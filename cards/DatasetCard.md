@@ -2,22 +2,27 @@
 
 ## Dataset Description
 
-- **Homepage**: None (Kaggle)
-- **Repository**: None (Github nuestro)
+- **Homepage**: _This will be updated when the repository is at Kaggle_
+- **Repository**: [TAED2_YOLOs](https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs.git)
 - **Point of Contact**: Javier Ruiz Hidalgo (UPC Professor)
 
 ### Dataset Summary
 
-This dataset contains a set of images in which one or more people appear. This dataset, might also include other elements that are not people. The goal by using this dataset is to fine-tune a previously existing instance segmentation model in order to generate masks corresponding to people in any image. It will be our task to avoid segmenting as well other objects that are not people. This dataset can be used for different tasks such as 
-surveillance applications, video and image editing, etc., among others.
+This dataset contains a set of images in which zero, one or more people appear. This dataset, might also include other elements that are not people. The goal by using this dataset is to fine-tune a previously existing instance segmentation model in order to generate masks corresponding to people in any image. It will be our objective to avoid segmenting as well other objects that are not people. This dataset can be used for different tasks such as surveillance applications, video and image editing, etc., among others.
 
 This dataset has been generating from a raw set of images (most of them containing people). This dataset tries to reach a wide range of variations in people's appearance (man, woman, whit people, black people, etc.).
 
-_**How si no lo sabemos? Languages? Domain y topic?**_
+### Supported tasks
 
-### Supported tasks and leaderboards (Quitar leaderboards)
+This dataset supports a wide range of tasks. In this section all these tasks will be detailed.
 
-_**No entiendo esta categoría**_
+- **Person segmentation**: The dataset can be used to train a model for person segmentation, which is the process of partitioning an image into different segments, assigning each pixel to a specific object or region (which in this case would be people). Success on this task is typically measured by achieving a high `IoU` (Intersection over Union).
+
+- **Person detection**: The dataset can be used to train a model for person detection, which is a computer vision task focused on identifying and locating human figures within images or video frames, often providing bounding boxes around each detected person. Success on this task is typically measured by achieving a high `mAP` (often `mAP:0.5:0.95` is used, to average the results of different thresholds).
+
+- **Pose estimation**: The dataset can be used to train a model for pose estimation, a computer vision task that involves detecting and estimating the orientation and position of a person's body in an image or video. The goal is to identify key points on the body, such as joints or limbs, to construct a representation of the person's pose. Success on this task is typically measured by achieving a high `PCK` (Percentage of Correct Keypoints) or `OKS` (Object Keypoint Similarity).
+
+- **Action recognition**: The dataset can be used to train a model for action recognition, a computer vision task that involves identifying and classifying specific actions or activities performed by individuals in images or videos, such as walking, running or jumping. Success is typically measured by achieving a high `Accuracy` or `F1`.
 
 ### Languages
 
@@ -29,7 +34,7 @@ This is an instance segmentation dataset. Therefore, no languages appear in it.
 
 This dataset contains a total of 5639 images and, therefore, a total of 5639 labels. 
 
-Each instance can be divided in two parts: the sample and the label. The sample will correspond to the image we want to segment. The label will correpsond to a `txt` file with `N` lines Each line will relate to a segmented person.
+Each instance can be divided in two parts: the sample and the label. The sample will correspond to the image we want to segment. The label will correpsond to a `txt` file with `N` lines. Each line will relate to a segmented person.
 
 There is no relation among different instances. Each instance has its own people to segment and no relations apply. An error in a segmentation will not affect another sample prediction.
 
@@ -42,7 +47,6 @@ The sample of a data instance can be described using JSON format in the followin
 ````
 
 The label of a data instance can be described using JSON format in the following way.
-_**Como explicamos en Annotations, este es el resultado final al que llegamos nosotros. ¿Tenemos que poner el estado original o el nuestro (este) después de realizar una anotación nosotros mismos?**_
 
 ````
 {
@@ -55,7 +59,7 @@ _**Como explicamos en Annotations, este es el resultado final al que llegamos no
 }
 ````
 
-This is a JSON format representation. The real dataset will not be in this format. Each segmentation line (N different of these) is formed by a class and a polygon. In our case, as we are finetuning an image segmentation model to segment a single class (person), there will only be a single class and, therefore, this number will allways be the same, a zero. The polygon is represented by `Mi` points (being `i` the number of the segmented person from `[1,N]`).
+This is a JSON format representation. The real dataset will not be in this format. Each segmentation line (`N` different of these) is formed by a class and a polygon. In our case, as we are finetuning an image segmentation model to segment a single class (person), there will only be a single class and, therefore, this number will allways be the same, a zero. The polygon is represented by `Mi` points (being `i` the number of the segmented person from `[1,N]`).
 
 ### Data Fields
 
@@ -82,42 +86,51 @@ Below, some general statistics for each test split can be found summarized in th
 | Feature                  | Train Split | Validation Split | Test Split |
 | :----------------------: | :---------: | :--------------: | :--------: |
 | Number of Samples        | 4395        | 775              | 469        |
-| Total Number of People   | None        | None             | None       |
-| Average Number of People | None        | None             | None       |
+| Total Number of People   | TODO        | TODO             | TODO       |
+| Average Number of People | TODO        | TODO             | TODO       |
 
 ## Dataset Creation
 
 ### Curation Rationale
 
-_**No se que poner**_
+This dataset has been created in to be able to provide a robust, complete and consistent dataset for people-related computer vision tasks. By combining previously existing datasets, it is ensured that a big diversity is presented in the dataset, thus mitigating possible biases in the data.
 
 ### Source Data
 
-_**A la espera de mail de Javier**_
+As it has been mentioned, the dataset has multiple sources. Particularly, the dataset has been created by obtaining random samples of data from the following resources.
 
-#### Initial Data Collection and Normalization (Dejar título y decir que no hemos normalizado)
+- [Human3.6m](http://vision.imar.ro/human3.6m/description.php)
+- [Multi-Human Parsing in the Wild](https://arxiv.org/pdf/1705.07206)
+- [OCHuman](https://github.com/liruilong940607/OCHumanApi/tree/master)
+- [COCO-Human](https://github.com/cocodataset)
 
-_**Yo cambiaría esta sección por Initial Data Collection and Transformations y hablaría de todo el proceso de transformación de las máscaras. Hacerlo cuando vayamos a trabajar con el dataset que lo tendremos más claro. Explicarlo resumido porqué esto irá más específico en Annotations**_
+#### Initial Data Collection and Normalization
 
-#### Who are the source language producers
+The initial data collection process has consisted, as it has been already stated, on taking random samples from the previous resources and merging them together to provide a complete, robust and diverse dataset. This dataset has been, in addition, randomly sorted to avoid possible patterns in data than may affect the training process.
 
-_**Quitaría esta sección porqué nuestro dataset no tiene nada que ver con el lenguaje y el orígen de los datos ya lo habremos hablado en otra sección**_
+No normalization steps have been necessary to generate the dataset.
 
 ### Annotations
 
-This dataset contained some initial annotations that some models such as YOLOv8-seg do not understand. The initial annotations are images with the same dimensions as the sample images whose pixels' values are 0 if that pixel in the sample image corresponds to background and a positive integer if the pixel in the sample image corresponds to people (That positive integer will indicate which person that pixel corresponds to).
+This dataset contained some initial annotations that some models such as YOLOv8-seg do not understand. The initial annotations are images with the same dimensions as the sample images whose pixels' values are 0 if that pixel in the sample image corresponds to background and a positive integer if the pixel in the sample image corresponds to people (That positive integer will indicate to which person that pixel corresponds to).
 
 #### Annotation process
 
-_**Hago un pequeño resumen pero se extenderá cuando lo apliquemos y lo tengamos más claro**_
+**Finish when the annotation process has been finished, so all steps are clear.**
 
-In order to re-anotate the dataset samples to achieve some annotations that YOLO models can read we have to transform the label images to label text files in a specific format. To do so, we have used some python scrips (_**Poner aquí link a la carpeta con los scripts de python cuando lo tengamos en el repo**_) that read the actual annotated images, extract the information and generate a text file for each of the data instances in our dataset.
+In order to re-anotate the dataset samples to achieve some annotations that YOLO models can read we have to transform the label images to label text files in a specific format. To do so, we have used some python scrips (_**Link to the folder with the different python scripts for data transformations**_) that read the actual annotated images, extract the information and generate a text file for each of the data instances in our dataset.
 
 This process has been required for each of the data instances of the dataset. The validation annotation process has been implemented by checking the resulting mask as an image and comparing it to the original image.
 
 #### Who are the annotators?
 
-_**No entiendo que hay que hacer**_
+The anotators are the members of the YOLOs group.
+
+- Josep Coll
+- Ignacio Gris
+- Marc Janer
+- Maria Risques
+- Silvia Vallet
 
 ### Personal and Sensitive Information
 

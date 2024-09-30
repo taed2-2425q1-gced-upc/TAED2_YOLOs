@@ -40,6 +40,9 @@ pandas = "^2.2.3"
 numpy = "^2.1.1"
 scikit-learn = "^1.5.2"
 dvc = "^3.55.2"
+opendatasets = "^0.1.22"
+ipykernel = "^6.29.5"
+python-dotenv = "^1.0.1"
 
 
 [tool.poetry.group.dev.dependencies]

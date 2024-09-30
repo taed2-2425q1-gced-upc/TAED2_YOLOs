@@ -10,4 +10,12 @@ dataPipelines:
     trainSize: 0.7
     valSize: 0.15
     testSize: 0.15
-    commitMesaage: null
+    commitMessage: null
+  transformMasks:
+    uploadToDVC: false
+    dataDirectory: /Users/nachogris/Desktop/UNI/GCED/QUART/TAED2/LAB/TAED2_YOLOs/data/interim/transformed # This needs to be changed according to the executor
+    commitMessage: null
+  createLabels:
+    uploadToDVC: false
+    dataDirectory: /Users/nachogris/Desktop/UNI/GCED/QUART/TAED2/LAB/TAED2_YOLOs/data/processed # This needs to be changed according to the executor
+    commitMessage: null

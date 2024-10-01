@@ -46,12 +46,14 @@ python-dotenv = "^1.0.1"
 opencv-python = "^4.10.0.84"
 pillow = "^10.4.0"
 mlflow = "^2.16.2"
+dagshub = "^0.3.37"
 
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"
 pylint = "^3.3.0"
 pytest = "^8.3.3"
+ipykernel = "^6.29.5"
 
 [build-system]
 requires = ["poetry-core"]

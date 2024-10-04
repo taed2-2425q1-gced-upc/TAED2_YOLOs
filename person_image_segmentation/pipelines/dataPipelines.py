@@ -40,7 +40,7 @@ os.environ['KAGGLE_KEY'] = os.getenv('KAGGLE_KEY')
 def download_dataset(dataset_link: str, data_dir: Path) -> None:
     api = KaggleApi()
     api.authenticate()
-    api.dataset_download_files(dataset_link, path = data_dir)
+    api.dataset_download_files(dataset_link, path = data_dir, unzip = True)
 
 
 def split_dataset(train_size: float, val_size: float, test_size: float, data_dir: Path, split_dir: Path) -> None:
@@ -91,6 +91,9 @@ def transform_masks(split_dir: Path, transform_dir: Path) -> None:
     output_dir_val = transform_dir / 'masks/val'
     input_dir_test = split_dir / 'masks/test'
     output_dir_test = transform_dir / 'masks/test'
+    images_dir_train = split_dir / 'images/train'
+    images_dir_val = split_dir / 'images/val'
+    images_dir_test = split_dir / 'images/test'
 
     output_dir_train.mkdir(parents = True, exist_ok = True)
     output_dir_val.mkdir(parents = True, exist_ok = True)
@@ -110,7 +113,7 @@ def transform_masks(split_dir: Path, transform_dir: Path) -> None:
     shutil.copytree(images_dir_test, images_dir_trans_test, dirs_exist_ok = True)
 
 
-def generate_labels(transform_dir: Path, labels_dir: Path) -> None:
+def generate_labels(transform_dir: Path, labels_dir: Path, split_dir: Path) -> None:
     # Define directories
     input_dir_train = transform_dir / 'masks/train'
     output_dir_train = labels_dir / 'labels/train'
@@ -118,6 +121,9 @@ def generate_labels(transform_dir: Path, labels_dir: Path) -> None:
     output_dir_val = labels_dir / 'labels/val'
     input_dir_test = transform_dir / 'masks/test'
     output_dir_test = labels_dir / 'labels/test'
+    images_dir_train = split_dir / 'images/train'
+    images_dir_val = split_dir / 'images/val'
+    images_dir_test = split_dir / 'images/test'
 
     output_dir_train.mkdir(parents = True, exist_ok = True)
     output_dir_val.mkdir(parents = True, exist_ok = True)
@@ -161,5 +167,6 @@ if __name__ == "__main__":
     # Then generate labels
     generate_labels(
         transform_dir = TRANSFORM_DATA_DIR,
-        labels_dir = LABELS_DATA_DIR
+        labels_dir = LABELS_DATA_DIR,
+        split_dir = SPLIT_DATA_DIR
     )

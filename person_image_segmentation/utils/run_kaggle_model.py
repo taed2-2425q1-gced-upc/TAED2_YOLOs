@@ -19,7 +19,7 @@ os.environ['KAGGLE_USERNAME'] = KAGGLE_USERNAME
 os.environ['KAGGLE_KEY'] = KAGGLE_KEY
 
 # Paths for local files
-code_file_path = '/Users/mariarisques/TAED2_YOLOs/TAED2_YOLOs/notebooks/model_training_v0.py'
+code_file_path = '/Users/mariarisques/TAED2_YOLOs/TAED2_YOLOs/person_image_segmentation/utils/model_training_v0.py'
 
 # Define the dataset slug
 dataset_slug = f'{KAGGLE_USERNAME.lower()}/yolo-training-data'  # Ensure the username and slug are lowercase
@@ -27,7 +27,7 @@ dataset_slug = f'{KAGGLE_USERNAME.lower()}/yolo-training-data'  # Ensure the use
 # Create kernel metadata for Kaggle
 kernel_metadata = {
     'id': f'{KAGGLE_USERNAME.lower()}/entrenamiento-yolo',  # Kernel ID in lowercase
-    'title': 'prueba6',
+    'title': 'YoloV8-training-v0-Hyps',
     'code_file': code_file_path,
     'language': 'python',
     'kernel_type': 'script',

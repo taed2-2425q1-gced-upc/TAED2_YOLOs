@@ -47,6 +47,7 @@ opencv-python = "^4.10.0.84"
 pillow = "^10.4.0"
 torch = "1.13.1"
 ultralytics = "^8.3.5"
+codecarbon = "^2.7.1"
 
 
 [tool.poetry.group.dev.dependencies]

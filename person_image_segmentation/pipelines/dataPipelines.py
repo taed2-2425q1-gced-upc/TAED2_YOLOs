@@ -10,6 +10,7 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 from pathlib import Path
 from dotenv import load_dotenv
 from PIL import Image
+import argparse
 
 from person_image_segmentation.utils.processing import copy_files, from_raw_masks_to_image_masks, from_image_masks_to_labels
 
@@ -18,9 +19,10 @@ load_dotenv()
 
 # Declare the base data path
 BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
-
+REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
+CONFIG_PATH = REPO_PATH / 'person_image_segmentation/pipelines/config.yaml'
 # Read the YAML configuration file
-with open('config.yaml', 'r') as file:
+with open(CONFIG_PATH, 'r') as file:
     config = yaml.safe_load(file)
 
 DATASET_LINK = config['dataPipelines']['dataDownloading']['datasetLink']
@@ -36,9 +38,6 @@ TRAIN_SIZE = config['dataPipelines']['splitData']['trainSize']
 VAL_SIZE = config['dataPipelines']['splitData']['valSize']
 TEST_SIZE = config['dataPipelines']['splitData']['testSize']
 
-# Create data directory if it does not exist
-DATA_DIR.mkdir(parents = True, exist_ok = True)
-
 # Load environment variables from a .env file and set up Kaggle credentials from environment variables
 os.environ['KAGGLE_USERNAME'] = os.getenv('KAGGLE_USERNAME')
 os.environ['KAGGLE_KEY'] = os.getenv('KAGGLE_KEY')
@@ -46,6 +45,9 @@ os.environ['KAGGLE_KEY'] = os.getenv('KAGGLE_KEY')
 
 # Function definition
 def download_dataset(dataset_link: str, data_dir: Path) -> None:
+    # Create data directory if it does not exist
+    DATA_DIR.mkdir(parents = True, exist_ok = True)
+    
     api = KaggleApi()
     api.authenticate()
     api.dataset_download_files(dataset_link, path = data_dir, unzip = True)
@@ -151,6 +153,17 @@ def generate_labels(transform_dir: Path, labels_dir: Path, split_dir: Path) -> N
     shutil.copytree(images_dir_test, images_dir_labels_test, dirs_exist_ok = True)
 
 if __name__ == "__main__":
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description="Person Image Segmentation Pipeline")
+    parser.add_argument('--test', action='store_true', help="Run the pipeline in test mode")
+    args = parser.parse_args()
+    
+    if args.test:
+        DATA_DIR = Path(str(DATA_DIR).replace('data', 'test_data'))
+        SPLIT_DATA_DIR = Path(str(SPLIT_DATA_DIR).replace('data', 'test_data'))
+        TRANSFORM_DATA_DIR = Path(str(TRANSFORM_DATA_DIR).replace('data', 'test_data'))
+        LABELS_DATA_DIR = Path(str(LABELS_DATA_DIR).replace('data', 'test_data'))
+
     # First, download the dataset
     download_dataset(
         dataset_link = DATASET_LINK,

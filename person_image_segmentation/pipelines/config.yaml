@@ -1,13 +1,13 @@
 dataPipelines:
   dataDownloading:
-    datasetLink: 'mariarisques/dataset-person-yolos'
-    dataDirectory: /Users/nachogris/Desktop/UNI/GCED/QUART/TAED2/LAB/TAED2_YOLOs/data/raw # This needs to be changed according to the executor
+    datasetLink: "mariarisques/dataset-person-yolos"
+    dataDirectory: /raw
   splitData:
-    dataDirectory: /Users/nachogris/Desktop/UNI/GCED/QUART/TAED2/LAB/TAED2_YOLOs/data/interim/splitted # This needs to be changed according to the executor
+    dataDirectory: /interim/splitted
     trainSize: 0.7
     valSize: 0.15
     testSize: 0.15
   transformMasks:
-    dataDirectory: /Users/nachogris/Desktop/UNI/GCED/QUART/TAED2/LAB/TAED2_YOLOs/data/interim/transformed # This needs to be changed according to the executor
+    dataDirectory: /interim/transformed
   createLabels:
-    dataDirectory: /Users/nachogris/Desktop/UNI/GCED/QUART/TAED2/LAB/TAED2_YOLOs/data/processed # This needs to be changed according to the executor
+    dataDirectory: /processed

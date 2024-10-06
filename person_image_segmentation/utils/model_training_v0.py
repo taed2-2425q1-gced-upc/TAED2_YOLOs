@@ -41,6 +41,6 @@ with EmissionsTracker(gpu_ids=[]) as tracker:
    with mlflow.start_run(run_name="YoloV8-training-v0-Hyps"):
 
        # Training the model
-       results = model.train(data=config_file_path, epochs=100, imgsz=640, cfg = cfg_file_path_hyps, name="Yolo Weights")
+       results = model.train(data=config_file_path, epochs=1, imgsz=640, cfg = cfg_file_path_hyps, name="Yolo Weights")
 
        print("Entrenamiento completado y experimentos registrados en MLflow.")

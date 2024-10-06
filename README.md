@@ -26,7 +26,7 @@ A short description of the project.
 │                         the creator's initials, and a short `-` delimited description, e.g.
 │                         `1.0-jqp-initial-data-exploration`.
 │
-├── pyproject.toml     <- Project configuration file with package metadata for 
+├── pyproject.toml     <- Project configuration file with package metadata for
 │                         person_image_segmentation and configuration for tools like black
 │
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
@@ -49,13 +49,24 @@ A short description of the project.
     │
     ├── features.py             <- Code to create features for modeling
     │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
+    ├── modeling
+    │   ├── __init__.py
+    │   ├── predict.py          <- Code to run model inference with trained models
     │   └── train.py            <- Code to train models
     │
     └── plots.py                <- Code to create visualizations
 ```
 
---------
+## Instructions
 
+Please, follow the instructions below to run the project:
+
+### Setting up the environment
+
+Before running the project, make sure that your `.env` has the same structuer as the `.env.test` file. Here is an explanation on how to come up with the necessary values for the environment variables:
+
+- TODO
+
+Note that there are some variables with a default value. You should not modify them, as they apply to all users running the project.
+
+---

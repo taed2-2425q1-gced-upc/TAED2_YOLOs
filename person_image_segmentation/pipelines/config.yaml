@@ -1,7 +1,7 @@
 dataPipelines:
   dataDownloading:
     datasetLink: 'mariarisques/dataset-person-yolos'
-    dataDirectory: /Users/nachogris/Desktop/UNI/GCED/QUART/TAED2/LAB/TAED2_YOLOs/data/tmp # This needs to be changed according to the executor
+    dataDirectory: /Users/nachogris/Desktop/UNI/GCED/QUART/TAED2/LAB/TAED2_YOLOs/data/raw # This needs to be changed according to the executor
   splitData:
     dataDirectory: /Users/nachogris/Desktop/UNI/GCED/QUART/TAED2/LAB/TAED2_YOLOs/data/interim/splitted # This needs to be changed according to the executor
     trainSize: 0.7

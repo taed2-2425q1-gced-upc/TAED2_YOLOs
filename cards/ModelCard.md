@@ -94,18 +94,31 @@ YOLOv8-Seg was trained on the COCO dataset, which contains a variety of object c
 - **Classes:** 80 object classes, including people, animals, and vehicles. 
 - **Data preprocessing:** Images were resized, normalized, and augmented with techniques such as random flipping, scaling, and color jittering.
 
-AFEGIR LA PART DEL NOSTRE TRAINING
+Our image segmentation model, finetuned from YOLOv8-Seg, has been finetuned using data_person, a set of images featuring one or more people each. This specific dataset tries to reach a wide range of variations in people’s appearance.
+- **Dataset name:** data_person
+- **Classes:** 1 (people)
+- **Data preprocessing:** A detailed explanation can be found in the dataset card. (FALTA LINK)
 
-
-
----
 ### Training Procedure
 <!-- This relates heavily to the Technical Specifications. Content here should link to that section when it is relevant to the training procedure. -->
-#### Preprocessing [optional]
-{{ preprocessing | default("[More Information Needed]", true)}}
+#### Preprocessing 
+The model was finetuned by our team on the data_person dataset, which contains over 5600 images featuring one or more people, with annotations specifically focused on person segmentation across diverse environments and scenerios. This dataset was preprocessed with several techniques to improve model performance on people segmentation tasks. 
+- Annotations were transformed from pixel-wise masks into YOLO-compatible text files with polygon representations for each segmented person. 
+- Augmentation techniques included flipping left-right(33% probability), scaling (±27.45%), translation (±7.69%), and HSV adjustments to hue, saturation, and value to enhance robustness. Mosaic augmentation (93.32% probability) and segment copy-paste (50% probability) were also employed to diversify image variations. 
+- Data was randomly split into training (78%), validation (14%), and test (8%) sets to mitigate potential biases.
+
+More details can be found in the dataset card (FALTA LINK).
 
 #### Training Hyperparameters
-- **Training regime:** {{ training_regime | default("[More Information Needed]", true)}} <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
+- **Initial learning rate** (`lr0`): 0.00729
+- **Final learning rate multiplier** (`lrf`): 0.00984
+- **Momentum** (`momentum`): 0.98
+- **Weight decay** (`weight_decay`): 0.00035
+- **Warmup epochs** (`warmup_epochs`): 4.21385
+- **Warmup momentum** (`warmup_momentum`): 0.76891
+- **Warmup bias learning rate** (`warmup_bias_lr`): 0.1
+- **Box loss gain** (`box`): 8.30896
+- **Class loss gain** (`cls`): 0.56119
 
 #### Speeds, Sizes, Times [optional]
 <!-- This section provides information about throughput, start/end time, checkpoint size if relevant, etc. -->

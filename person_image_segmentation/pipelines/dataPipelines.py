@@ -37,10 +37,9 @@ VAL_SIZE = config['dataPipelines']['splitData']['valSize']
 TEST_SIZE = config['dataPipelines']['splitData']['testSize']
 
 # Create data directory if it does not exist
-DATA_DIR.mkdir(parents=True, exist_ok=True)
+DATA_DIR.mkdir(parents = True, exist_ok = True)
 
 # Load environment variables from a .env file and set up Kaggle credentials from environment variables
-load_dotenv()
 os.environ['KAGGLE_USERNAME'] = os.getenv('KAGGLE_USERNAME')
 os.environ['KAGGLE_KEY'] = os.getenv('KAGGLE_KEY')
 

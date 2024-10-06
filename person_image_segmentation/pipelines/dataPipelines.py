@@ -13,22 +13,31 @@ from PIL import Image
 
 from person_image_segmentation.utils.processing import copy_files, from_raw_masks_to_image_masks, from_image_masks_to_labels
 
-# Load configuration file
+# Load environment variables from a .env file
+load_dotenv()
+
+# Declare the base data path
+BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
+
+# Read the YAML configuration file
 with open('config.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
-# Declare some configuration variables
 DATASET_LINK = config['dataPipelines']['dataDownloading']['datasetLink']
-DATA_DIR = Path(config['dataPipelines']['dataDownloading']['dataDirectory'])
+
+# Combine the base path and subdirectories 
+DATA_DIR = BASE_DATA_PATH / Path(config['dataPipelines']['dataDownloading']['dataDirectory']).relative_to('/')
+SPLIT_DATA_DIR = BASE_DATA_PATH / Path(config['dataPipelines']['splitData']['dataDirectory']).relative_to('/')
+TRANSFORM_DATA_DIR = BASE_DATA_PATH / Path(config['dataPipelines']['transformMasks']['dataDirectory']).relative_to('/')
+LABELS_DATA_DIR = BASE_DATA_PATH / Path(config['dataPipelines']['createLabels']['dataDirectory']).relative_to('/')
+
+# Declare split sizes
 TRAIN_SIZE = config['dataPipelines']['splitData']['trainSize']
 VAL_SIZE = config['dataPipelines']['splitData']['valSize']
 TEST_SIZE = config['dataPipelines']['splitData']['testSize']
-SPLIT_DATA_DIR = Path(config['dataPipelines']['splitData']['dataDirectory'])
-TRANSFORM_DATA_DIR = Path(config['dataPipelines']['transformMasks']['dataDirectory'])
-LABELS_DATA_DIR = Path(config['dataPipelines']['createLabels']['dataDirectory'])
 
 # Create data directory if it does not exist
-DATA_DIR.mkdir(parents = True, exist_ok = True)
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # Load environment variables from a .env file and set up Kaggle credentials from environment variables
 load_dotenv()

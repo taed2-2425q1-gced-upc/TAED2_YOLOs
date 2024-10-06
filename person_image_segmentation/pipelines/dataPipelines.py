@@ -139,8 +139,8 @@ def generate_labels(transform_dir: Path, labels_dir: Path, split_dir: Path) -> N
     images_dir_labels_test = labels_dir / 'images/test'
 
     shutil.copytree(images_dir_train, images_dir_labels_train, dirs_exist_ok = True)
-    shutil.copytree(images_dir_val, images_dir_labels_train, dirs_exist_ok = True)
-    shutil.copytree(images_dir_test, images_dir_labels_train, dirs_exist_ok = True)
+    shutil.copytree(images_dir_val, images_dir_labels_val, dirs_exist_ok = True)
+    shutil.copytree(images_dir_test, images_dir_labels_test, dirs_exist_ok = True)
 
 if __name__ == "__main__":
     # First, download the dataset

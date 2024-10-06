@@ -65,7 +65,19 @@ Please, follow the instructions below to run the project:
 
 Before running the project, make sure that your `.env` has the same structuer as the `.env.test` file. Here is an explanation on how to come up with the necessary values for the environment variables:
 
-- TODO
+- `KAGGLE_USERNAME` -> Your Kaggle username
+  - Login to Kaggle and navigate to your profile page
+- `KAGGLE_KEY` -> Your Kaggle API key
+  - Navigate to Settings -> Account -> API
+  - Click on "Create New API Token"
+  - Copy the API key
+- `MLFLOW_TRACKING_USERNAME` -> Your MLFlow username (you may use your DagsHub username)
+- `MLFLOW_TRACKING_PASSWORD` -> A personal access token or API key generated in DagsHub
+- `PATH_TO_DATA_FOLDER` -> The path to the `data` folder
+  - In the root of the project, create a folder called `data`
+  - Right click on the folder name and select "Copy path"
+- `PATH_TO_REPO` -> The path to the root of the project
+  - It should look something like this: `.../.../TAED2_YOLOs`
 
 Note that there are some variables with a default value. You should not modify them, as they apply to all users running the project.
 

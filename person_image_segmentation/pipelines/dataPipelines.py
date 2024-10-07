@@ -16,11 +16,12 @@ from person_image_segmentation.utils.processing import copy_files, from_raw_mask
 # Load environment variables from a .env file
 load_dotenv()
 
-# Declare the base data path
+# Declare the base data path and the config file path
 BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
+CONFIG_FILE_PATH = Path(os.getenv('PATH_TO_REPO')) / "person_image_segmentation/pipelines/config.yaml"
 
 # Read the YAML configuration file
-with open('config.yaml', 'r') as file:
+with open(CONFIG_FILE_PATH, 'r') as file:
     config = yaml.safe_load(file)
 
 DATASET_LINK = config['dataPipelines']['dataDownloading']['datasetLink']

@@ -1,0 +1,7 @@
+stages:
+  build_dataset:
+    cmd: python3 -m person_image_segmentation.pipelines.dataPipelines
+    deps:
+    - person_image_segmentation/pipelines/dataPipelines.py
+    outs:
+    - local_data/

@@ -2,7 +2,7 @@
 
 ## Dataset Description
 
-- **Homepage**: _This will be updated when the repository is at Kaggle_
+- **Homepage**: [TAED2_YOLOs Dataset](https://www.kaggle.com/datasets/mariarisques/dataset-person-yolos)
 - **Repository**: [TAED2_YOLOs](https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs.git)
 - **Point of Contact**: Javier Ruiz Hidalgo (UPC Professor)
 

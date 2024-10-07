@@ -130,17 +130,29 @@ More details can be found in the dataset card (FALTA LINK).
 ### Testing Data, Factors & Metrics
 #### Testing Data
 <!-- This should link to a Dataset Card if possible. -->
-{{ testing_data | default("[More Information Needed]", true)}}
+The testing dataset contains 469 images that were not used during training or validation. These images are used to evaluate the model's performance in unseen conditions. Details about the testing data can be found in the [Dataset Card](https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs.git).
+
 #### Factors
 <!-- These are the things the evaluation is disaggregating by, e.g., subpopulations or domains. -->
-{{ testing_factors | default("[More Information Needed]", true)}}
+The evaluation factors included variations in poses, environments, and lighting conditions to ensure that the model can generalize well to real-world scenarios.
+
 #### Metrics
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
-{{ testing_metrics | default("[More Information Needed]", true)}}
+- **mAP50-95**: Evaluates model performance at different Intersection over Union (IoU) thresholds.
+- **Precision**: Measures the accuracy of the model's predictions.
+- **Recall**: Evaluates how many relevant instances the model correctly identified.
+
 ### Results
-{{ results | default("[More Information Needed]", true)}}
+On the validations set:
+- **mAP50-95M** : 0.835
+- **PrecisionM**: 0.964
+- **RecallM**: 0.904
+On the test set:
+- **mIoU**: 0.8386
+
 #### Summary
-{{ results_summary | default("", true) }}
+The evaluation results indicate high model performance in person segmentation tasks, with mIou of 0.8386 which satisfies our intial requirements. 
+
 ## Model Examination [optional]
 <!-- Relevant interpretability work for the model goes here -->
 {{ model_examination | default("[More Information Needed]", true)}}

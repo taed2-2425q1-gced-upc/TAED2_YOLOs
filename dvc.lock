@@ -27,3 +27,10 @@ stages:
       md5: 0e59b3d274d46e781cfe934daa7fb103.dir
       size: 127044
       nfiles: 10
+  evaluate_predictions:
+    cmd: python3 -m person_image_segmentation.pipelines.evaluationPipeline
+    deps:
+    - path: person_image_segmentation/pipelines/evaluationPipeline.py
+      hash: md5
+      md5: fc06801e8fbb4202dc53795c0681b17e
+      size: 1604

@@ -1,0 +1,36 @@
+schema: '2.0'
+stages:
+  build_dataset:
+    cmd: python3 -m person_image_segmentation.pipelines.dataPipelines
+    deps:
+    - path: person_image_segmentation/pipelines/dataPipelines.py
+      hash: md5
+      md5: 34377aae908b26aa11d6c01274d6bee1
+      size: 7084
+    outs:
+    - path: local_data/
+      hash: md5
+      md5: 7e52b59b9b41ced784979e28e5d01d10.dir
+      size: 1337173015
+      nfiles: 40471
+  predict_masks:
+    cmd: python3 -m person_image_segmentation.pipelines.predictionPipeline --max_predictions
+      10
+    deps:
+    - path: person_image_segmentation/pipelines/predictionPipeline.py
+      hash: md5
+      md5: 273fa3dfe6e2fcf237a09c758f47de37
+      size: 3164
+    outs:
+    - path: predictions/
+      hash: md5
+      md5: 0e59b3d274d46e781cfe934daa7fb103.dir
+      size: 127044
+      nfiles: 10
+  evaluate_predictions:
+    cmd: python3 -m person_image_segmentation.pipelines.evaluationPipeline
+    deps:
+    - path: person_image_segmentation/pipelines/evaluationPipeline.py
+      hash: md5
+      md5: fc06801e8fbb4202dc53795c0681b17e
+      size: 1604

@@ -14,33 +14,15 @@ import argparse
 
 from person_image_segmentation.utils.processing import copy_files, from_raw_masks_to_image_masks, from_image_masks_to_labels
 
+# Import constants and configurations
+from person_image_segmentation.config import DATA_DIR, DATASET_LINK,  SPLIT_DATA_DIR, TRANSFORM_DATA_DIR, LABELS_DATA_DIR, TRAIN_SIZE, VAL_SIZE, TEST_SIZE, KAGGLE_KEY, KAGGLE_USERNAME
+
 # Load environment variables from a .env file
 load_dotenv()
 
-# Declare the base data path and the config file path
-BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
-REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
-CONFIG_PATH = REPO_PATH / 'person_image_segmentation/pipelines/config.yaml'
-# Read the YAML configuration file
-with open(CONFIG_PATH, 'r') as file:
-    config = yaml.safe_load(file)
-
-DATASET_LINK = config['dataPipelines']['dataDownloading']['datasetLink']
-
-# Combine the base path and subdirectories 
-DATA_DIR = BASE_DATA_PATH / Path(config['dataPipelines']['dataDownloading']['dataDirectory']).relative_to('/')
-SPLIT_DATA_DIR = BASE_DATA_PATH / Path(config['dataPipelines']['splitData']['dataDirectory']).relative_to('/')
-TRANSFORM_DATA_DIR = BASE_DATA_PATH / Path(config['dataPipelines']['transformMasks']['dataDirectory']).relative_to('/')
-LABELS_DATA_DIR = BASE_DATA_PATH / Path(config['dataPipelines']['createLabels']['dataDirectory']).relative_to('/')
-
-# Declare split sizes
-TRAIN_SIZE = config['dataPipelines']['splitData']['trainSize']
-VAL_SIZE = config['dataPipelines']['splitData']['valSize']
-TEST_SIZE = config['dataPipelines']['splitData']['testSize']
-
 # Load environment variables from a .env file and set up Kaggle credentials from environment variables
-os.environ['KAGGLE_USERNAME'] = os.getenv('KAGGLE_USERNAME')
-os.environ['KAGGLE_KEY'] = os.getenv('KAGGLE_KEY')
+os.environ['KAGGLE_USERNAME'] =KAGGLE_KEY
+os.environ['KAGGLE_KEY'] =KAGGLE_USERNAME
 
 
 # Function definition

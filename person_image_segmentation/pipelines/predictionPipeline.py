@@ -7,11 +7,13 @@ import torch
 import argparse
 
 import numpy as np
+import pandas as pd
 
 from pathlib import Path
 from dotenv import load_dotenv
 from PIL import Image
 from ultralytics import YOLO
+from codecarbon import EmissionsTracker
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -79,12 +81,13 @@ if __name__ == "__main__":
     test_folder = BASE_DATA_PATH / "processed/images/test"
     file_names = os.listdir(test_folder)
     file_names = [str(test_folder / file) for file in file_names if os.path.isfile(str(test_folder / file))]
-
-    # Make predictions
-    PREDS_PATH = REPO_PATH / "predictions"
-    generate_predictions(
-        test_filenames = file_names,
-        predictions_folder = PREDS_PATH,
-        model = model,
-        max_predictions = max_predictions
-    )
+    
+    with EmissionsTracker(output_dir=str(REPO_PATH / "metrics"), output_file="emissions_inference.csv") as tracker:
+        # Make predictions
+        PREDS_PATH = REPO_PATH / "predictions"
+        generate_predictions(
+            test_filenames = file_names,
+            predictions_folder = PREDS_PATH,
+            model = model,
+            max_predictions = max_predictions
+        )

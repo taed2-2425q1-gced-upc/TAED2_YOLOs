@@ -6,13 +6,13 @@ stages:
     outs:
     - local_data/
   predict_masks:
-    cmd: python3 -m person_image_segmentation.pipelines.predictionPipeline --max_predictions
+    cmd: python3 -m person_image_segmentation.modeling.prediction --max_predictions
       10
     deps:
-    - person_image_segmentation/pipelines/predictionPipeline.py
+    - person_image_segmentation/modeling/prediction.py
     outs:
     - predictions/
   evaluate_predictions:
-    cmd: python3 -m person_image_segmentation.pipelines.evaluationPipeline
+    cmd: python3 -m person_image_segmentation.modeling.evaluation
     deps:
-    - person_image_segmentation/pipelines/evaluationPipeline.py
+    - person_image_segmentation/modeling/evaluation.py

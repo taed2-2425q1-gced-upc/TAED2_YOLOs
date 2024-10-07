@@ -50,6 +50,7 @@ ultralytics = "^8.3.5"
 codecarbon = "^2.7.1"
 mlflow = "^2.16.2"
 dagshub = "^0.3.37"
+loguru = "^0.7.2"
 
 
 [tool.poetry.group.dev.dependencies]

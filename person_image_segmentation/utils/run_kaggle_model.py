@@ -21,7 +21,7 @@ os.environ['KAGGLE_USERNAME'] = KAGGLE_USERNAME
 os.environ['KAGGLE_KEY'] = KAGGLE_KEY
 
 # Paths for local files
-code_file_path = Path(os.getenv('PATH_TO_REPO')) / 'person_image_segmentation/utils/model_training_v0.py'
+code_file_path = Path(os.getenv('PATH_TO_REPO')) / 'person_image_segmentation/modeling/train_v0.py'
 
 # Define the dataset slug
 dataset_slug = f'{KAGGLE_USERNAME.lower()}/yolo-training-data'  # Ensure the username and slug are lowercase

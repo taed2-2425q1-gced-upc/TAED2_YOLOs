@@ -19,7 +19,7 @@ os.environ['KAGGLE_USERNAME'] = KAGGLE_USERNAME
 os.environ['KAGGLE_KEY'] = KAGGLE_KEY
 
 # Paths for local files
-code_file_path = os.path.join(os.getenv('PATH_TO_REPO'), '/notebooks/model_training_v0.py')
+code_file_path = os.path.join(os.getenv('PATH_TO_REPO'), '/person_image_segmentation/modeling/train_v0.py')
 data_directory_path = os.getenv('PATH_TO_DATA_FOLDER')
 dataset_metadata_path = os.path.join(data_directory_path, 'dataset-metadata.json')
 

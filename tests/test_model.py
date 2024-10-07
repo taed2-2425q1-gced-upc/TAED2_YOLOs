@@ -12,7 +12,7 @@ from PIL import Image
 from typing import Optional
 from ultralytics import YOLO
 
-from person_image_segmentation.pipelines.evaluationPipeline import compute_mIoU
+from person_image_segmentation.modeling.evaluation import compute_mIoU
 
 load_dotenv()
 
@@ -26,7 +26,7 @@ def run_prediction_pipeline():
     # Run the pipeline script
     print("Running the prediction pipeline script...")
     start_time = time.time()
-    script_path = REPO_PATH / 'person_image_segmentation/pipelines/predictionPipeline.py'
+    script_path = REPO_PATH / 'person_image_segmentation/modeling/prediction.py'
     subprocess.run(['python', str(script_path), '--max_predictions', '10'], check = True)
     print("Prediction pipeline script completed successfully.")
     end_time = time.time()

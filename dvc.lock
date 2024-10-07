@@ -14,10 +14,10 @@ stages:
       size: 1337173015
       nfiles: 40471
   predict_masks:
-    cmd: python3 -m person_image_segmentation.pipelines.predictionPipeline --max_predictions
+    cmd: python3 -m person_image_segmentation.modeling.prediction --max_predictions
       10
     deps:
-    - path: person_image_segmentation/pipelines/predictionPipeline.py
+    - path: person_image_segmentation/modeling/prediction.py
       hash: md5
       md5: 273fa3dfe6e2fcf237a09c758f47de37
       size: 3164
@@ -28,9 +28,9 @@ stages:
       size: 127044
       nfiles: 10
   evaluate_predictions:
-    cmd: python3 -m person_image_segmentation.pipelines.evaluationPipeline
+    cmd: python3 -m person_image_segmentation.modeling.evaluation
     deps:
-    - path: person_image_segmentation/pipelines/evaluationPipeline.py
+    - path: person_image_segmentation/modeling/evaluation.py
       hash: md5
       md5: fc06801e8fbb4202dc53795c0681b17e
       size: 1604

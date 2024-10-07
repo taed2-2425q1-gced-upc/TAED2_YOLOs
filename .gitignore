@@ -177,3 +177,4 @@ kernel-metadata.json
 /local_data
 /predictions
 powermetrics_log.txt
+/mlruns

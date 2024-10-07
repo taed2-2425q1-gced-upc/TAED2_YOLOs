@@ -62,3 +62,11 @@ pytest-cov = "^5.0.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.coverage.run]
+omit = []
+
+[tool.pytest.ini_options]
+pythonpath = "."
+testpaths = "tests"
+addopts = "--junitxml=out/tests-report.xml --cov=src --cov-report=html:reports/coverage"

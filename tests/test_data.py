@@ -54,4 +54,3 @@ def test_data_pipeline_and_structure(run_data_pipeline):
 
     for subfolder in subfolders:
         assert subfolder.exists()
-

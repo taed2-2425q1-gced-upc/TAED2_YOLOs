@@ -1,5 +1,6 @@
 # Data
 /data/
+/test_data/
 
 # Mac OS-specific storage files
 .DS_Store

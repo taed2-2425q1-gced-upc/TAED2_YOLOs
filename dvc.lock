@@ -1,0 +1,15 @@
+schema: '2.0'
+stages:
+  build_dataset:
+    cmd: python3 -m person_image_segmentation.pipelines.dataPipelines
+    deps:
+    - path: person_image_segmentation/pipelines/dataPipelines.py
+      hash: md5
+      md5: 34377aae908b26aa11d6c01274d6bee1
+      size: 7084
+    outs:
+    - path: local_data/
+      hash: md5
+      md5: 7e52b59b9b41ced784979e28e5d01d10.dir
+      size: 1337173015
+      nfiles: 40471

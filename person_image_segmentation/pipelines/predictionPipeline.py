@@ -81,7 +81,7 @@ if __name__ == "__main__":
     file_names = [str(test_folder / file) for file in file_names if os.path.isfile(str(test_folder / file))]
 
     # Make predictions
-    PREDS_PATH = BASE_DATA_PATH / "predictions"
+    PREDS_PATH = REPO_PATH / "predictions"
     generate_predictions(
         test_filenames = file_names,
         predictions_folder = PREDS_PATH,

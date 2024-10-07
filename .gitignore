@@ -174,3 +174,4 @@ cython_debug/
 dataset-metadata.json
 kernel-metadata.json
 /local_data
+/predictions

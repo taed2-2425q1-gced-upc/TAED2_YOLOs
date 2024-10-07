@@ -3,9 +3,12 @@ import os
 import cv2
 import argparse
 
+import pandas as pd
+
 from PIL import Image
 from pathlib import Path
 from dotenv import load_dotenv
+from codecarbon import EmissionsTracker
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -49,6 +52,7 @@ if __name__ == "__main__":
     file_names = os.listdir(PREDS_PATH)
     file_names = [str(folder_path / file) for file in file_names if os.path.isfile(str(folder_path / file))]
 
-    mIoU = compute_mIoU(file_names, PREDS_PATH)
+    with EmissionsTracker(output_dir=str(REPO_PATH / "metrics"), output_file="emissions_evaluation.csv") as tracker:
+        mIoU = compute_mIoU(file_names, PREDS_PATH)
 
     print(f"Evaluation completed. Final mIoU is: {mIoU:.4f}")

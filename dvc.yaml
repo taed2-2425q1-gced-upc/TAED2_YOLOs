@@ -13,7 +13,6 @@ stages:
     - data/raw/dataset_person-yolos/data/images
     - data/raw/dataset_person-yolos/data/masks
     - person_image_segmentation/pipelines/split_data.py
-    - person_image_segmentation/pipelines/download_raw_data.py
     outs:
     - data/interim/splitted/images/test
     - data/interim/splitted/images/train

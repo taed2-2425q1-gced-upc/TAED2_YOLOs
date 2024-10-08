@@ -7,3 +7,16 @@ stages:
     - data/raw/dataset_person-yolos/data/images
     - data/raw/dataset_person-yolos/data/masks
     - data/raw/dataset_person-yolos/test/images
+  split_data:
+    cmd: python3 -m person_image_segmentation.pipelines.split_data
+    deps:
+    - data/raw/dataset_person-yolos/data/images
+    - data/raw/dataset_person-yolos/data/masks
+    - person_image_segmentation/pipelines/split_data.py
+    outs:
+    - data/interim/splitted/images/test
+    - data/interim/splitted/images/train
+    - data/interim/splitted/images/val
+    - data/interim/splitted/masks/test
+    - data/interim/splitted/masks/train
+    - data/interim/splitted/masks/val

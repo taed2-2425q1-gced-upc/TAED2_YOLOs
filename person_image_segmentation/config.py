@@ -1,9 +1,9 @@
+""" Configuration file for the project """
 from pathlib import Path
+import os
 
 from dotenv import load_dotenv
 from loguru import logger
-import os
-import yaml
 
 # Load environment variables from .env file if it exists
 load_dotenv()

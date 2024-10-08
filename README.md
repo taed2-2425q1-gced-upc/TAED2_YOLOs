@@ -61,9 +61,48 @@ A short description of the project.
 
 Please, follow the instructions below to run the project:
 
+### Cloning the repository
+
+Clone this repository to be able to run the project locally. You can do this by running:
+
+```bash
+git clone https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs.git
+cd TAED2_YOLOs
+```
+
+### Installing dependencies and libraries
+
+Once you have cloned the project into you local machine, you need to install the necessary dependencies and libraries.
+
+#### Installing poetry
+
+This project uses [Poetry](https://python-poetry.org/) to manage dependencies and libraries. Make sure you have it installed on you machine by running:
+
+```bash
+poetry --version
+```
+
+If you don't have Poetry installed, you can install it by running:
+
+```bash
+pipx install poetry
+```
+
+For more information on how to get started with Poetry, refer to the [official documentation](https://python-poetry.org/docs/).
+
+#### Installing dependencies
+
+Once you have Poetry installed, you can install the project's dependencies by running:
+
+```bash
+poetry install
+```
+
+This will install all the necessary dependencies and libraries for the project.
+
 ### Setting up the environment
 
-Before running the project, make sure that your `.env` has the same structuer as the `.env.test` file. Here is an explanation on how to come up with the necessary values for the environment variables:
+Before running the project, make sure that your `.env` has the same structure as the `.env.test` file. Here is an explanation on how to come up with the necessary values for the environment variables:
 
 - `KAGGLE_USERNAME` -> Your Kaggle username
   - Login to Kaggle and navigate to your profile page
@@ -80,5 +119,3 @@ Before running the project, make sure that your `.env` has the same structuer as
   - It should look something like this: `.../.../TAED2_YOLOs`
 
 Note that there are some variables with a default value. You should not modify them, as they apply to all users running the project.
-
----

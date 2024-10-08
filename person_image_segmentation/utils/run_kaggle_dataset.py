@@ -57,7 +57,7 @@ os.chdir(data_directory_path)
 
 # Upload data as a Kaggle dataset (including subfolders)
 print("Uploading dataset to Kaggle...")
-upload_result = subprocess.run(['kaggle', 'datasets', 'create', '-p', '.', '--dir-mode', 'zip'])
+upload_result = subprocess.run(['kaggle', 'datasets', 'create', '-p', '.', '--dir-mode', 'zip'], check=False)
 
 # Check if the dataset was uploaded successfully
 if upload_result.returncode != 0:

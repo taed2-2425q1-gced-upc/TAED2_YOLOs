@@ -1,14 +1,11 @@
-import pytest
-import yaml
+""" Tests for the data pipeline """
 import os
-import cv2
-import subprocess
-import shutil
-
 from pathlib import Path
+import subprocess
 from dotenv import load_dotenv
-from PIL import Image
-from typing import Optional
+import pytest
+
+
 
 load_dotenv()
 
@@ -17,15 +14,17 @@ TEST_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER').replace('data', 'test_dat
 
 @pytest.fixture(scope = "module")
 def run_data_pipeline():
+    """ Runs de data pipelin to be tested """
     # Run the pipeline script
     print("Running the data pipeline script...")
-    script_path = REPO_PATH / 'person_image_segmentation/pipelines/dataPipelines.py'
+    script_path = REPO_PATH / 'person_image_segmentation/pipelines/data_pipelines.py'
     subprocess.run(['python', str(script_path), '--test'], check = True)
     print("Data pipeline script completed successfully.")
 
     yield
 
 def test_data_pipeline_and_structure(run_data_pipeline):
+    """Tests the data pipeline and its structure"""
     # Check if the data folder exists
     assert TEST_DATA_PATH.exists()
 

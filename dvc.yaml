@@ -3,12 +3,12 @@ stages:
     cmd: python3 -m person_image_segmentation.pipelines.download_raw_data
     deps:
     - person_image_segmentation/pipelines/download_raw_data.py
+    - person_image_segmentation/config.py
+    - person_image_segmentation/utils/dataset_utils.py
     outs:
     - data/raw/dataset_person-yolos/data/images
     - data/raw/dataset_person-yolos/data/masks
     - data/raw/dataset_person-yolos/test/images
-    - person_image_segmentation/config.py
-    - person_image_segmentation/utils/dataset_utils.py
   split_data:
     cmd: python3 -m person_image_segmentation.pipelines.split_data
     deps:

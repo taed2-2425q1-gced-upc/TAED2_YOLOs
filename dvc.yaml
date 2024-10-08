@@ -7,12 +7,16 @@ stages:
     - data/raw/dataset_person-yolos/data/images
     - data/raw/dataset_person-yolos/data/masks
     - data/raw/dataset_person-yolos/test/images
+    - person_image_segmentation/config.py
+    - person_image_segmentation/utils/dataset_utils.py
   split_data:
     cmd: python3 -m person_image_segmentation.pipelines.split_data
     deps:
     - data/raw/dataset_person-yolos/data/images
     - data/raw/dataset_person-yolos/data/masks
     - person_image_segmentation/pipelines/split_data.py
+    - person_image_segmentation/config.py
+    - person_image_segmentation/utils/dataset_utils.py
     outs:
     - data/interim/splitted/images/test
     - data/interim/splitted/images/train
@@ -30,6 +34,8 @@ stages:
     - data/interim/splitted/masks/train
     - data/interim/splitted/masks/val
     - person_image_segmentation/pipelines/transform_masks.py
+    - person_image_segmentation/config.py
+    - person_image_segmentation/utils/dataset_utils.py
     outs:
     - data/interim/transformed/images/test
     - data/interim/transformed/images/train
@@ -37,3 +43,28 @@ stages:
     - data/interim/transformed/masks/test
     - data/interim/transformed/masks/train
     - data/interim/transformed/masks/val
+  create_labels:
+  cmd: python3 -m person_image_segmentation.pipelines.create_labels
+  deps:
+    - data/interim/transformed/images/test
+    - data/interim/transformed/images/train
+    - data/interim/transformed/images/val
+    - data/interim/transformed/masks/test
+    - data/interim/transformed/masks/train
+    - data/interim/transformed/masks/val
+    - data/interim/splitted/images/test
+    - data/interim/splitted/images/train
+    - data/interim/splitted/images/val
+    - data/interim/splitted/masks/test
+    - data/interim/splitted/masks/train
+    - data/interim/splitted/masks/val
+    - person_image_segmentation/pipelines/create_labels.py
+    - person_image_segmentation/config.py
+    - person_image_segmentation/utils/dataset_utils.py
+  outs:
+    - data/processed/images/train
+    - data/processed/images/val
+    - data/processed/images/test
+    - data/processed/labels/train
+    - data/processed/labels/val
+    - data/processed/labels/test

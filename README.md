@@ -130,4 +130,29 @@ dvc repro
 
 This will run all the stages of the pipeline and create the necessary files in the `data` folder.
 
+Keep in mind that this pipeline is configured to run the training with a single epoch, so the weights generated will not be final and should not be considered the best results of the model. 
+
+Additionally, in the evaluation stage, only 10 images will be used to speed up the process. This means that each time the pipeline is run, the evaluation results may vary, since the images selected could be different in each run.
+
+This configuration is intended to allow the pipeline to run completely without requiring too much time or resources.
+
 The results and metrics for the model will be available in our hosted [MLFlow instance](https://dagshub.com/nachoogriis/TAED2_YOLOs.mlflow).
+
+**Note**: During this process, human authorization will be needed for Dagshub. This is necessary to complete the model run. Make sure you keep an eye on notifications to grant the necessary permissions.
+
+### Running the training in kaggle to get the final model
+
+#### Upload the Dataset to Kaggle
+To upload the dataset to Kaggle, run the following command:
+```bash
+python3 run_kaggle_dataset.py
+```
+This command will upload the previously configured dataset to your Kaggle account.
+
+#### Upload the Model to Kaggle and Run
+To upload the model to Kaggle and run the training, use the following command:
+```bash
+python3 run_kaggle_model.py
+```
+
+**Note**: During this process, Kaggle will ask for human authorization on the platform for DagsHub. This is necessary to complete the model run. Make sure you keep an eye on Kaggle notifications to grant the necessary permissions.

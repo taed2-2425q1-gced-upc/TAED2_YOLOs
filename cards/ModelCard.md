@@ -168,34 +168,45 @@ The evaluation results indicate high model performance in person segmentation ta
 ## Environmental Impact
 <!-- Total emissions (in grams of CO2eq) and additional considerations, such as electricity usage, go here. Edit the suggested text below accordingly -->
 
-- **Hardware Type:** {{ hardware_type | default("[More Information Needed]", true)}}
-- **Hours used:** {{ hours_used | default("[More Information Needed]", true)}}
-- **Cloud Provider:** {{ cloud_provider | default("[More Information Needed]", true)}}
-- **Compute Region:** {{ cloud_region | default("[More Information Needed]", true)}}
-- **Carbon Emitted:** {{ co2_emitted | default("[More Information Needed]", true)}}
+#### Co2 eqemissions:
 
-## Technical Specifications [optional]
-### Model Architecture and Objective
-{{ model_specs | default("[More Information Needed]", true)}}
-### Compute Infrastructure
-{{ compute_infrastructure | default("[More Information Needed]", true)}}
-#### Hardware
-{{ hardware_requirements | default("[More Information Needed]", true)}}
-#### Software
-{{ software | default("[More Information Needed]", true)}}
-## Citation [optional]
+- **source**: CodeCarbon tool
+
+- **Training:**
+    - **emissions**: 0.03898 tons of CO2 in total for the training process
+    - **power_consumption**: 
+        - CPU: 42.5 kWh, 
+        - GPU: 0 kWh (not properly estimated), 
+        - RAM: 11.76 kWh
+    - **training_type**: Fine-tuning
+    - **geographical_location**: Oregon, USA (for Intel Xeon and Tesla P100 setup); 
+    - **hardware_used**: 
+        - CPU: Intel Xeon CPU @ 2.00GHz, 
+        - GPU: Tesla P100-PCIE-16GB GPU, 
+    - **training_time**: Total of 18644.86s 
+    - **energy_label**: Not available
+    - **energy_label_source**: Not available
+    - **energy_label_classification**: Not available
+
+- **Inference and Validation**:
+    - **emissions**: 0.0004 tons of CO2
+    - **power_consumption**: 
+        - CPU: 0.28 kWh, 
+        - GPU: 0.02 kWh (not properly estimated), 
+        - RAM: 6.75 kWh
+    - **geographical_location**: **inference and evaluation**: Catalonia, Spain (for Apple M3 Pro setup)
+    - **hardware_used**:  Apple M3 Pro CPU/GPU
+
+## Citation
 <!-- If there is a paper or blog post introducing the model, the APA and Bibtex information for that should go in this section. -->
 **BibTeX:**
-{{ citation_bibtex | default("[More Information Needed]", true)}}
-**APA:**
-{{ citation_apa | default("[More Information Needed]", true)}}
-## Glossary [optional]
-<!-- If relevant, include terms and calculations in this section that can help readers understand the model or model card. -->
-{{ glossary | default("[More Information Needed]", true)}}
-## More Information [optional]
-{{ more_information | default("[More Information Needed]", true)}}
-
----
+```bibtex
+@misc{
+    author = {Josep Coll, Ignacio Gris, Marc Janer, Maria Risques, Silvia Vallet},
+    title  = {Model Card for YOLOv8-Seg People},
+    year   = {2025}
+}
+``` 
 
 ## Model Card Author 
 YOLOs: 
@@ -204,8 +215,6 @@ YOLOs:
 - Marc Janer
 - Maria Risques
 - Silvia Vallet
-
-
 
 ## Model Card Contact
 YOLOs: 

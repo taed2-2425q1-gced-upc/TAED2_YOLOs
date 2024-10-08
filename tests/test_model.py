@@ -12,7 +12,7 @@ from PIL import Image
 from typing import Optional
 from ultralytics import YOLO
 
-from person_image_segmentation.modeling.evaluation import compute_mIoU
+from person_image_segmentation.modeling.evaluation import compute_miou
 
 load_dotenv()
 
@@ -41,7 +41,7 @@ def run_evaluation_pipeline():
     folder_path = BASE_DATA_PATH / "processed/images/test"
     file_names = os.listdir(PREDS_PATH)
     file_names = [str(folder_path / file) for file in file_names if os.path.isfile(str(folder_path / file))]
-    mIoU = compute_mIoU(file_names, PREDS_PATH)
+    mIoU = compute_miou(file_names, PREDS_PATH)
 
     yield mIoU
 

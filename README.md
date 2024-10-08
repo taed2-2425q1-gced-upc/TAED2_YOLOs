@@ -140,6 +140,8 @@ The results and metrics for the model will be available in our hosted [MLFlow in
 
 **Note**: During this process, human authorization will be needed for Dagshub. This is necessary to complete the model run. Make sure you keep an eye on notifications to grant the necessary permissions.
 
+Additionally, to make the pipeline run faster, we have configured it to train using the test dataset instead of the full training dataset. The test dataset contains significantly fewer images, allowing us to verify that the pipeline works correctly on local machines without long wait times. Keep in mind that this setup is intended for quick testing and does not reflect the final model's performance.
+
 ### Running the training in kaggle to get the final model
 
 #### Upload the Dataset to Kaggle

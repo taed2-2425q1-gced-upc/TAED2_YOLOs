@@ -68,3 +68,12 @@ stages:
       - data/processed/labels/train
       - data/processed/labels/val
       - data/processed/labels/test
+  complete_data_folder:
+    cmd: python3 -m person_image_segmentation.pipelines.complete_data_folder
+    deps:
+      - models/configs/config_yolos.yaml
+      - models/configs/config_hyps.yaml
+      - person_image_segmentation/pipelines/complete_data_folder.py
+    outs:
+      - data/config_yolos.yaml
+      - data/config_hyps.yaml

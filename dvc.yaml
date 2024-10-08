@@ -86,3 +86,17 @@ stages:
     outs:
       - person_image_segmentation/modeling/runs/segment/Sample_Train__DVC_Pipeline
       - person_image_segmentation/modeling/yolov8m-seg.pt
+  predict_model_sample:
+    cmd: python3 -m person_image_segmentation.modeling.prediction
+    deps:
+      - models/weights_v0/best.pt
+      - data/processed/images/test
+      - person_image_segmentation/modeling/prediction.py
+    outs:
+      - predictions
+  evaluate_model_sample:
+    cmd: python3 -m person_image_segmentation.modeling.evaluation
+    deps:
+      - data/processed/images/test
+      - data/interim/transformed/masks/test
+      - predictions

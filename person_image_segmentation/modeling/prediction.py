@@ -70,7 +70,7 @@ def generate_predictions(test_filenames: list[str], predictions_folder: Path, mo
 if __name__ == "__main__":
     # Argument parser for max number of predictions
     parser = argparse.ArgumentParser(description="Generate predictions for test images.")
-    parser.add_argument('--max_predictions', type=int, default=None, help='Maximum number of predictions to generate')
+    parser.add_argument('--max_predictions', type=int, default=10, help='Maximum number of predictions to generate')
     args = parser.parse_args()
     max_predictions = args.max_predictions
 

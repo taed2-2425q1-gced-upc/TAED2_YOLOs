@@ -82,10 +82,11 @@ stages:
     deps:
       - models/configs/config_yolos_sample_train.yaml
       - models/configs/config_hyps.yaml
+      - data/processed/images/train
       - person_image_segmentation/modeling/simple_train.py
     outs:
-      - person_image_segmentation/modeling/runs/segment/Sample_Train__DVC_Pipeline
-      - person_image_segmentation/modeling/yolov8m-seg.pt
+      - runs/segment/Sample_Train__DVC_Pipeline
+      - yolov8m-seg.pt
   predict_model_sample:
     cmd: python3 -m person_image_segmentation.modeling.prediction
     deps:

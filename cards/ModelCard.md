@@ -15,7 +15,6 @@ YOLOv8-Seg is a model built on the YOLOv8 (You Only Look Once) architecture, ext
 - **Repository:**
     - YOLOs: https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs
     - Ultralytics:  https://github.com/ultralytics/ultralytics
-- **Demo [optional]:** {{ demo | default("[More Information Needed]", true)}}
 
 ## Uses
 
@@ -67,14 +66,14 @@ The **YOLOv8-seg** model, tuned for person segmentation, is not suitable for:
 ## How to Get Started with the Model
 Use the code below to get started with the model:
 ```python
-# Install the Ultralytics YOLOv8 package if you haven't already
-!pip install ultralytics
+# Install all the dependencies you haven't already
+!poetry install
 
 # Import YOLOv8
 from ultralytics import YOLO
 
 # Load the fine-tuned YOLOv8-seg model
-model = YOLO('model_weights.pt')  
+model = YOLO('best.pt')   # our weights 
 
 # Segment an image
 results = model('path_to_image.jpg')  
@@ -97,7 +96,7 @@ YOLOv8-Seg was trained on the COCO dataset, which contains a variety of object c
 Our image segmentation model, finetuned from YOLOv8-Seg, has been finetuned using data_person, a set of images featuring one or more people each. This specific dataset tries to reach a wide range of variations in people’s appearance.
 - **Dataset name:** data_person
 - **Classes:** 1 (people)
-- **Data preprocessing:** A detailed explanation can be found in the dataset card. (FALTA LINK)
+- **Data preprocessing:** A detailed explanation can be found in the dataset card. [Dataset Card](https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs.git).
 
 ### Training Procedure
 <!-- This relates heavily to the Technical Specifications. Content here should link to that section when it is relevant to the training procedure. -->
@@ -120,9 +119,16 @@ More details can be found in the dataset card (FALTA LINK).
 - **Box loss gain** (`box`): 8.30896
 - **Class loss gain** (`cls`): 0.56119
 
-#### Speeds, Sizes, Times [optional]
+#### Speeds, Sizes, Times
 <!-- This section provides information about throughput, start/end time, checkpoint size if relevant, etc. -->
-{{ speeds_sizes_times | default("[More Information Needed]", true)}}
+- **Speeds**:
+    - Speed CPU ONNX (ms): 155.7
+    - A100 TensorRT (ms): 1.47
+- **Sizes**:
+    - Parameters (M): 11.8
+- **Times**:
+    - Training time 5.18 hours
+    - Epochs: 100
 
 ## Evaluation
 <!-- This section describes the evaluation protocols and provides the results. -->
@@ -138,32 +144,36 @@ The evaluation factors included variations in poses, environments, and lighting 
 
 #### Metrics
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
-- **mAP50-95**: Evaluates model performance at different Intersection over Union (IoU) thresholds.
-- **Precision**: Measures the accuracy of the model's predictions.
-- **Recall**: Evaluates how many relevant instances the model correctly identified.
+- **Validation**
+    Our main focus has been in the following ones:
+    - **mAP50-95M**: Evaluates model performance at different Intersection over Union (IoU) thresholds.
+    - **loss_seg**: Indicates how effective the model is in assigning the correct labels to each pixel during the validation phase
+    - **Precision**: Measures the accuracy of the model's predictions.
+    - **Recall**: Evaluates how many relevant instances the model correctly identified.
+- **Test**
+    - **mIoU**: 
 
 ### Results
-On the validations set:
-- **mAP50-95M** : 0.835
-- **PrecisionM**: 0.964
-- **RecallM**: 0.904
-On the test set:
-- **mIoU**: 0.8386
+- **Validation**
+    - **mAP50-95M** : 0.835
+    - **loss_seg**: 1.305
+    - **PrecisionM**: 0.964
+    - **RecallM**: 0.904
+- **Test**
+    - **mIoU**: 0.854
 
 #### Summary
-The evaluation results indicate high model performance in person segmentation tasks, with mIou of 0.8386 which satisfies our intial requirements. 
+The evaluation results indicate high model performance in person segmentation tasks, with mIou of 0.854 which satisfies our intial requirements. 
 
-## Model Examination [optional]
-<!-- Relevant interpretability work for the model goes here -->
-{{ model_examination | default("[More Information Needed]", true)}}
 ## Environmental Impact
 <!-- Total emissions (in grams of CO2eq) and additional considerations, such as electricity usage, go here. Edit the suggested text below accordingly -->
-Carbon emissions can be estimated using the [Machine Learning Impact calculator](https://mlco2.github.io/impact#compute) presented in [Lacoste et al. (2019)](https://arxiv.org/abs/1910.09700).
+
 - **Hardware Type:** {{ hardware_type | default("[More Information Needed]", true)}}
 - **Hours used:** {{ hours_used | default("[More Information Needed]", true)}}
 - **Cloud Provider:** {{ cloud_provider | default("[More Information Needed]", true)}}
 - **Compute Region:** {{ cloud_region | default("[More Information Needed]", true)}}
 - **Carbon Emitted:** {{ co2_emitted | default("[More Information Needed]", true)}}
+
 ## Technical Specifications [optional]
 ### Model Architecture and Objective
 {{ model_specs | default("[More Information Needed]", true)}}

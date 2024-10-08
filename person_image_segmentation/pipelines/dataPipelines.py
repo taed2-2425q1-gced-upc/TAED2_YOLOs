@@ -15,7 +15,7 @@ import argparse
 from person_image_segmentation.utils.processing import copy_files, from_raw_masks_to_image_masks, from_image_masks_to_labels
 
 # Import constants and configurations
-from person_image_segmentation.config import DATA_DIR, DATASET_LINK,  SPLIT_DATA_DIR, TRANSFORM_DATA_DIR, LABELS_DATA_DIR, TRAIN_SIZE, VAL_SIZE, TEST_SIZE, KAGGLE_KEY, KAGGLE_USERNAME
+from person_image_segmentation.config import DATA_DIR, RAW_DATA_DIR, DATASET_LINK,  SPLIT_DATA_DIR, TRANSFORM_DATA_DIR, LABELS_DATA_DIR, TRAIN_SIZE, VAL_SIZE, TEST_SIZE, KAGGLE_KEY, KAGGLE_USERNAME
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -141,7 +141,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     if args.test:
-        DATA_DIR = Path(str(DATA_DIR).replace('data', 'test_data'))
+        RAW_DATA_DIR = Path(str(RAW_DATA_DIR).replace('data', 'test_data'))
         SPLIT_DATA_DIR = Path(str(SPLIT_DATA_DIR).replace('data', 'test_data'))
         TRANSFORM_DATA_DIR = Path(str(TRANSFORM_DATA_DIR).replace('data', 'test_data'))
         LABELS_DATA_DIR = Path(str(LABELS_DATA_DIR).replace('data', 'test_data'))
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     # First, download the dataset
     download_dataset(
         dataset_link = DATASET_LINK,
-        data_dir = DATA_DIR
+        data_dir = RAW_DATA_DIR
     )
 
     # Then split into train, val and test
@@ -157,7 +157,7 @@ if __name__ == "__main__":
         train_size = TRAIN_SIZE,
         val_size = VAL_SIZE,
         test_size = TEST_SIZE,
-        data_dir = DATA_DIR,
+        data_dir = RAW_DATA_DIR,
         split_dir = SPLIT_DATA_DIR
     )
 

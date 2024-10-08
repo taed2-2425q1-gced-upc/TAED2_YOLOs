@@ -269,3 +269,27 @@ stages:
       md5: a8bd64f206e97f276476361a67d24fd1.dir
       size: 13143590
       nfiles: 750
+  complete_data_folder:
+    cmd: python3 -m person_image_segmentation.pipelines.complete_data_folder
+    deps:
+    - path: models/configs/config_hyps.yaml
+      hash: md5
+      md5: 05da6817f854175a91cd5c93e7f2b3fa
+      size: 1064
+    - path: models/configs/config_yolos.yaml
+      hash: md5
+      md5: af86e7ab1cf83d785677f10c7e6b9e87
+      size: 317
+    - path: person_image_segmentation/pipelines/complete_data_folder.py
+      hash: md5
+      md5: 674cba8398fe62191aeafd41c3753fb9
+      size: 729
+    outs:
+    - path: data/config_hyps.yaml
+      hash: md5
+      md5: 05da6817f854175a91cd5c93e7f2b3fa
+      size: 1064
+    - path: data/config_yolos.yaml
+      hash: md5
+      md5: af86e7ab1cf83d785677f10c7e6b9e87
+      size: 317

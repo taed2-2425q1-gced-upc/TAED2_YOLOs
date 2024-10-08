@@ -1,5 +1,7 @@
 import argparse
+import shutil
 
+from pathlib import Path
 from person_image_segmentation.config import REPO_PATH, DATA_DIR
 
 

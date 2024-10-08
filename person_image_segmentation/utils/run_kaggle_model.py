@@ -1,10 +1,11 @@
+""" Module to run a model in Kaggle"""
 import os
 import subprocess
-import requests
 import json
-
-from dotenv import load_dotenv
 from pathlib import Path
+from dotenv import load_dotenv
+import requests
+
 
 # Load Kaggle credentials
 load_dotenv()
@@ -24,7 +25,7 @@ os.environ['KAGGLE_KEY'] = KAGGLE_KEY
 code_file_path = Path(os.getenv('PATH_TO_REPO')) / 'person_image_segmentation/modeling/train_v0.py'
 
 # Define the dataset slug
-dataset_slug = f'{KAGGLE_USERNAME.lower()}/yolo-training-data'  # Ensure the username and slug are lowercase
+DATASET_SLUG = f'{KAGGLE_USERNAME.lower()}/yolo-training-data'  # Ensure lowercase
 
 # Create kernel metadata for Kaggle
 kernel_metadata = {
@@ -37,29 +38,30 @@ kernel_metadata = {
     'enable_gpu': True,
     'enable_internet': True,
     'dataset_sources': [
-        dataset_slug  # Reference to the uploaded dataset
+        DATASET_SLUG  # Reference to the uploaded dataset
     ]
 }
 
 # Save kernel metadata
-kernel_metadata_path = 'kernel-metadata.json'
-with open(kernel_metadata_path, 'w') as f:
+KERNEL_METADATA_PATH = 'kernel-metadata.json'
+with open(KERNEL_METADATA_PATH, 'w', encoding='utf-8') as f:
     json.dump(kernel_metadata, f, indent=4)
 
 # Push the kernel to Kaggle
 print("Pushing kernel to Kaggle...")
-push_result = subprocess.run(['kaggle', 'kernels', 'push', '-p', '.'])
+push_result = subprocess.run(['kaggle', 'kernels', 'push', '-p', '.'], check=False)
 
 # Check if the kernel was pushed successfully
 if push_result.returncode != 0:
     raise RuntimeError("Failed to push the kernel to Kaggle. Please check the output for errors.")
 
 # Execute the kernel (optional step, kernel will execute automatically after being pushed)
-kernel_slug = f'{KAGGLE_USERNAME.lower()}/entrenamiento-yolo'
+KERNEL_SLUG = f'{KAGGLE_USERNAME.lower()}/entrenamiento-yolo'
 response = requests.post(
-    f'https://www.kaggle.com/api/v1/kernels/{kernel_slug}/status',
+    f'https://www.kaggle.com/api/v1/kernels/{KERNEL_SLUG}/status',
     headers={
         'Content-Type': 'application/json',
         'Authorization': f'Bearer {KAGGLE_KEY}'
-    }
+    },
+    timeout=30
 )

@@ -1,0 +1,25 @@
+schema: '2.0'
+stages:
+  download_raw_data:
+    cmd: python3 -m person_image_segmentation.pipelines.download_raw_data
+    deps:
+    - path: person_image_segmentation/pipelines/download_raw_data.py
+      hash: md5
+      md5: 950d9e0d3534dea2abdbaf0e858442f3
+      size: 874
+    outs:
+    - path: data/raw/dataset_person-yolos/data/images
+      hash: md5
+      md5: 3dfdc49f5546ce7f914a679ad073e4c1.dir
+      size: 296250886
+      nfiles: 5000
+    - path: data/raw/dataset_person-yolos/data/masks
+      hash: md5
+      md5: aea06a58b327f00c3d8e4a327bb11625.dir
+      size: 15018109
+      nfiles: 5000
+    - path: data/raw/dataset_person-yolos/test/images
+      hash: md5
+      md5: aa3ef33c4e3d7f88725ce5fa8983c873.dir
+      size: 27439626
+      nfiles: 469

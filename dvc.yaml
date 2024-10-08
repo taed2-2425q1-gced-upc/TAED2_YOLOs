@@ -1,0 +1,9 @@
+stages:
+  download_raw_data:
+    cmd: python3 -m person_image_segmentation.pipelines.download_raw_data
+    deps:
+    - person_image_segmentation/pipelines/download_raw_data.py
+    outs:
+    - data/raw/dataset_person-yolos/data/images
+    - data/raw/dataset_person-yolos/data/masks
+    - data/raw/dataset_person-yolos/test/images

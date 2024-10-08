@@ -41,10 +41,12 @@ cfg_file_path_hyps = REPO_PATH / "models/configs/config_hyps.yaml"
 
 # Use CodeCarbon's EmissionsTracker as a context manager
 with EmissionsTracker(gpu_ids=[0]) as tracker:
-   # Start a new MLflow run to track the experiment
-   with mlflow.start_run(run_name="YoloV8-training-v0-Hyps"):
+    # Start a new MLflow run to track the experiment
+    with mlflow.start_run(run_name="YoloV8-training-v0-Hyps"):
+        # Training the model
+        if not torch.cuda.is_available():
+            results = model.train(data=config_file_path, epochs=1, imgsz=640, cfg = cfg_file_path_hyps, name="Sample_Train__DVC_Pipeline")
+        else:
+            results = model.train(data=config_file_path, epochs=1, imgsz=640, cfg = cfg_file_path_hyps, name="Sample_Train__DVC_Pipeline", device = 0)
 
-       # Training the model
-       results = model.train(data=config_file_path, epochs=1, imgsz=640, cfg = cfg_file_path_hyps, name="Sample Train for DVC Pipeline", device = 0)
-
-       print("Entrenamiento completado y experimentos registrados en MLflow.")
+        print("Entrenamiento completado y experimentos registrados en MLflow.")

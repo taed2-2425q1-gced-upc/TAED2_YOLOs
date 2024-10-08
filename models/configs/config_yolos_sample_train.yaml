@@ -2,8 +2,8 @@
 path: ../data/processed
 
 # Paths to the training, validation, and test image directories relative to the `path`
-train: images/train/
-val: images/val/
+train: images/test/
+val: images/test/
 test: images/test/
 
 # Number of classes and their names

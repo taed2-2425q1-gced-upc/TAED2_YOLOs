@@ -119,3 +119,15 @@ Before running the project, make sure that your `.env` has the same structure as
   - It should look something like this: `.../.../TAED2_YOLOs`
 
 Note that there are some variables with a default value. You should not modify them, as they apply to all users running the project.
+
+### Running the pipeline
+
+All the stages of the project are integrated into a single dvc pipeline. Thus, you can run the entire pipeline by running:
+
+```bash
+dvc repro
+```
+
+This will run all the stages of the pipeline and create the necessary files in the `data` folder.
+
+The results and metrics for the model will be available in our hosted [MLFlow instance](https://dagshub.com/nachoogriis/TAED2_YOLOs.mlflow).

@@ -20,3 +20,20 @@ stages:
     - data/interim/splitted/masks/test
     - data/interim/splitted/masks/train
     - data/interim/splitted/masks/val
+  transform_masks:
+    cmd: python3 -m person_image_segmentation.pipelines.transform_masks
+    deps:
+    - data/interim/splitted/images/test
+    - data/interim/splitted/images/train
+    - data/interim/splitted/images/val
+    - data/interim/splitted/masks/test
+    - data/interim/splitted/masks/train
+    - data/interim/splitted/masks/val
+    - person_image_segmentation/pipelines/transform_masks.py
+    outs:
+    - data/interim/transformed/images/test
+    - data/interim/transformed/images/train
+    - data/interim/transformed/images/val
+    - data/interim/transformed/masks/test
+    - data/interim/transformed/masks/train
+    - data/interim/transformed/masks/val

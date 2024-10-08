@@ -1,18 +1,19 @@
 stages:
   build_dataset:
-    cmd: python3 -m person_image_segmentation.pipelines.dataPipelines
+    cmd: python3 -m person_image_segmentation.pipelines.data_pipelines
     deps:
-    - person_image_segmentation/pipelines/dataPipelines.py
+      - person_image_segmentation/pipelines/data_pipelines.py
     outs:
-    - local_data/
+      - local_data/
   predict_masks:
-    cmd: python3 -m person_image_segmentation.modeling.prediction --max_predictions
+    cmd:
+      python3 -m person_image_segmentation.modeling.prediction --max_predictions
       10
     deps:
-    - person_image_segmentation/modeling/prediction.py
+      - person_image_segmentation/modeling/prediction.py
     outs:
-    - predictions/
+      - predictions/
   evaluate_predictions:
     cmd: python3 -m person_image_segmentation.modeling.evaluation
     deps:
-    - person_image_segmentation/modeling/evaluation.py
+      - person_image_segmentation/modeling/evaluation.py

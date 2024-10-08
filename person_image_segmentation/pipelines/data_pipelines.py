@@ -1,41 +1,71 @@
+""" This module contains the data pipelines and functions for the project """
 # General imports
 import os
-import yaml
 import shutil
-import subprocess
-import random
-import cv2
-
-from kaggle.api.kaggle_api_extended import KaggleApi
 from pathlib import Path
-from dotenv import load_dotenv
-from PIL import Image
+import random
 import argparse
 
-from person_image_segmentation.utils.processing import copy_files, from_raw_masks_to_image_masks, from_image_masks_to_labels
+from kaggle.api.kaggle_api_extended import KaggleApi
+from dotenv import load_dotenv
+
+from person_image_segmentation.utils.processing import (
+    copy_files,
+    from_raw_masks_to_image_masks,
+    from_image_masks_to_labels
+)
 
 # Import constants and configurations
-from person_image_segmentation.config import DATA_DIR, DATASET_LINK,  SPLIT_DATA_DIR, TRANSFORM_DATA_DIR, LABELS_DATA_DIR, TRAIN_SIZE, VAL_SIZE, TEST_SIZE, KAGGLE_KEY, KAGGLE_USERNAME
+from person_image_segmentation.config import (
+    DATA_DIR,
+    DATASET_LINK,
+    SPLIT_DATA_DIR,
+    TRANSFORM_DATA_DIR,
+    LABELS_DATA_DIR,
+    TRAIN_SIZE,
+    VAL_SIZE,
+    KAGGLE_KEY,
+    KAGGLE_USERNAME
+)
 
 # Load environment variables from a .env file
 load_dotenv()
 
-# Load environment variables from a .env file and set up Kaggle credentials from environment variables
+# Load environment variables from a .env file and set up Kaggle credentials
 os.environ['KAGGLE_USERNAME'] =KAGGLE_KEY
 os.environ['KAGGLE_KEY'] =KAGGLE_USERNAME
 
 
 # Function definition
 def download_dataset(dataset_link: str, data_dir: Path) -> None:
+    """ 
+        Downloads the dataset from Kaggle 
+        ### Args
+        - `dataset_link` -> link to the dataset in kaggle relative to the username
+        - `data_dir` -> path to the directory where the dataset will be downloaded
+    """
     # Create data directory if it does not exist
     DATA_DIR.mkdir(parents = True, exist_ok = True)
-    
     api = KaggleApi()
     api.authenticate()
     api.dataset_download_files(dataset_link, path = data_dir, unzip = True)
 
 
-def split_dataset(train_size: float, val_size: float, test_size: float, data_dir: Path, split_dir: Path) -> None:
+def split_dataset(
+    train_size: float,
+    val_size: float,
+    data_dir: Path,
+    split_dir: Path
+) -> None:
+    """
+    Splits the dataset into train, val and test sets
+    ### Args
+    - `train_size` -> size of the train set
+    - `val_size` -> size of the val set
+    - `test_size` -> size of the test set
+    - `data_dir` -> path to the directory where the dataset is stored
+    - `split_dir` -> path to the directory where the splits will be stored
+    """
     # Define directories
     images_dir = data_dir / 'dataset_person-yolos/data/images'
     masks_dir = data_dir / 'dataset_person-yolos/data/masks'
@@ -76,6 +106,12 @@ def split_dataset(train_size: float, val_size: float, test_size: float, data_dir
 
 
 def transform_masks(split_dir: Path, transform_dir: Path) -> None:
+    """
+    Transforms the masks to a format suitable for training the model
+    ### Args
+    - `split_dir` -> path to the directory where the splits are stored
+    - `transform_dir` -> path to the directory where the transformed masks will be stored
+    """
     # Define directories
     input_dir_train = split_dir / 'masks/train'
     output_dir_train = transform_dir / 'masks/train'
@@ -106,6 +142,13 @@ def transform_masks(split_dir: Path, transform_dir: Path) -> None:
 
 
 def generate_labels(transform_dir: Path, labels_dir: Path, split_dir: Path) -> None:
+    """
+    Generates labels for the transformed masks
+    ### Args
+    - `transform_dir` -> path to the directory where the transformed masks are stored
+    - `labels_dir` -> path to the directory where the labels will be stored
+    - `split_dir` -> path to the directory where the splits are stored    
+    """
     # Define directories
     input_dir_train = transform_dir / 'masks/train'
     output_dir_train = labels_dir / 'labels/train'
@@ -139,7 +182,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Person Image Segmentation Pipeline")
     parser.add_argument('--test', action='store_true', help="Run the pipeline in test mode")
     args = parser.parse_args()
-    
     if args.test:
         DATA_DIR = Path(str(DATA_DIR).replace('data', 'test_data'))
         SPLIT_DATA_DIR = Path(str(SPLIT_DATA_DIR).replace('data', 'test_data'))
@@ -156,7 +198,6 @@ if __name__ == "__main__":
     split_dataset(
         train_size = TRAIN_SIZE,
         val_size = VAL_SIZE,
-        test_size = TEST_SIZE,
         data_dir = DATA_DIR,
         split_dir = SPLIT_DATA_DIR
     )

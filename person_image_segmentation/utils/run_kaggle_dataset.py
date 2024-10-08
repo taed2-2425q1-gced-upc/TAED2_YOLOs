@@ -1,6 +1,6 @@
+"""Run the dataset creation and upload to Kaggle."""
 import os
 import subprocess
-import requests
 import json
 from dotenv import load_dotenv
 
@@ -19,12 +19,16 @@ os.environ['KAGGLE_USERNAME'] = KAGGLE_USERNAME
 os.environ['KAGGLE_KEY'] = KAGGLE_KEY
 
 # Paths for local files
-code_file_path = os.path.join(os.getenv('PATH_TO_REPO'), '/person_image_segmentation/modeling/train_v0.py')
+code_file_path = os.path.join(
+    os.getenv('PATH_TO_REPO'),
+    'person_image_segmentation/modeling/train_v0.py'
+)
+
 data_directory_path = os.getenv('PATH_TO_DATA_FOLDER')
 dataset_metadata_path = os.path.join(data_directory_path, 'dataset-metadata.json')
 
 # Define the dataset slug
-dataset_slug = f'{KAGGLE_USERNAME.lower()}/yolo-training-data'  # Use lowercase for consistency
+DATASET_SLUG = f'{KAGGLE_USERNAME.lower()}/yolo-training-data'  # Use lowercase for consistency
 
 # 1. Create and Upload the Dataset to Kaggle
 print("\nStep 1: Creating and Uploading Dataset")
@@ -32,7 +36,7 @@ print("\nStep 1: Creating and Uploading Dataset")
 # Create dataset metadata for Kaggle
 dataset_metadata = {
     "title": "YOLO Training Data",  # A descriptive title for your dataset
-    "id": dataset_slug,
+    "id": DATASET_SLUG,
     "licenses": [
         {
             "name": "CC0-1.0"
@@ -41,7 +45,7 @@ dataset_metadata = {
 }
 
 # Save dataset metadata in the data directory
-with open(dataset_metadata_path, 'w') as f:
+with open(dataset_metadata_path, 'w', encoding='utf-8') as f:
     json.dump(dataset_metadata, f, indent=4)
 
 # Debug: Check if the file was created successfully
@@ -57,6 +61,9 @@ upload_result = subprocess.run(['kaggle', 'datasets', 'create', '-p', '.', '--di
 
 # Check if the dataset was uploaded successfully
 if upload_result.returncode != 0:
-    raise RuntimeError("Failed to upload the dataset to Kaggle. Please check the output above for errors.")
-else:
-    print("Dataset uploaded successfully.")
+    raise RuntimeError(
+    "Failed to upload the dataset to Kaggle. "
+    "Please check the output above for errors."
+)
+
+print("Dataset uploaded successfully.")

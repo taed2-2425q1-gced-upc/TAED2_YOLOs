@@ -1,5 +1,7 @@
 # Data
 /data/
+/test_data/
+/out/
 
 # Mac OS-specific storage files
 .DS_Store
@@ -173,4 +175,8 @@ cython_debug/
 /data
 dataset-metadata.json
 kernel-metadata.json
+/local_data
 /predictions
+powermetrics_log.txt
+/mlruns
+/yolov8m-seg.pt

@@ -1,10 +1,16 @@
-# person_image_segmentation
+# Person Image Segmentation with YOLOv8-Seg finetuned version
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-A short description of the project.
+The main objective of the project is to build and deploy a machine learning (ML) component, using and following software engineering best practices.
+
+More specifically, an image segmentation problem with focus on human figure detection using a You Only Look Once model has been selected, a fine-tuned YOLO v8-seg to be precise.
+
+The primary aim is to develop a robust system that not only detects but also accurately segments human figures in various image sets. By refining the YOLO v8-seg model, we seek to achieve high precision in recognizing and delineating human shapes amidst other objects in the frame.
+
+Hence, the end goal will be for the model to successfully detect and segment people within an input set of images containing various elements.
 
 ## Project Organization
 
@@ -13,14 +19,13 @@ A short description of the project.
 ├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
 ├── README.md          <- The top-level README for developers using this project.
 ├── data
-│   ├── external       <- Data from third party sources.
 │   ├── interim        <- Intermediate data that has been transformed.
 │   ├── processed      <- The final, canonical data sets for modeling.
 │   └── raw            <- The original, immutable data dump.
 │
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
-│
 ├── models             <- Trained and serialized models, model predictions, or model summaries
+│   ├── configs
+│   └── weights
 │
 ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
 │                         the creator's initials, and a short `-` delimited description, e.g.
@@ -28,16 +33,15 @@ A short description of the project.
 │
 ├── pyproject.toml     <- Project configuration file with package metadata for
 │                         person_image_segmentation and configuration for tools like black
+├── poetry.lock
 │
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
+│   └── cards
+│   │   ├── ModelCard.md
+│   │   └── DatasetCard.md
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-├── setup.cfg          <- Configuration file for flake8
+├── tests
+├── metrics
 │
 └── person_image_segmentation   <- Source code for use in this project.
     │
@@ -45,16 +49,14 @@ A short description of the project.
     │
     ├── config.py               <- Store useful variables and configuration
     │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
     ├── modeling
     │   ├── __init__.py
     │   ├── predict.py          <- Code to run model inference with trained models
-    │   └── train.py            <- Code to train models
-    │
-    └── plots.py                <- Code to create visualizations
+    │   └── train_v0.py         <- Code to train model v0
+    │   └── evaluation.py       <- Code to evaluate models
+    ├── pipelines
+    │   └── dataPipelines.py
+    ├── utils
 ```
 
 ## Instructions
@@ -130,7 +132,7 @@ dvc repro
 
 This will run all the stages of the pipeline and create the necessary files in the `data` folder.
 
-Keep in mind that this pipeline is configured to run the training with a single epoch, so the weights generated will not be final and should not be considered the best results of the model. 
+Keep in mind that this pipeline is configured to run the training with a single epoch, so the weights generated will not be final and should not be considered the best results of the model.
 
 Additionally, in the evaluation stage, only 10 images will be used to speed up the process. This means that each time the pipeline is run, the evaluation results may vary, since the images selected could be different in each run.
 
@@ -145,14 +147,19 @@ Additionally, to make the pipeline run faster, we have configured it to train us
 ### Running the training in kaggle to get the final model
 
 #### Upload the Dataset to Kaggle
+
 To upload the dataset to Kaggle, run the following command:
+
 ```bash
 python3 run_kaggle_dataset.py
 ```
+
 This command will upload the previously configured dataset to your Kaggle account.
 
 #### Upload the Model to Kaggle and Run
+
 To upload the model to Kaggle and run the training, use the following command:
+
 ```bash
 python3 run_kaggle_model.py
 ```

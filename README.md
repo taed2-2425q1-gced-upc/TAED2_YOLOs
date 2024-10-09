@@ -16,7 +16,6 @@ Hence, the end goal will be for the model to successfully detect and segment peo
 
 ```
 ├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
 ├── README.md          <- The top-level README for developers using this project.
 ├── data
 │   ├── interim        <- Intermediate data that has been transformed.
@@ -53,9 +52,14 @@ Hence, the end goal will be for the model to successfully detect and segment peo
     │   ├── __init__.py
     │   ├── predict.py          <- Code to run model inference with trained models
     │   └── train_v0.py         <- Code to train model v0
+    │   └── simple_train.py     <- Code to perform a simple training
     │   └── evaluation.py       <- Code to evaluate models
     ├── pipelines
-    │   └── dataPipelines.py
+    │   └── download_raw_data.py        <- Code to download raw data
+    │   └── split_data.py               <- Code to split data
+    │   └── transform_masks.py          <- Code to transform masks to YOLO format
+    │   └── create_labels.py            <- Code to create labels
+    │   └── complete_data_folder.py     <- Code to copy files
     ├── utils
 ```
 

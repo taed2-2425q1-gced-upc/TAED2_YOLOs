@@ -14,9 +14,12 @@ Hence, the end goal will be for the model to successfully detect and segment peo
 
 ## Project Organization
 
+The `data` folder that appears in this section is not in the GitHub repository, but will be generated once the `dvc repro` command ends.
+
 ```
-├── LICENSE            <- Open-source license if one is chosen
+├── LICENSE            <- Apache 2.0. License
 ├── README.md          <- The top-level README for developers using this project.
+│
 ├── data
 │   ├── interim        <- Intermediate data that has been transformed.
 │   ├── processed      <- The final, canonical data sets for modeling.
@@ -28,7 +31,7 @@ Hence, the end goal will be for the model to successfully detect and segment peo
 │
 ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
 │                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
+│                         `0_NG_initial-data-exploration`.
 │
 ├── pyproject.toml     <- Project configuration file with package metadata for
 │                         person_image_segmentation and configuration for tools like black
@@ -39,28 +42,37 @@ Hence, the end goal will be for the model to successfully detect and segment peo
 │   │   ├── ModelCard.md
 │   │   └── DatasetCard.md
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
+│
 ├── tests
+│
 ├── metrics
 │
-└── person_image_segmentation   <- Source code for use in this project.
-    │
-    ├── __init__.py             <- Makes person_image_segmentation a Python module
-    │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── modeling
-    │   ├── __init__.py
-    │   ├── predict.py          <- Code to run model inference with trained models
-    │   └── train_v0.py         <- Code to train model v0
-    │   └── simple_train.py     <- Code to perform a simple training
-    │   └── evaluation.py       <- Code to evaluate models
-    ├── pipelines
-    │   └── download_raw_data.py        <- Code to download raw data
-    │   └── split_data.py               <- Code to split data
-    │   └── transform_masks.py          <- Code to transform masks to YOLO format
-    │   └── create_labels.py            <- Code to create labels
-    │   └── complete_data_folder.py     <- Code to copy files
-    ├── utils
+├── person_image_segmentation   <- Source code for use in this project.
+│   │
+│   ├── __init__.py             <- Makes person_image_segmentation a Python module
+│   │
+│   ├── config.py               <- Store useful variables and configuration
+│   │
+│   ├── modeling
+│   │   ├── __init__.py
+│   │   ├── predict.py          <- Code to run model inference with trained models
+│   │   └── train_v0.py         <- Code to train model v0
+│   │   └── simple_train.py     <- Code to perform a simple training
+│   │   └── evaluation.py       <- Code to evaluate models
+│   │
+│   ├── pipelines
+│   │   └── download_raw_data.py        <- Code to download raw data
+│   │   └── split_data.py               <- Code to split data
+│   │   └── transform_masks.py          <- Code to transform masks to YOLO format
+│   │   └── create_labels.py            <- Code to create labels
+│   │   └── complete_data_folder.py     <- Code to copy files
+│   ├── utils
+│
+├ .env.test                     <- Sample .env file with the main structure
+│
+├ dvc.lock                      <- Stores status of DVC pipeline previous executions
+│
+└ dvc.yaml                      <- Yaml file describing stages, commands, dependencies and outputs of the DVC pipeline
 ```
 
 ## Instructions

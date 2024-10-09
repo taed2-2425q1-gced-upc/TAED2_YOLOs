@@ -24,9 +24,9 @@ Hence, the end goal will be for the model to successfully detect and segment peo
 │   ├── processed      <- The final, canonical data sets for modeling.
 │   └── raw            <- The original, immutable data dump.
 │
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
-│
 ├── models             <- Trained and serialized models, model predictions, or model summaries
+│   ├── configs     
+│   └── weights      
 │
 ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
 │                         the creator's initials, and a short `-` delimited description, e.g.
@@ -34,16 +34,15 @@ Hence, the end goal will be for the model to successfully detect and segment peo
 │
 ├── pyproject.toml     <- Project configuration file with package metadata for 
 │                         person_image_segmentation and configuration for tools like black
+├── poetry.lock 
 │
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
+│   └── cards
+│   │   ├── ModelCard.md    
+│   │   └── DatasetCard.md    
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
 ├── tests
-├── metrics         
-├── cards            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── ModelCard.md    
-│   └── DatasetCard.md            
+├── metrics               
 │
 └── person_image_segmentation   <- Source code for use in this project.
     │
@@ -54,8 +53,8 @@ Hence, the end goal will be for the model to successfully detect and segment peo
     ├── modeling                
     │   ├── __init__.py 
     │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train_v0.py            <- Code to train model v0
-    │   └── evaluation.py            <- Code to evaluate models
+    │   └── train_v0.py         <- Code to train model v0
+    │   └── evaluation.py       <- Code to evaluate models
     ├── pipelines 
     │   └── dataPipelines.py 
     ├── utils 

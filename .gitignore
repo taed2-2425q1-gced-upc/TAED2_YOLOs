@@ -179,3 +179,4 @@ kernel-metadata.json
 /predictions
 powermetrics_log.txt
 /mlruns
+/yolov8m-seg.pt

@@ -293,3 +293,73 @@ stages:
       hash: md5
       md5: af86e7ab1cf83d785677f10c7e6b9e87
       size: 317
+  train_model_sample:
+    cmd: python3 -m person_image_segmentation.modeling.simple_train
+    deps:
+    - path: data/processed/images/train
+      hash: md5
+      md5: 682181e1009a2da49dde406f716c10bf.dir
+      size: 208485967
+      nfiles: 3500
+    - path: models/configs/config_hyps.yaml
+      hash: md5
+      md5: 05da6817f854175a91cd5c93e7f2b3fa
+      size: 1064
+    - path: models/configs/config_yolos_sample_train.yaml
+      hash: md5
+      md5: 7b3652cc71e25d4c55e40139d18fc0ac
+      size: 292
+    - path: person_image_segmentation/modeling/simple_train.py
+      hash: md5
+      md5: ce43bf42819977c1ec472f0cedda0b3b
+      size: 1748
+    outs:
+    - path: runs/segment/Sample_Train__DVC_Pipeline
+      hash: md5
+      md5: fbdb9d6bd99ed212832a243bf96b623b.dir
+      size: 104463291
+      nfiles: 26
+    - path: yolov8m-seg.pt
+      hash: md5
+      md5: f4c1091abb8ef1104201072d5bbaf06d
+      size: 54921020
+  predict_model_sample:
+    cmd: python3 -m person_image_segmentation.modeling.prediction
+    deps:
+    - path: data/processed/images/test
+      hash: md5
+      md5: d1b932328f7d02df8aeccd399758ca9d.dir
+      size: 42697826
+      nfiles: 750
+    - path: models/weights_v0/best.pt
+      hash: md5
+      md5: f280fa61349c0c6c6c183571b83bd6f3
+      size: 49567649
+    - path: person_image_segmentation/modeling/prediction.py
+      hash: md5
+      md5: d09cd7a6d83b9eabacafbb58927365de
+      size: 3375
+    outs:
+    - path: predictions
+      hash: md5
+      md5: 146d62c1c7cba43dfc5be04978e15b80.dir
+      size: 132635
+      nfiles: 10
+  evaluate_model_sample:
+    cmd: python3 -m person_image_segmentation.modeling.evaluation
+    deps:
+    - path: data/interim/transformed/masks/test
+      hash: md5
+      md5: 9783472065fed2150d80490ceb30c427.dir
+      size: 1139987
+      nfiles: 750
+    - path: data/processed/images/test
+      hash: md5
+      md5: d1b932328f7d02df8aeccd399758ca9d.dir
+      size: 42697826
+      nfiles: 750
+    - path: predictions
+      hash: md5
+      md5: 146d62c1c7cba43dfc5be04978e15b80.dir
+      size: 132635
+      nfiles: 10

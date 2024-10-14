@@ -32,7 +32,7 @@ mlflow.autolog()
 model = YOLO('yolov8m-seg.pt')
 
 # Path to the config file in the Kaggle environment
-config_file_path = "/kaggle/input/yolo-training-data/config_yolos_sample_train.yaml"
+config_file_path = "/kaggle/input/yolo-training-data/config_yolos.yaml"
 cfg_file_path_hyps = "/kaggle/input/yolo-training-data/config_hyps.yaml"
 
 # Use CodeCarbon's EmissionsTracker as a context manager

@@ -6,7 +6,7 @@ from deepchecks.vision.suites import data_integrity, train_test_validation
 
 # Define paths
 PROCESSED_DATA_DIR = Path("/Users/mariarisques/TAED2_YOLOs/data/interim/transformed")
-REPORTS_DIR = Path("/Users/mariarisques/TAED2_YOLOs/data")
+REPORTS_DIR = Path("/Users/mariarisques/TAED2_YOLOs/TAED2_YOLOs/reports")
 
 # Paths for images and labels for training and validation
 train_images_dir = PROCESSED_DATA_DIR / 'images' / 'train'

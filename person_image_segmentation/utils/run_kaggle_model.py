@@ -1,11 +1,10 @@
+""" Module to run a model in Kaggle"""
 import os
 import subprocess
-import requests
 import json
-
-from dotenv import load_dotenv
 from pathlib import Path
-
+from dotenv import load_dotenv
+import requests
 
 def load_kaggle_credentials():
     """Load Kaggle credentials from the environment variables."""

@@ -1,6 +1,6 @@
+"""Run the dataset creation and upload to Kaggle."""
 import os
 import subprocess
-import requests
 import json
 from dotenv import load_dotenv
 

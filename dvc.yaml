@@ -1,0 +1,103 @@
+stages:
+  download_raw_data:
+    cmd: python3 -m person_image_segmentation.pipelines.download_raw_data
+    deps:
+    - person_image_segmentation/pipelines/download_raw_data.py
+    - person_image_segmentation/config.py
+    - person_image_segmentation/utils/dataset_utils.py
+    outs:
+    - data/raw/dataset_person-yolos/data/images
+    - data/raw/dataset_person-yolos/data/masks
+    - data/raw/dataset_person-yolos/test/images
+  split_data:
+    cmd: python3 -m person_image_segmentation.pipelines.split_data
+    deps:
+    - data/raw/dataset_person-yolos/data/images
+    - data/raw/dataset_person-yolos/data/masks
+    - person_image_segmentation/pipelines/split_data.py
+    - person_image_segmentation/config.py
+    - person_image_segmentation/utils/dataset_utils.py
+    outs:
+    - data/interim/splitted/images/test
+    - data/interim/splitted/images/train
+    - data/interim/splitted/images/val
+    - data/interim/splitted/masks/test
+    - data/interim/splitted/masks/train
+    - data/interim/splitted/masks/val
+  transform_masks:
+    cmd: python3 -m person_image_segmentation.pipelines.transform_masks
+    deps:
+    - data/interim/splitted/images/test
+    - data/interim/splitted/images/train
+    - data/interim/splitted/images/val
+    - data/interim/splitted/masks/test
+    - data/interim/splitted/masks/train
+    - data/interim/splitted/masks/val
+    - person_image_segmentation/pipelines/transform_masks.py
+    - person_image_segmentation/config.py
+    - person_image_segmentation/utils/dataset_utils.py
+    outs:
+    - data/interim/transformed/images/test
+    - data/interim/transformed/images/train
+    - data/interim/transformed/images/val
+    - data/interim/transformed/masks/test
+    - data/interim/transformed/masks/train
+    - data/interim/transformed/masks/val
+  create_labels:
+    cmd: python3 -m person_image_segmentation.pipelines.create_labels
+    deps:
+      - data/interim/transformed/images/test
+      - data/interim/transformed/images/train
+      - data/interim/transformed/images/val
+      - data/interim/transformed/masks/test
+      - data/interim/transformed/masks/train
+      - data/interim/transformed/masks/val
+      - data/interim/splitted/images/test
+      - data/interim/splitted/images/train
+      - data/interim/splitted/images/val
+      - data/interim/splitted/masks/test
+      - data/interim/splitted/masks/train
+      - data/interim/splitted/masks/val
+      - person_image_segmentation/pipelines/create_labels.py
+      - person_image_segmentation/config.py
+      - person_image_segmentation/utils/dataset_utils.py
+    outs:
+      - data/processed/images/train
+      - data/processed/images/val
+      - data/processed/images/test
+      - data/processed/labels/train
+      - data/processed/labels/val
+      - data/processed/labels/test
+  complete_data_folder:
+    cmd: python3 -m person_image_segmentation.pipelines.complete_data_folder
+    deps:
+      - models/configs/config_yolos.yaml
+      - models/configs/config_hyps.yaml
+      - person_image_segmentation/pipelines/complete_data_folder.py
+    outs:
+      - data/config_yolos.yaml
+      - data/config_hyps.yaml
+  train_model_sample:
+    cmd: python3 -m person_image_segmentation.modeling.simple_train
+    deps:
+      - models/configs/config_yolos_sample_train.yaml
+      - models/configs/config_hyps.yaml
+      - data/processed/images/train
+      - person_image_segmentation/modeling/simple_train.py
+    outs:
+      - runs/segment/Sample_Train__DVC_Pipeline
+      - yolov8m-seg.pt
+  predict_model_sample:
+    cmd: python3 -m person_image_segmentation.modeling.prediction
+    deps:
+      - models/weights_v0/best.pt
+      - data/processed/images/test
+      - person_image_segmentation/modeling/prediction.py
+    outs:
+      - predictions
+  evaluate_model_sample:
+    cmd: python3 -m person_image_segmentation.modeling.evaluation
+    deps:
+      - data/processed/images/test
+      - data/interim/transformed/masks/test
+      - predictions

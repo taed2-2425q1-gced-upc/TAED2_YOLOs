@@ -1,0 +1,11 @@
+# Base path pointing to where the dataset is stored on Kaggle
+path: ../data/processed
+
+# Paths to the training, validation, and test image directories relative to the `path`
+train: images/test/
+val: images/test/
+test: images/test/
+
+# Number of classes and their names
+nc: 1
+names: ['person']

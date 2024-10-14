@@ -71,8 +71,10 @@ if __name__ == "__main__":
     # Argument parser for max number of predictions
     parser = argparse.ArgumentParser(description="Generate predictions for test images.")
     parser.add_argument('--max_predictions', type=int, default=10, help='Maximum number of predictions to generate')
+    parser.add_argument('--test', action='store_true', help='Run the pipeline in test mode')
     args = parser.parse_args()
     max_predictions = args.max_predictions
+    is_test = args.test
 
     # Load the YOLO model
     model = YOLO(best_weights_fullpath)
@@ -82,7 +84,18 @@ if __name__ == "__main__":
     file_names = os.listdir(test_folder)
     file_names = [str(test_folder / file) for file in file_names if os.path.isfile(str(test_folder / file))]
     
-    with EmissionsTracker(output_dir=str(REPO_PATH / "metrics"), output_file="emissions_inference.csv") as tracker:
+    if not is_test:
+        with EmissionsTracker(output_dir=str(REPO_PATH / "metrics"), output_file="emissions_inference.csv") as tracker:
+            # Make predictions
+            PREDS_PATH = REPO_PATH / "predictions"
+            generate_predictions(
+                test_filenames = file_names,
+                predictions_folder = PREDS_PATH,
+                model = model,
+                max_predictions = max_predictions
+            )
+    
+    else:
         # Make predictions
         PREDS_PATH = REPO_PATH / "predictions"
         generate_predictions(

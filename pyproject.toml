@@ -72,4 +72,4 @@ omit = []
 [tool.pytest.ini_options]
 pythonpath = "."
 testpaths = "tests"
-addopts = "--junitxml=out/tests-report.xml --cov=src --cov-report=html:reports/coverage"
+addopts = "--junitxml=out/tests-report.xml --cov=person_image_segmentation --cov-report=html:reports/coverage"

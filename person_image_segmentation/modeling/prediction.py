@@ -81,9 +81,10 @@ if __name__ == "__main__":
     parser.add_argument(
         '--max_predictions',
         type=int,
-        default=None,
+        default=10,
         help='Maximum number of predictions to generate'
     )
+
     args = parser.parse_args()
     max_predictions = args.max_predictions
 

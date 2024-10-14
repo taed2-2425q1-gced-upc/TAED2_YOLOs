@@ -54,7 +54,6 @@ if __name__ == "__main__":
     file_names = [str(folder_path / file) for file in file_names if os.path.isfile(str(folder_path / file))]
 
     with EmissionsTracker(output_dir=str(METRICS_PATH), output_file="emissions_evaluation.csv") as tracker:
-
         
         mlflow.set_experiment("image-segmentation-yolo")
 

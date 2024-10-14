@@ -34,9 +34,6 @@ def generate_predictions(test_filenames: list[str], predictions_folder: Path, mo
         if max_predictions and idx >= max_predictions:
             print("Early stop! The maximum number of predictions has been reached.")
             return
-
-        if file.split('/')[-1] == '.DS_Store':
-            continue
         
         # Process the image
         results = model(file)

@@ -11,6 +11,7 @@ from person_image_segmentation.modeling.evaluation import compute_miou # pylint:
 load_dotenv()
 
 REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
+PREDS_PATH = REPO_PATH / "predictions"
 BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
 BEST_WEIGHTS = os.getenv('PATH_TO_BEST_WEIGHTS')
 BEST_WEIGHTS_FULL_PATH = (
@@ -38,7 +39,6 @@ def run_prediction_pipeline():
 def run_evaluation_pipeline():
     """ Runs the evaluation pipeline to be tested """
     # Compute the mIoU on the predicted samples
-    PREDS_PATH = REPO_PATH / "predictions"
     folder_path = BASE_DATA_PATH / "processed/images/test"
     file_names = os.listdir(PREDS_PATH)
     file_names = [

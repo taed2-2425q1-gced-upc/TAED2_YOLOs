@@ -1,8 +1,9 @@
 """ Module with processing utils """
 import shutil
 import os
-from cv2 import imread, IMREAD_GRAYSCALE, threshold, THRESH_BINARY, findContours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE, contourArea # pylint: disable=E0611
-
+from cv2 import imread, threshold, findContours, contourArea # pylint: disable=E0611
+from cv2 import  RETR_EXTERNAL, CHAIN_APPROX_SIMPLE # pylint: disable=E0611
+from cv2 import IMREAD_GRAYSCALE, THRESH_BINARY # pylint: disable=E0611
 from PIL import Image
 
 def copy_files(sample_list, src_images_dir, src_masks_dir, dest_images_dir, dest_masks_dir):

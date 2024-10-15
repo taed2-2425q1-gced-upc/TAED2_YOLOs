@@ -2,10 +2,6 @@
 import subprocess
 import sys
 import os
-import mlflow
-import dagshub
-from codecarbon import EmissionsTracker # pylint: disable=E0401
-from ultralytics import YOLO # pylint: disable=E0401
 
 # Install necessary packages (uncomment if required)
 subprocess.check_call([
@@ -13,6 +9,11 @@ subprocess.check_call([
     "opencv-python", "ultralytics", "mlflow",
     "dagshub", "codecarbon"
 ])
+
+import mlflow
+import dagshub
+from codecarbon import EmissionsTracker # pylint: disable=E0401
+from ultralytics import YOLO # pylint: disable=E0401
 
 # Disable W&B logging
 os.environ["WANDB_MODE"] = "offline"
@@ -50,6 +51,6 @@ with EmissionsTracker(gpu_ids=[]) as tracker:
         )
 
         # Training the model
-        results = model.train(data=config_file_path, epochs=100, imgsz=640, cfg = cfg_file_path_hyps, name="Yolo Weights")
+        results = model.train(data=CONFIG_FILE_PATH, epochs=100, imgsz=640, cfg = CFG_FILE_PATH_HYPS, name="Yolo Weights")
 
         print("Entrenamiento completado y experimentos registrados en MLflow.")

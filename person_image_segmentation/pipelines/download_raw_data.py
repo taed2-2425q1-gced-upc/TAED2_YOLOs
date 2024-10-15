@@ -1,7 +1,7 @@
 import argparse
 import os
-from pathlib import Path
 
+from pathlib import Path
 from dotenv import load_dotenv
 
 from person_image_segmentation.config import RAW_DATA_DIR, DATASET_LINK, KAGGLE_KEY, KAGGLE_USERNAME

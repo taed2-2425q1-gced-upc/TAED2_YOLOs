@@ -1,5 +1,7 @@
 import argparse
 
+from pathlib import Path
+
 from person_image_segmentation.config import RAW_DATA_DIR, SPLIT_DATA_DIR, TRAIN_SIZE, VAL_SIZE, TEST_SIZE
 from person_image_segmentation.utils.dataset_utils import split_dataset
 

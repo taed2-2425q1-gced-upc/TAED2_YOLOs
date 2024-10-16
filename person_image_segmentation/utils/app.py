@@ -45,6 +45,16 @@ async def predict_mask(file: UploadFile = File(...)):
     img_path = f"temp_{file.filename}"
     with open(img_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+
+    img = Image.open(img_path)
+    print(img.format)
+    if img.format != 'JPEG':
+        img = img.convert('RGB')  # Convertir a RGB
+        jpg_path = f"temp_{os.path.splitext(file.filename)[0]}.jpg"  # Nueva ruta con extensión JPG
+        img.save(jpg_path, 'JPEG')  # Guardar como JPG
+        os.remove(img_path)
+        img_path = jpg_path  # Actualizar la ruta de la imagen a la nueva
+
     
     # Leer la imagen
     img = Image.open(img_path)

@@ -7,6 +7,7 @@ import numpy as np
 import shutil
 from ultralytics import YOLO
 from dotenv import load_dotenv
+from pydantic import BaseModel
 
 # Load Kaggle credentials
 load_dotenv()
@@ -20,13 +21,25 @@ best_weights_fullpath = str(REPO_PATH / BEST_WEIGHTS)
 
 model = YOLO(best_weights_fullpath)
 
+# Modelos Pydantic para estructurar las respuestas
+class PredictionResponse(BaseModel):
+    filename: str
+    message: str
+
+class ErrorResponse(BaseModel):
+    error: str
+
+class RootResponse(BaseModel):
+    message: str
+
+
 # Ruta base
-@app.get("/")
+@app.get("/", response_model=RootResponse)
 def read_root():
-    return {"message": "API para hacer predicciones con YOLO"}
+    return RootResponse(message="API para hacer predicciones con YOLO")
 
 # Ruta para hacer predicciones
-@app.post("/predict/")
+@app.post("/predict/", response_model=PredictionResponse, responses={400: {"model": ErrorResponse}})
 async def predict_mask(file: UploadFile = File(...)):
     # Guardar el archivo temporalmente
     img_path = f"temp_{file.filename}"
@@ -65,11 +78,9 @@ async def predict_mask(file: UploadFile = File(...)):
             # Eliminar archivo temporal
             os.remove(img_path)
 
-            return {"filename": f"pred_{file.filename}", "message": "Prediction complete!"}
-
+            return PredictionResponse(filename=f"pred_{file.filename}", message="Prediction complete!")
         except Exception as e:
-            return {"error": str(e)}
+            return ErrorResponse(error=str(e))
 
     else:
-        return {"error": "No masks found in the prediction."}
-
+        return ErrorResponse(error="No masks found in the prediction.")

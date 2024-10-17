@@ -1,5 +1,6 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.responses import FileResponse
 from pathlib import Path
 from PIL import Image
 import os
@@ -43,6 +44,11 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
             detail="Token inválido o no autorizado",
         )
     return token
+
+# Ruta para servir el favicon
+@app.get("/favicon.ico", include_in_schema=True)
+async def favicon():
+    return FileResponse(str(REPO_PATH) + "/static/favicon.ico")  # Ruta al archivo favicon.ico
 
 # Ruta base
 @app.get("/", response_model=RootResponse)

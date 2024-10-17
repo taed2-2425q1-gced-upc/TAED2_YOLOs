@@ -7,7 +7,12 @@ import numpy as np
 import shutil
 from ultralytics import YOLO
 from dotenv import load_dotenv
-from pydantic import BaseModel
+
+from person_image_segmentation.utils.schema import (
+    PredictionResponse,
+    ErrorResponse,
+    RootResponse,
+)
 
 # Load Kaggle credentials
 load_dotenv()
@@ -20,18 +25,6 @@ BEST_WEIGHTS = Path(os.getenv('PATH_TO_BEST_WEIGHTS', 'yolov8m-seg.pt'))
 best_weights_fullpath = str(REPO_PATH / BEST_WEIGHTS)
 
 model = YOLO(best_weights_fullpath)
-
-# Modelos Pydantic para estructurar las respuestas
-class PredictionResponse(BaseModel):
-    filename: str
-    message: str
-
-class ErrorResponse(BaseModel):
-    error: str
-
-class RootResponse(BaseModel):
-    message: str
-
 
 # Ruta base
 @app.get("/", response_model=RootResponse)

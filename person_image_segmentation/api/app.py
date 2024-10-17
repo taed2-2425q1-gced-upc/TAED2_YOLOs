@@ -17,7 +17,7 @@ from person_image_segmentation.api.schema import (
 # Load Kaggle credentials
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(title = "YOLOs image segmentation inference")
 
 # Cargar el modelo de YOLO
 REPO_PATH = Path(os.getenv('PATH_TO_REPO'))

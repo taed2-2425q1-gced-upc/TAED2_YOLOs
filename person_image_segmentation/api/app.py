@@ -1,4 +1,5 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pathlib import Path
 from PIL import Image
 import os
@@ -26,6 +27,23 @@ best_weights_fullpath = str(REPO_PATH / BEST_WEIGHTS)
 
 model = YOLO(best_weights_fullpath)
 
+VALID_TOKEN = "YOLOs"
+
+# Configurar el esquema de seguridad para el token
+security = HTTPBearer()
+
+def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """
+    Verifica si el token es válido.
+    """
+    token = credentials.credentials
+    if token != VALID_TOKEN:
+        raise HTTPException(
+            status_code=401,
+            detail="Token inválido o no autorizado",
+        )
+    return token
+
 # Ruta base
 @app.get("/", response_model=RootResponse)
 def read_root():
@@ -33,7 +51,7 @@ def read_root():
 
 # Ruta para hacer predicciones
 @app.post("/predict/", response_model=PredictionResponse, responses={400: {"model": ErrorResponse}})
-async def predict_mask(file: UploadFile = File(...)):
+async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify_token)):
     # Guardar el archivo temporalmente
     img_path = f"temp_{file.filename}"
     with open(img_path, "wb") as buffer:

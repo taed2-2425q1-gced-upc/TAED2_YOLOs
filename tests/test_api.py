@@ -99,23 +99,23 @@ def test_predict_mask_with_non_jpeg_file(test_non_jpeg_image_path):
     assert "filename" in response_json, "Response missing 'filename' field for non-JPEG."
     assert response_json["message"] == "Prediction complete!"
 
-def test_predict_mask_with_unsupported_file_format():
+def test_predict_mask_with_no_masks():
     """
-    Test the prediction route with an unsupported file format, such as a PDF.
-    This should trigger an error response and ensure cleanup occurs correctly.
+    Test the prediction route when no masks are found in the prediction.
     """
-    pdf_content = b"%PDF-1.4 This is a test PDF file."
-    response = client.post(
-        "/predict/",
-        files={"file": ("test_file.pdf", pdf_content, "application/pdf")},
-        headers={"Authorization": f"Bearer {VALID_TOKEN}"},
-    )
+    no_mask_image_path = "/Users/mariarisques/TAED2_YOLOs/TAED2_YOLOs/tests/test_image_no_mask.png"
+    if not os.path.exists(no_mask_image_path):
+        pytest.fail(f"Test image with no masks not found at {no_mask_image_path}")
 
-    # Expecting a 400 error because the file format is not supported for prediction
-    assert response.status_code == 400, "API did not return 400 for unsupported file format."
-    assert "error" in response.json(), "Response missing 'error' field for unsupported file format."
-    assert "unsupported" in response.json()["error"].lower(), "Error message does not mention unsupported format."
+    with open(no_mask_image_path, "rb") as image_file:
+        response = client.post(
+            "/predict/",
+            files={"file": ("test_image_no_mask.png", image_file, "image/png")},
+            headers={"Authorization": f"Bearer {VALID_TOKEN}"},
+        )
 
-    # Ensure no temporary files remain after the error
-    temp_pdf_path = "temp_test_file.pdf"
-    assert not os.path.exists(temp_pdf_path), "Temporary PDF file was not deleted."
+    # Verificar que la API devuelve un código de estado 400 cuando no se encuentran máscaras
+    assert response.status_code == 400, "Expected status code 400 when no masks are found."
+    response_json = response.json()
+    assert "detail" in response_json, "Response should contain a 'detail' message when no masks are found."
+    assert response_json["detail"] == "No masks found in the prediction.", "The error message should indicate that no masks were found."

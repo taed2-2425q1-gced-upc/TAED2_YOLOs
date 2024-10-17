@@ -8,7 +8,7 @@ import shutil
 from ultralytics import YOLO
 from dotenv import load_dotenv
 
-from person_image_segmentation.utils.schema import (
+from person_image_segmentation.api.schema import (
     PredictionResponse,
     ErrorResponse,
     RootResponse,

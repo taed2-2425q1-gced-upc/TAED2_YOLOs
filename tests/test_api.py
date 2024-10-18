@@ -2,9 +2,15 @@ import os
 import pytest
 from fastapi.testclient import TestClient
 from person_image_segmentation.api.app import app
+from dotenv import load_dotenv
+from pathlib import Path
+
+load_dotenv()
+
+VALID_TOKEN = str(Path(os.getenv('VALID_TOKEN')))
+
 
 client = TestClient(app)
-VALID_TOKEN = "YOLOs"
 
 @pytest.fixture
 def test_image_path():

@@ -16,7 +16,6 @@ from person_image_segmentation.api.schema import (
     RootResponse,
 )
 
-# Load Kaggle credentials
 load_dotenv()
 
 app = FastAPI(title="YOLOs image segmentation inference")
@@ -28,7 +27,8 @@ best_weights_fullpath = str(REPO_PATH / BEST_WEIGHTS)
 
 model = YOLO(best_weights_fullpath)
 
-VALID_TOKEN = "YOLOs"
+VALID_TOKEN = str(Path(os.getenv('VALID_TOKEN')))
+print(VALID_TOKEN)
 
 # Configurar el esquema de seguridad para el token
 security = HTTPBearer()

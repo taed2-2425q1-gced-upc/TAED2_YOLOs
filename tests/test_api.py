@@ -8,6 +8,7 @@ from pathlib import Path
 load_dotenv()
 
 VALID_TOKEN = str(Path(os.getenv('VALID_TOKEN')))
+REPO_PATH = str(Path(os.getenv('PATH_TO_REPO')))
 
 
 client = TestClient(app)
@@ -17,7 +18,7 @@ def test_image_path():
     """
     Fixture for the path of a test image.
     """
-    path = "/Users/mariarisques/TAED2_YOLOs/TAED2_YOLOs/tests/test_image.jpg"
+    path = REPO_PATH + "/tests/test_image.jpg"
     if not os.path.exists(path):
         pytest.fail(f"Test image not found at {path}")
     return path
@@ -27,7 +28,7 @@ def test_non_jpeg_image_path():
     """
     Fixture for the path of a non-JPEG test image.
     """
-    path = "/Users/mariarisques/TAED2_YOLOs/TAED2_YOLOs/tests/test_image.png"
+    path = REPO_PATH + "/tests/test_image.png"
     if not os.path.exists(path):
         pytest.fail(f"Test non-JPEG image not found at {path}")
     return path
@@ -109,7 +110,7 @@ def test_predict_mask_with_no_masks():
     """
     Test the prediction route when no masks are found in the prediction.
     """
-    no_mask_image_path = "/Users/mariarisques/TAED2_YOLOs/TAED2_YOLOs/tests/test_image_no_mask.png"
+    no_mask_image_path = REPO_PATH + "/tests/test_image_no_mask.png"
     if not os.path.exists(no_mask_image_path):
         pytest.fail(f"Test image with no masks not found at {no_mask_image_path}")
 

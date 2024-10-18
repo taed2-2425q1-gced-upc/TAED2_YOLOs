@@ -7,6 +7,7 @@ from PIL import Image
 from dotenv import load_dotenv
 from codecarbon import EmissionsTracker # pylint: disable=E0401
 import mlflow
+import numpy as np
 
 
 # Load environment variables from a .env file
@@ -75,10 +76,10 @@ if __name__ == "__main__":
         mlflow.set_experiment("image-segmentation-yolo")
 
         with mlflow.start_run(run_name="yolov8-training-v0-codecarbon-evaluation"):
-            mIoU = compute_mIoU(file_names, PREDS_PATH)
+            mean_iou = compute_miou(file_names, PREDS_PATH)
 
             # Save the evaluation metrics to a dictionary to be reused later
-            metrics_dict = {"mIoU": mIoU}
+            metrics_dict = {"mIoU": mean_iou}
 
             # Log the evaluation metrics to MLflow
             mlflow.log_metrics(metrics_dict)

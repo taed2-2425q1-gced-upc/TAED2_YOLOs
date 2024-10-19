@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import FileResponse
+from starlette.staticfiles import StaticFiles
 from pathlib import Path
 from PIL import Image
 import os
@@ -45,6 +46,9 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
         )
     return token
 
+print(str(REPO_PATH) + "/static")
+app.mount("/static", StaticFiles(directory = str(REPO_PATH) + "/static", html=True), name = "static")
+
 # Ruta para servir el favicon
 @app.get("/favicon.ico", include_in_schema=True)
 async def favicon():
@@ -65,7 +69,7 @@ async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify
             shutil.copyfileobj(file.file, buffer)
 
         img = Image.open(img_path)
-        print(img.format)
+      
         if img.format != 'JPEG':
             img = img.convert('RGB')  # Convertir a RGB
             jpg_path = f"temp_{os.path.splitext(file.filename)[0]}.jpg"  # Nueva ruta con extensión JPG
@@ -101,7 +105,7 @@ async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify
 
                 # Convertir la máscara a imagen y devolverla
                 im_to_save = Image.fromarray(pred_mask)
-                im_to_save.save(f"pred_{file.filename}")
+                im_to_save.save(str(REPO_PATH) + "/static/"+f"pred_{file.filename}")
 
                 # Eliminar archivo temporal
                 os.remove(img_path)

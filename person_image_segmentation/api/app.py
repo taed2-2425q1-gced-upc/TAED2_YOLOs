@@ -46,7 +46,6 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
         )
     return token
 
-print(str(REPO_PATH) + "/static")
 app.mount("/static", StaticFiles(directory = str(REPO_PATH) + "/static", html=True), name = "static")
 
 # Ruta para servir el favicon

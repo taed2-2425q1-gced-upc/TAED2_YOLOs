@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, BackgroundTasks
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 from pathlib import Path
 from PIL import Image
@@ -25,6 +26,14 @@ from datetime import datetime
 load_dotenv()
 
 app = FastAPI(title = "YOLOs image segmentation inference")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust this to your frontend's domain if needed for security
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Cargar el modelo de YOLO
 REPO_PATH = Path(os.getenv('PATH_TO_REPO'))

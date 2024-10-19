@@ -28,7 +28,7 @@ def run_prediction_pipeline():
     print("Running the prediction pipeline script...")
     start_time = time.time()
     script_path = REPO_PATH / 'person_image_segmentation/modeling/prediction.py'
-    subprocess.run(['python', str(script_path), '--max_predictions', '10'], check = True)
+    subprocess.run(['python', str(script_path), '--max_predictions', '10', '--test'], check = True)
     print("Prediction pipeline script completed successfully.")
     end_time = time.time()
 

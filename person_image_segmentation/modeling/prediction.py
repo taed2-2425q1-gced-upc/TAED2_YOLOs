@@ -45,8 +45,6 @@ def generate_predictions(
             print("Early stop! The maximum number of predictions has been reached.")
             return
 
-        if file.split('/')[-1] == '.DS_Store':
-            continue
         # Process the image
         results = model(file)
         result = results[0]
@@ -84,9 +82,10 @@ if __name__ == "__main__":
         default=10,
         help='Maximum number of predictions to generate'
     )
-
+    parser.add_argument('--test', action='store_true', help='Run the pipeline in test mode')
     args = parser.parse_args()
     max_predictions = args.max_predictions
+    is_test = args.test
 
     # Load the YOLO model
     model = YOLO(BEST_WEIGHTS_FULL_PATH)
@@ -94,15 +93,20 @@ if __name__ == "__main__":
     # Load the test images
     test_folder = BASE_DATA_PATH / "processed/images/test"
     file_names = os.listdir(test_folder)
-    file_names = [
-        str(test_folder / file)
-        for file in file_names
-        if os.path.isfile(str(test_folder / file))
-    ]
-    with EmissionsTracker(
-        output_dir=str(REPO_PATH / "metrics"),
-        output_file="emissions_inference.csv"
-    ) as tracker:
+    file_names = [str(test_folder / file) for file in file_names if os.path.isfile(str(test_folder / file))]
+    
+    if not is_test:
+        with EmissionsTracker(output_dir=str(REPO_PATH / "metrics"), output_file="emissions_inference.csv") as tracker:
+            # Make predictions
+            PREDS_PATH = REPO_PATH / "predictions"
+            generate_predictions(
+                test_filenames = file_names,
+                predictions_folder = PREDS_PATH,
+                model = model,
+                max_predictions = max_predictions
+            )
+    
+    else:
         # Make predictions
         PREDS_PATH = REPO_PATH / "predictions"
         generate_predictions(

@@ -1,6 +1,7 @@
 import argparse
 
 from dotenv import load_dotenv
+from pathlib import Path
 
 from person_image_segmentation.config import TRANSFORM_DATA_DIR, LABELS_DATA_DIR, SPLIT_DATA_DIR
 from person_image_segmentation.utils.dataset_utils import generate_labels

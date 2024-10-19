@@ -17,8 +17,12 @@ def run_data_pipeline():
     """ Runs de data pipelin to be tested """
     # Run the pipeline script
     print("Running the data pipeline script...")
-    script_path = REPO_PATH / 'person_image_segmentation/pipelines/data_pipelines.py'
-    subprocess.run(['python', str(script_path), '--test'], check = True)
+    pipelines_path = REPO_PATH / 'person_image_segmentation/pipelines/'
+    script_names = ["download_raw_data.py", "split_data.py", "transform_masks.py", "create_labels.py", "complete_data_folder.py"]
+    for script_name in script_names:
+        script_path = pipelines_path / script_name
+        subprocess.run(['python', str(script_path), '--test'], check = True)
+
     print("Data pipeline script completed successfully.")
 
     yield
@@ -53,3 +57,6 @@ def test_data_pipeline_and_structure(run_data_pipeline):
 
     for subfolder in subfolders:
         assert subfolder.exists()
+
+    # Remove the test_data folder after the test
+    shutil.rmtree(TEST_DATA_PATH)

@@ -32,8 +32,6 @@ def from_raw_masks_to_image_masks(input_dirs: list[str], output_dirs: list[str])
             ]
 
         for j in os.listdir(input_dir):
-            if j == '.DS_Store':
-                continue
             image_path = input_dir / j
             mask = Image.open(image_path).convert('P')
             # Ensure that all non-zero values are set to 1
@@ -52,9 +50,6 @@ def from_image_masks_to_labels(input_dirs: list[str], output_dirs: list[str]) ->
     """ Converts the masks from the image format to the labels format supported by YOLOv8-Seg """
     for input_dir, output_dir in zip(input_dirs, output_dirs):
         for j in os.listdir(input_dir):
-            if j == '.DS_Store':
-                continue
-
             image_path = os.path.join(input_dir, j)
             # load the binary mask and get its contours
             mask = imread(image_path, IMREAD_GRAYSCALE)

@@ -1,18 +1,14 @@
 import pytest
-import yaml
 import os
-import cv2
 import subprocess
-import shutil
 import time
 
 from pathlib import Path
 from dotenv import load_dotenv
-from PIL import Image
-from typing import Optional
 from ultralytics import YOLO
 
 from person_image_segmentation.modeling.evaluation import compute_mIoU
+from person_image_segmentation.utils.modeling_utils import generate_predictions
 
 load_dotenv()
 
@@ -20,16 +16,29 @@ REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
 BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
 BEST_WEIGHTS = os.getenv('PATH_TO_BEST_WEIGHTS')
 BEST_WEIGHTS_FULL_PATH = str(REPO_PATH / BEST_WEIGHTS) if BEST_WEIGHTS != "None" else "yolov8m-seg.pt"
+MAX_PREDICTIONS = 10
 
 @pytest.fixture(scope = "module")
 def run_prediction_pipeline():
     # Run the pipeline script
     print("Running the prediction pipeline script...")
     start_time = time.time()
-    script_path = REPO_PATH / 'person_image_segmentation/modeling/prediction.py'
-    subprocess.run(['python', str(script_path), '--max_predictions', '10', '--test'], check = True)
-    print("Prediction pipeline script completed successfully.")
+    
+    PREDS_PATH = REPO_PATH / "predictions"
+    test_folder = BASE_DATA_PATH / "processed/images/test"
+    file_names = os.listdir(test_folder)
+    file_names = [str(test_folder / file) for file in file_names if os.path.isfile(str(test_folder / file))]
+    model = YOLO(BEST_WEIGHTS_FULL_PATH)
+
+    generate_predictions(
+        test_filenames = file_names,
+        predictions_folder = PREDS_PATH,
+        model = model,
+        max_predictions = MAX_PREDICTIONS
+    )
+
     end_time = time.time()
+    print("Prediction pipeline script completed successfully.")
 
     duration = end_time - start_time
     yield duration

@@ -2,10 +2,12 @@ import pytest
 import os
 import subprocess
 import time
+import torch
 
 from pathlib import Path
 from dotenv import load_dotenv
 from ultralytics import YOLO
+from unittest import mock
 
 from person_image_segmentation.modeling.evaluation import compute_mIoU
 from person_image_segmentation.utils.modeling_utils import generate_predictions
@@ -63,3 +65,23 @@ def test_model_performance(run_evaluation_pipeline):
     mIoU = run_evaluation_pipeline
     print("mIoU is: ", mIoU)
     assert mIoU > 0.85
+
+def test_generate_predictions_raises_exception_on_image_processing_error():
+    # Mock the model to return a valid result object
+    mock_model = mock.Mock()
+    mock_result = mock.Mock()
+    mock_result.masks.data = torch.tensor([[0, 0], [0, 1]])  # Simulate masks data
+    mock_model.return_value = [mock_result]
+    
+    # Mock the cv2.imread to simulate an error when reading an image
+    with mock.patch("cv2.imread", side_effect=Exception("Error reading image")):
+        test_filenames = ["path/to/image1.jpg"]
+        predictions_folder = Path("predictions")
+
+        # Check that the exception is raised with the correct message
+        with pytest.raises(Exception, match="Error processing"):
+            generate_predictions(
+                test_filenames = test_filenames,
+                predictions_folder = REPO_PATH / "predictions",
+                model = mock_model,
+                max_predictions = MAX_PREDICTIONS)

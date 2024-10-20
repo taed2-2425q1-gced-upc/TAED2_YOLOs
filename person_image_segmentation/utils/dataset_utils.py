@@ -115,3 +115,8 @@ def generate_labels(transform_dir: Path, labels_dir: Path, split_dir: Path) -> N
     shutil.copytree(images_dir_train, images_dir_labels_train, dirs_exist_ok = True)
     shutil.copytree(images_dir_val, images_dir_labels_val, dirs_exist_ok = True)
     shutil.copytree(images_dir_test, images_dir_labels_test, dirs_exist_ok = True)
+
+
+def complete_data_folder(config_names: list[str], src_folder: Path, dst_folder: Path) -> None:
+    for config_name in config_names:
+        shutil.copy(src_folder / config_name, dst_folder / config_name)

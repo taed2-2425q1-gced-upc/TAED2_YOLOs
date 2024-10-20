@@ -1,14 +1,16 @@
+import os
+import torch
+import time
+import numpy as np
+import shutil
+
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, BackgroundTasks
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 from pathlib import Path
 from PIL import Image
-import os
-import torch
-import time
-import numpy as np
-import shutil
+from datetime import datetime
 from ultralytics import YOLO
 from dotenv import load_dotenv
 from threading import Thread
@@ -19,12 +21,10 @@ from person_image_segmentation.api.schema import (
     RootResponse,
 )
 
-from datetime import datetime
-
 # Load Kaggle credentials
 load_dotenv()
 
-app = FastAPI(title = "YOLOs image segmentation inference")
+app = FastAPI(title="YOLOs image segmentation inference")
 
 # Cargar el modelo de YOLO
 REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
@@ -33,7 +33,8 @@ best_weights_fullpath = str(REPO_PATH / BEST_WEIGHTS)
 
 model = YOLO(best_weights_fullpath)
 
-VALID_TOKEN = "YOLOs"
+VALID_TOKEN = str(Path(os.getenv('VALID_TOKEN')))
+print(VALID_TOKEN)
 
 # Configurar el esquema de seguridad para el token
 security = HTTPBearer()
@@ -103,22 +104,22 @@ async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify
             shutil.copyfileobj(file.file, buffer)
 
         img = Image.open(img_path)
-      
         if img.format != 'JPEG':
-            img = img.convert('RGB')  # Convertir a RGB
-            jpg_path = f"temp_{os.path.splitext(file.filename)[0]}.jpg"  # Nueva ruta con extensión JPG
-            img.save(jpg_path, 'JPEG')  # Guardar como JPG
+            img = img.convert('RGB')
+            jpg_path = f"temp_{os.path.splitext(file.filename)[0]}.jpg"
+            img.save(jpg_path, 'JPEG')
             os.remove(img_path)
-            img_path = jpg_path  # Actualizar la ruta de la imagen a la nueva
+            img_path = jpg_path
 
-        
-        # Leer la imagen
-        img = Image.open(img_path)
-        
         # Realizar predicción con YOLO
         results = model(img_path)
         result = results[0]
-        
+
+        # Verificar si existen máscaras en la predicción
+        if not hasattr(result, 'masks') or result.masks is None:
+            # No se encontraron máscaras, devolver error
+            raise HTTPException(status_code=400, detail="No masks found in the prediction.")
+            
         if hasattr(result, 'masks') and result.masks is not None:
             try:
                 # Procesar la máscara predicha
@@ -152,9 +153,10 @@ async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify
 
         else:
             return ErrorResponse(error="No masks found in the prediction.")
+          
     finally:
-            # Eliminar archivo temporal
-            if os.path.exists(img_path):
-                os.remove(img_path)
-            if 'jpg_path' in locals() and os.path.exists(jpg_path):
-                os.remove(jpg_path)
+        # Asegurarse de eliminar el archivo temporal
+        if os.path.exists(img_path):
+            os.remove(img_path)
+
+

@@ -1,19 +1,17 @@
+""" Prediction script for the model """
 # General imports
 import os
-import yaml
-import shutil
-import cv2
-import torch
 import argparse
+from pathlib import Path
+from cv2 import imread  # pylint: disable=E0611
+import torch # pylint: disable=E0401
 
 import numpy as np
-import pandas as pd
 
-from pathlib import Path
 from dotenv import load_dotenv
 from PIL import Image
-from ultralytics import YOLO
-from codecarbon import EmissionsTracker
+from ultralytics import YOLO # pylint: disable=E0401
+from codecarbon import EmissionsTracker # pylint: disable=E0401
 
 from person_image_segmentation.utils.modeling_utils import generate_predictions
 
@@ -24,7 +22,12 @@ load_dotenv()
 BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
 REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
 BEST_WEIGHTS = os.getenv('PATH_TO_BEST_WEIGHTS')
-best_weights_fullpath = str(REPO_PATH / BEST_WEIGHTS) if BEST_WEIGHTS != "None" else "yolov8m-seg.pt"
+BEST_WEIGHTS_FULL_PATH = (
+    str(REPO_PATH / BEST_WEIGHTS)
+    if BEST_WEIGHTS != "None"
+    else "yolov8m-seg.pt"
+)
+
 
 if __name__ == "__main__":
     # Argument parser for max number of predictions
@@ -34,7 +37,7 @@ if __name__ == "__main__":
     max_predictions = args.max_predictions
 
     # Load the YOLO model
-    model = YOLO(best_weights_fullpath)
+    model = YOLO(BEST_WEIGHTS_FULL_PATH)
 
     # Load the test images
     test_folder = BASE_DATA_PATH / "processed/images/test"

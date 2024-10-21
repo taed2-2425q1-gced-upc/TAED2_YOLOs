@@ -1,6 +1,6 @@
+"""Run the dataset creation and upload to Kaggle."""
 import os
 import subprocess
-import requests
 import json
 from dotenv import load_dotenv
 
@@ -57,7 +57,9 @@ def create_and_upload_dataset(KAGGLE_USERNAME, data_directory_path, dataset_meta
 
     # Upload data as a Kaggle dataset (including subfolders)
     print("Uploading dataset to Kaggle...")
-    upload_result = subprocess.run(['kaggle', 'datasets', 'create', '-p', '.', '--dir-mode', 'zip'])
+    upload_result = subprocess.run(
+        ['kaggle', 'datasets', 'create', '-p', '.', '--dir-mode', 'zip'],
+    )
 
     # Check if the dataset was uploaded successfully
     if upload_result.returncode != 0:

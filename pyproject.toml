@@ -52,12 +52,12 @@ codecarbon = "^2.7.1"
 mlflow = "^2.16.2"
 dagshub = "^0.3.37"
 loguru = "^0.7.2"
+pylint = "^3.3.1"
 deepchecks = {extras = ["vision"], version = "^0.18.1"}
 fastapi = "^0.115.2"
 uvicorn = {extras = ["standard"], version = "^0.31.1"}
 python-multipart = "^0.0.12"
 pydantic = "^2.9.2"
-
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"

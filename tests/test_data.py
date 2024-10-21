@@ -1,14 +1,11 @@
-import pytest
-import yaml
+""" Tests for the data pipeline """
 import os
-import cv2
-import subprocess
-import shutil
-
 from pathlib import Path
+import subprocess
 from dotenv import load_dotenv
-from PIL import Image
-from typing import Optional
+import pytest
+
+
 
 from person_image_segmentation.config import RAW_DATA_DIR, SPLIT_DATA_DIR, TRANSFORM_DATA_DIR, LABELS_DATA_DIR, TRAIN_SIZE, VAL_SIZE, TEST_SIZE, DATASET_LINK, KAGGLE_KEY, KAGGLE_USERNAME
 from person_image_segmentation.utils.dataset_utils import download_dataset, split_dataset, transform_masks, generate_labels, complete_data_folder
@@ -27,6 +24,7 @@ LABELS_DATA_DIR = Path(str(LABELS_DATA_DIR).replace('data', 'test_data'))
 
 @pytest.fixture(scope = "module")
 def run_data_pipeline():
+    """ Runs de data pipelin to be tested """
     # Run the pipeline script
     print("Running the data pipeline script...")
     pipelines_path = REPO_PATH / 'person_image_segmentation/pipelines/'
@@ -75,6 +73,7 @@ def run_data_pipeline():
     yield
 
 def test_data_pipeline_and_structure(run_data_pipeline):
+    """Tests the data pipeline and its structure"""
     # Check if the data folder exists
     assert TEST_DATA_DIR.exists()
 
@@ -103,6 +102,6 @@ def test_data_pipeline_and_structure(run_data_pipeline):
 
     for subfolder in subfolders:
         assert subfolder.exists()
-    
+
     # Remove the test_data folder after the test
     shutil.rmtree(TEST_DATA_DIR)

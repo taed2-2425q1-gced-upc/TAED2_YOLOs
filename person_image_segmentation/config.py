@@ -1,10 +1,12 @@
+
+""" Configuration file for the project """
 import os
 import yaml
 
 from pathlib import Path
 from tqdm import tqdm
 from dotenv import load_dotenv
-from loguru import logger
+from loguru import logger # pylint: disable=E0401
 
 # Load environment variables from .env file if it exists
 load_dotenv()

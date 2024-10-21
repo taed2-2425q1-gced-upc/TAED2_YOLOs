@@ -1,7 +1,10 @@
-""" Configuration file for the project """
-from pathlib import Path
-import os
 
+""" Configuration file for the project """
+import os
+import yaml
+
+from pathlib import Path
+from tqdm import tqdm
 from dotenv import load_dotenv
 from loguru import logger # pylint: disable=E0401
 
@@ -41,12 +44,5 @@ FIGURES_DIR = REPORTS_DIR / "figures"
 KAGGLE_USERNAME = os.getenv('KAGGLE_USERNAME')
 KAGGLE_KEY = os.getenv('KAGGLE_KEY')
 
-# If tqdm is installed, configure loguru with tqdm.write
-# https://github.com/Delgan/loguru/issues/135
-try:
-    from tqdm import tqdm
-
-    logger.remove(0)
-    logger.add(lambda msg: tqdm.write(msg, end=""), colorize=True)
-except ModuleNotFoundError:
-    pass
+logger.remove(0)
+logger.add(lambda msg: tqdm.write(msg, end=""), colorize=True)

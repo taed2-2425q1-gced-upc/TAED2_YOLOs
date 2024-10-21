@@ -1,12 +1,17 @@
 """ Tests for the model """
+import pytest
 import os
 import subprocess
 import time
+import torch
+
 from pathlib import Path
 from dotenv import load_dotenv
+from ultralytics import YOLO
+from unittest import mock
 
-import pytest
-from person_image_segmentation.modeling.evaluation import compute_miou # pylint: disable=E0401
+from person_image_segmentation.modeling.evaluation import compute_mIoU # pylint: disable=E0401
+from person_image_segmentation.utils.modeling_utils import generate_predictions
 
 load_dotenv()
 
@@ -19,7 +24,7 @@ BEST_WEIGHTS_FULL_PATH = (
     if BEST_WEIGHTS != "None"
     else "yolov8m-seg.pt"
 )
-
+MAX_PREDICTIONS = 10
 
 @pytest.fixture(scope = "module")
 def run_prediction_pipeline():
@@ -27,10 +32,22 @@ def run_prediction_pipeline():
     # Run the pipeline script
     print("Running the prediction pipeline script...")
     start_time = time.time()
-    script_path = REPO_PATH / 'person_image_segmentation/modeling/prediction.py'
-    subprocess.run(['python', str(script_path), '--max_predictions', '10', '--test'], check = True)
-    print("Prediction pipeline script completed successfully.")
+    
+    PREDS_PATH = REPO_PATH / "predictions"
+    test_folder = BASE_DATA_PATH / "processed/images/test"
+    file_names = os.listdir(test_folder)
+    file_names = [str(test_folder / file) for file in file_names if os.path.isfile(str(test_folder / file))]
+    model = YOLO(BEST_WEIGHTS_FULL_PATH)
+
+    generate_predictions(
+        test_filenames = file_names,
+        predictions_folder = PREDS_PATH,
+        model = model,
+        max_predictions = MAX_PREDICTIONS
+    )
+
     end_time = time.time()
+    print("Prediction pipeline script completed successfully.")
 
     duration = end_time - start_time
     yield duration
@@ -46,7 +63,7 @@ def run_evaluation_pipeline():
         for file in file_names
         if os.path.isfile(str(folder_path / file))
     ]
-    miou = compute_miou(file_names, PREDS_PATH)
+    miou = compute_mIoU(file_names, PREDS_PATH)
 
     yield miou
 
@@ -60,4 +77,24 @@ def test_model_performance(run_evaluation_pipeline):
     """ Tests the performance of the model """
     miou = run_evaluation_pipeline
     print("mIoU is: ", miou)
-    assert miou > 0.85
+    assert miou > 0.85 
+
+def test_generate_predictions_raises_exception_on_image_processing_error():
+    # Mock the model to return a valid result object
+    mock_model = mock.Mock()
+    mock_result = mock.Mock()
+    mock_result.masks.data = torch.tensor([[0, 0], [0, 1]])  # Simulate masks data
+    mock_model.return_value = [mock_result]
+    
+    # Mock the cv2.imread to simulate an error when reading an image
+    with mock.patch("cv2.imread", side_effect=Exception("Error reading image")):
+        test_filenames = ["path/to/image1.jpg"]
+        predictions_folder = Path("predictions")
+
+        # Check that the exception is raised with the correct message
+        with pytest.raises(Exception, match="Error processing"):
+            generate_predictions(
+                test_filenames = test_filenames,
+                predictions_folder = REPO_PATH / "predictions",
+                model = mock_model,
+                max_predictions = MAX_PREDICTIONS)

@@ -3,6 +3,7 @@ import shutil
 
 from pathlib import Path
 from person_image_segmentation.config import REPO_PATH, DATA_DIR
+from person_image_segmentation.utils import complete_data_folder
 
 
 if __name__ == "__main__":
@@ -19,5 +20,9 @@ if __name__ == "__main__":
     src_folder = REPO_PATH / "models/configs"
     dst_folder = DATA_DIR
 
-    for config_name in config_names:
-        shutil.copy(src_folder / config_name, dst_folder / config_name)
+    
+    complete_data_folder(
+        config_names = config_names,
+        src_folder = src_folder,
+        dst_folder = dst_folder
+    )

@@ -1,9 +1,18 @@
+"""
+Module for testing the FastAPI application for YOLO image segmentation.
+
+This module includes tests for different endpoints and scenarios to ensure the correct 
+functionality of the API, including token validation, file format handling, and edge cases 
+such as no masks found in the prediction.
+"""
+
 import os
+from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 from person_image_segmentation.api.app import app
 from dotenv import load_dotenv
-from pathlib import Path
+
 
 load_dotenv()
 
@@ -124,5 +133,7 @@ def test_predict_mask_with_no_masks():
     # Verify that the API returns a 400 status code when no masks are found
     assert response.status_code == 400, "Expected status code 400 when no masks are found."
     response_json = response.json()
-    assert "detail" in response_json, "Response should contain a 'detail' message when no masks are found."
-    assert response_json["detail"] == "No masks found in the prediction.", "The error message should indicate that no masks were found."
+    assert "detail" in response_json, "'detail' key is missing in the response."
+    assert (
+        response_json["detail"] == "No masks found in the prediction."
+        ), "Unexpected error message."

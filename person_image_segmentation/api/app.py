@@ -2,8 +2,10 @@ import os
 import torch
 import time
 import numpy as np
+import pandas as pd
 import shutil
 
+from codecarbon import EmissionsTracker # pylint: disable=E0401
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, BackgroundTasks
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import FileResponse
@@ -16,8 +18,10 @@ from ultralytics import YOLO
 from dotenv import load_dotenv
 from threading import Thread
 
+from person_image_segmentation.utils.api_utils import predict_mask_function
 from person_image_segmentation.api.schema import (
     PredictionResponse,
+    PredictionAndEnergyResponse,
     ErrorResponse,
     RootResponse,
 )
@@ -67,8 +71,6 @@ app.mount("/static", StaticFiles(directory = str(REPO_PATH) + "/static", html=Tr
 async def favicon():
     return FileResponse(str(REPO_PATH) + "/static/favicon.ico")  # Ruta al archivo favicon.ico
 
-
-from threading import Thread
 
 # Función para limpiar imágenes más antiguas de una hora
 def clean_old_images():
@@ -120,52 +122,67 @@ async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify
             os.remove(img_path)
             img_path = jpg_path
 
-        # Realizar predicción con YOLO
-        results = model(img_path)
-        result = results[0]
-
-        # Verificar si existen máscaras en la predicción
-        if not hasattr(result, 'masks') or result.masks is None:
-            # No se encontraron máscaras, devolver error
-            raise HTTPException(status_code=400, detail="No masks found in the prediction.")
-            
-        if hasattr(result, 'masks') and result.masks is not None:
-            try:
-                # Procesar la máscara predicha
-                im = np.array(img)
-                H, W = im.shape[0], im.shape[1]
-                tmp_mask = result.masks.data
-                tmp_mask, _ = torch.max(tmp_mask, dim=0)
-                pred_mask = Image.fromarray(tmp_mask.cpu().numpy()).convert('P')
-                pred_mask = pred_mask.resize((W, H))
-                pred_mask = np.array(pred_mask)
-
-                # Binarizar la máscara
-                (width, height) = pred_mask.shape
-                for y in range(height):
-                    for x in range(width):
-                        if pred_mask[x][y] > 0:
-                            pred_mask[x][y] = 255
-
-                # Generar el timestamp
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                # Convertir la máscara a imagen y devolverla
-                im_to_save = Image.fromarray(pred_mask)
-                im_to_save.save(str(REPO_PATH) + "/static/"+f"pred_{timestamp}_{file.filename}")
-
-                # Eliminar archivo temporal
-                os.remove(img_path)
-
-                return PredictionResponse(filename=f"pred_{timestamp}_{file.filename}", message="Prediction complete!")
-            except Exception as e:
-                return ErrorResponse(error=str(e))
-
-        else:
-            return ErrorResponse(error="No masks found in the prediction.")
+        # Make prediction
+        response = predict_mask_function(img_path, Path(str(REPO_PATH) + "/static/"), img, model)
+        return response
           
     finally:
         # Asegurarse de eliminar el archivo temporal
         if os.path.exists(img_path):
             os.remove(img_path)
+
+
+# Make predictions with enery consumption information
+@app.post("/predict_energy/", response_model=PredictionAndEnergyResponse, responses={400: {"model": ErrorResponse}})
+async def predict_mask_energy(file: UploadFile = File(...), token: str = Depends(verify_token)):
+    # Temporarily save the file
+    img_path = f"temp_{file.filename}"
+    try:
+        with open(img_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        img = Image.open(img_path)
+        if img.format != 'JPEG':
+            img = img.convert('RGB')
+            jpg_path = f"temp_{os.path.splitext(file.filename)[0]}.jpg"
+            img.save(jpg_path, 'JPEG')
+            os.remove(img_path)
+            img_path = jpg_path
+
+        # Make prediction with energy consumption tracking
+        try:
+            response = None
+            with EmissionsTracker(output_dir=str(REPO_PATH / "static"), output_file="emissions_inferene_api.csv") as tracker:
+                response = predict_mask_function(img_path, Path(REPO_PATH / "static"), img, model)
+            # Read the emissions file and return the results as a dictionary
+            emissions_file = REPO_PATH / "static" / "emissions_inferene_api.csv"
+            emissions_stats = {}
+            if emissions_file.exists():
+                emissions_data = pd.read_csv(emissions_file).to_dict(orient='records')
+                if emissions_data:
+                    latest_emission = emissions_data[-1]  # Get the latest emission record
+                    energy_stats = {
+                        'emissions': emissions_data[0].get('emissions', None),
+                        'duration': emissions_data[0].get('duration', None),
+                        'cpu_power': emissions_data[0].get('cpu_power', None),
+                        'gpu_power': emissions_data[0].get('gpu_power', None),
+                        'ram_power': emissions_data[0].get('ram_power', None),
+                        'energy_consumed': emissions_data[0].get('energy_consumed', None),
+                    }
+                else:
+                    energy_stats = {}
+            
+            return PredictionAndEnergyResponse(prediction=response, energy_stats=emissions_stats, message="Prediction complete with energy tracking!")
+            
+        except Exception as e:
+            raise HTTPException(status_code=400, detail=f"Error while making prediction with energy tracking. {e}")
+    
+    finally:
+        # Ensure to delete the temporary files
+        if os.path.exists(img_path):
+            os.remove(img_path)
+        emissions_file = REPO_PATH / "static" / "emissions_inferene_api.csv"
+        if emissions_file.exists():
+            emissions_file.unlink()
 
 

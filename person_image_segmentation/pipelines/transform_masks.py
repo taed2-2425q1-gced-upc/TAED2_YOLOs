@@ -1,6 +1,4 @@
 import argparse
-
-from dotenv import load_dotenv
 from pathlib import Path
 
 from person_image_segmentation.config import SPLIT_DATA_DIR, TRANSFORM_DATA_DIR

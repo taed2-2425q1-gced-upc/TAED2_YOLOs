@@ -49,4 +49,4 @@ with EmissionsTracker(gpu_ids=[0]) as tracker:
         else:
             results = model.train(data=config_file_path, epochs=1, imgsz=640, cfg = cfg_file_path_hyps, name="Sample_Train__DVC_Pipeline", device = 0)
 
-        print("Entrenamiento completado y experimentos registrados en MLflow.")
+        print("Training completed and experiments recorded in MLflow.")

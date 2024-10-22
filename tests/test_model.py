@@ -1,7 +1,6 @@
 """ Tests for the model """
 import pytest
 import os
-import subprocess
 import time
 import torch
 

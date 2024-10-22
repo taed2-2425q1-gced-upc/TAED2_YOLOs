@@ -5,7 +5,7 @@ const BASE_URL = "http://127.0.0.1:8000"
 
 const headers = {
   "Content-Type": "multipart/form-data",
-  Authorization: "Bearer YOLOs",
+  Authorization: "Bearer YOLOsImageSegmentation",
 }
 
 interface IPrediction {

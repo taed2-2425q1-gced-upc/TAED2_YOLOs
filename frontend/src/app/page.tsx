@@ -11,21 +11,33 @@ import {PredictionCard} from "@/components/predictions/PredictionCard"
 
 export default function Home() {
   const [prediction, setPrediction] = useState<Image | null>(null)
+  const [original, setOriginal] = useState<Image | null>(null)
 
   const handlePrediction = async (img: Image) => {
-    toast.promise(
-      predictService.getPrediction(img).then((prediction) => {
-        if (!prediction.mask) {
-          throw new Error("No mask found")
-        }
-        setPrediction(prediction.mask)
-      }),
-      {
-        loading: "Predicting...",
-        success: <b>Prediction complete!</b>,
-        error: <b>Prediction failed!</b>,
+    setPrediction(null)
+    setOriginal(img)
+
+    try {
+      toast.loading("Predicting...")
+
+      const prediction = await predictService.getPrediction(img)
+
+      if (!prediction.mask) {
+        throw new Error("No mask found")
       }
-    )
+
+      setPrediction(prediction.mask)
+      toast.dismiss() // Dismiss the loading toast
+      toast.success(<b>Prediction complete!</b>)
+    } catch (error: any) {
+      toast.dismiss() // Dismiss the loading toast
+
+      if (error.response && error.response.status === 400) {
+        toast.error("No masks found")
+      } else {
+        toast.error("Prediction failed!")
+      }
+    }
   }
 
   return (
@@ -35,7 +47,7 @@ export default function Home() {
         <PageSubtitle>with YOLOv8-Seg</PageSubtitle>
       </PageHeader>
       <ImageUpload onSubmit={handlePrediction} />
-      <PredictionCard prediction={prediction!} />
+      <PredictionCard prediction={prediction!} original={original!} />
     </main>
   )
 }

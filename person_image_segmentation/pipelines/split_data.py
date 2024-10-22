@@ -20,7 +20,6 @@ if __name__ == "__main__":
     split_dataset(
         train_size = TRAIN_SIZE,
         val_size = VAL_SIZE,
-        test_size = TEST_SIZE,
         data_dir = RAW_DATA_DIR,
         split_dir = SPLIT_DATA_DIR
     )

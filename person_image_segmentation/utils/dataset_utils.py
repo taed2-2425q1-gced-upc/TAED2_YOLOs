@@ -1,3 +1,11 @@
+"""
+Utility functions for dataset management.
+
+This module provides functions to download datasets, split them into training, validation, 
+and test sets, transform masks, generate labels, and manage data folder structure for machine 
+learning workflows.
+"""
+
 import os
 import random
 import shutil
@@ -5,19 +13,45 @@ import shutil
 from pathlib import Path
 from kaggle.api.kaggle_api_extended import KaggleApi
 
-from person_image_segmentation.utils.processing import copy_files, from_raw_masks_to_image_masks, from_image_masks_to_labels, from_image_masks_to_labels
-
+from person_image_segmentation.utils.processing import (
+    copy_files,
+    from_raw_masks_to_image_masks,
+    from_image_masks_to_labels
+)
 
 def download_dataset(dataset_link: str, data_dir: Path) -> None:
+    """
+    Download a dataset from Kaggle.
+
+    Args:
+        dataset_link (str): Kaggle dataset link.
+        data_dir (Path): Path to the directory where the dataset will be downloaded.
+
+    Returns:
+        None
+    """
     # Create data directory if it does not exist
     data_dir.mkdir(parents = True, exist_ok = True)
-    
+
     api = KaggleApi()
     api.authenticate()
     api.dataset_download_files(dataset_link, path = data_dir, unzip = True)
 
 
-def split_dataset(train_size: float, val_size: float, test_size: float, data_dir: Path, split_dir: Path) -> None:
+def split_dataset(train_size: float, val_size: float,
+                  data_dir: Path, split_dir: Path) -> None:
+    """
+    Split the dataset into training, validation, and test sets.
+
+    Args:
+        train_size (float): Proportion of data to use for training.
+        val_size (float): Proportion of data to use for validation.
+        data_dir (Path): Path to the directory containing the original dataset.
+        split_dir (Path): Path to the directory where the split dataset will be saved.
+
+    Returns:
+        None
+    """
     # Define directories
     images_dir = data_dir / 'dataset_person-yolos/data/images'
     masks_dir = data_dir / 'dataset_person-yolos/data/masks'
@@ -58,6 +92,17 @@ def split_dataset(train_size: float, val_size: float, test_size: float, data_dir
 
 
 def transform_masks(split_dir: Path, transform_dir: Path) -> None:
+    """
+    Transform mask images from raw format to image masks format.
+
+    Args:
+        split_dir (Path): Path to the directory containing the split dataset 
+                          (training, validation, and test).
+        transform_dir (Path): Path to the directory where the transformed masks will be saved.
+
+    Returns:
+        None
+    """
     # Define directories
     input_dir_train = split_dir / 'masks/train'
     output_dir_train = transform_dir / 'masks/train'
@@ -88,6 +133,18 @@ def transform_masks(split_dir: Path, transform_dir: Path) -> None:
 
 
 def generate_labels(transform_dir: Path, labels_dir: Path, split_dir: Path) -> None:
+    """
+    Generate labels from transformed masks.
+
+    Args:
+        transform_dir (Path): Path to the directory containing the transformed masks.
+        labels_dir (Path): Path to the directory where the generated labels will be saved.
+        split_dir (Path): Path to the directory containing the original split dataset.
+
+    Returns:
+        None
+    """
+
     # Define directories
     input_dir_train = transform_dir / 'masks/train'
     output_dir_train = labels_dir / 'labels/train'
@@ -118,5 +175,17 @@ def generate_labels(transform_dir: Path, labels_dir: Path, split_dir: Path) -> N
 
 
 def complete_data_folder(config_names: list[str], src_folder: Path, dst_folder: Path) -> None:
+    """
+    Copy configuration files from the source folder to the destination folder.
+
+    Args:
+        config_names (list[str]): List of configuration file names to copy.
+        src_folder (Path): Path to the source folder containing the configuration files.
+        dst_folder (Path): Path to the destination folder where the files will be copied.
+
+    Returns:
+        None
+    """
     for config_name in config_names:
         shutil.copy(src_folder / config_name, dst_folder / config_name)
+        

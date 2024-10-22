@@ -1,3 +1,23 @@
+"""
+Person Image Segmentation Pipeline.
+
+This script sets up the environment for downloading a dataset for person image segmentation.
+It loads environment variables, configures the dataset directory, and downloads the dataset
+from a specified source (Kaggle). The script supports a test mode where an alternative data
+directory is used.
+
+Usage:
+    python complete_data_folder.py [--test]
+
+Args:
+    --test: Run the pipeline in test mode, which uses a different data directory for testing purposes.
+
+Environment Variables:
+    KAGGLE_USERNAME: The Kaggle username used for authentication.
+    KAGGLE_KEY: The Kaggle API key used for authentication.
+
+"""
+
 import argparse
 import os
 
@@ -21,7 +41,7 @@ if __name__ == "__main__":
 
     if args.test:
         RAW_DATA_DIR = Path(str(RAW_DATA_DIR).replace('data', 'test_data'))
-    
+
     # Download the dataset
     download_dataset(
         dataset_link = DATASET_LINK,

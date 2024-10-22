@@ -1,4 +1,11 @@
-""" First version of the training script for the model """
+"""
+Training script for YOLOv8 model.
+
+This script configures and trains a YOLOv8 model for image segmentation using 
+MLflow for experiment tracking, DagsHub for version control, and CodeCarbon 
+for tracking carbon emissions. It supports both CPU and GPU training.
+"""
+
 import subprocess
 import sys
 import os
@@ -46,6 +53,11 @@ with EmissionsTracker(gpu_ids=[]) as tracker:
     with mlflow.start_run(run_name="YoloV8-training-v0-Hyps"):
 
         # Training the model
-        results = model.train(data=CONFIG_FILE_PATH, epochs=100, imgsz=640, cfg = CFG_FILE_PATH_HYPS, name="Yolo Weights")
+        results = model.train(
+            data=CONFIG_FILE_PATH,
+            epochs=100,
+            imgsz=640,
+            cfg = CFG_FILE_PATH_HYPS,
+            name="Yolo Weights")
 
         print("Training completed and experiments recorded in MLflow.")

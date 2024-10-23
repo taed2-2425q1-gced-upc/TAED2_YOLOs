@@ -1,6 +1,26 @@
-import argparse
+"""
+Person Image Segmentation Pipeline - Mask Transformation.
 
-from dotenv import load_dotenv
+This script transforms the masks in the dataset by converting them from their original format
+to a format suitable for training a segmentation model. It uses predefined directories for split
+data and transformed data, and allows for running in test mode to use alternative data directories.
+
+Usage:
+    python transform_masks.py [--test]
+
+Args:
+    --test: Run the pipeline in test mode, which changes the data directories to use a
+            test-specific path.
+
+Functionality:
+    - Updates the data directories to point to test directories if the '--test' argument is
+      provided.
+    - Calls the 'transform_masks' function to transform the masks in the dataset and save them in
+      the specified directory.
+"""
+
+
+import argparse
 from pathlib import Path
 
 from person_image_segmentation.config import SPLIT_DATA_DIR, TRANSFORM_DATA_DIR
@@ -16,7 +36,7 @@ if __name__ == "__main__":
     if args.test:
         SPLIT_DATA_DIR = Path(str(SPLIT_DATA_DIR).replace('data', 'test_data'))
         TRANSFORM_DATA_DIR = Path(str(TRANSFORM_DATA_DIR).replace('data', 'test_data'))
-    
+
     # Transform masks
     transform_masks(
         split_dir = SPLIT_DATA_DIR,

@@ -1,9 +1,18 @@
+"""
+Module for testing the FastAPI application for YOLO image segmentation.
+
+This module includes tests for different endpoints and scenarios to ensure the correct 
+functionality of the API, including token validation, file format handling, and edge cases 
+such as no masks found in the prediction.
+"""
+
 import os
+from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 from person_image_segmentation.api.app import app
 from dotenv import load_dotenv
-from pathlib import Path
+
 
 load_dotenv()
 
@@ -18,7 +27,7 @@ def test_image_path():
     """
     Fixture for the path of a test image.
     """
-    path = REPO_PATH + "/tests/test_image.jpg"
+    path = REPO_PATH + "/tests/test_images/test_image.jpg"
     if not os.path.exists(path):
         pytest.fail(f"Test image not found at {path}")
     return path
@@ -28,7 +37,7 @@ def test_non_jpeg_image_path():
     """
     Fixture for the path of a non-JPEG test image.
     """
-    path = REPO_PATH + "/tests/test_image.png"
+    path = REPO_PATH + "/tests/test_images/test_image.png"
     if not os.path.exists(path):
         pytest.fail(f"Test non-JPEG image not found at {path}")
     return path
@@ -110,7 +119,7 @@ def test_predict_mask_with_no_masks():
     """
     Test the prediction route when no masks are found in the prediction.
     """
-    no_mask_image_path = REPO_PATH + "/tests/test_image_no_mask.png"
+    no_mask_image_path = REPO_PATH + "/tests/test_images/test_image_no_mask.png"
     if not os.path.exists(no_mask_image_path):
         pytest.fail(f"Test image with no masks not found at {no_mask_image_path}")
 
@@ -121,8 +130,10 @@ def test_predict_mask_with_no_masks():
             headers={"Authorization": f"Bearer {VALID_TOKEN}"},
         )
 
-    # Verificar que la API devuelve un código de estado 400 cuando no se encuentran máscaras
+    # Verify that the API returns a 400 status code when no masks are found
     assert response.status_code == 400, "Expected status code 400 when no masks are found."
     response_json = response.json()
-    assert "detail" in response_json, "Response should contain a 'detail' message when no masks are found."
-    assert response_json["detail"] == "No masks found in the prediction.", "The error message should indicate that no masks were found."
+    assert "detail" in response_json, "'detail' key is missing in the response."
+    assert (
+        response_json["detail"] == "No masks found in the prediction."
+        ), "Unexpected error message."

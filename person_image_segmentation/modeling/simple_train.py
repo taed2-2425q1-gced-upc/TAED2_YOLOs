@@ -1,5 +1,11 @@
-import subprocess
-import sys
+"""
+Simple training script for YOLOv8 model.
+
+This script configures and trains a YOLOv8 model for image segmentation using 
+MLflow for experiment tracking, DagsHub for version control, and CodeCarbon 
+for tracking carbon emissions. It supports both CPU and GPU training.
+"""
+
 import os
 import mlflow
 import dagshub
@@ -12,7 +18,8 @@ from person_image_segmentation.config import REPO_PATH
 
 # Print GPU availability for debugging
 print("Is CUDA available?:", torch.cuda.is_available())
-print("GPU Device Name:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "No GPU Found")
+print("GPU Device Name:", torch.cuda.get_device_name(0)
+      if torch.cuda.is_available() else "No GPU Found")
 
 # Disable W&B logging
 os.environ["WANDB_MODE"] = "offline"
@@ -45,8 +52,21 @@ with EmissionsTracker(gpu_ids=[0]) as tracker:
     with mlflow.start_run(run_name="YoloV8-training-v0-Hyps"):
         # Training the model
         if not torch.cuda.is_available():
-            results = model.train(data=config_file_path, epochs=1, imgsz=640, cfg = cfg_file_path_hyps, name="Sample_Train__DVC_Pipeline")
+            results = model.train(
+                data=config_file_path,
+                epochs=1,
+                imgsz=640,
+                cfg = cfg_file_path_hyps,
+                name="Sample_Train__DVC_Pipeline"
+                )
         else:
-            results = model.train(data=config_file_path, epochs=1, imgsz=640, cfg = cfg_file_path_hyps, name="Sample_Train__DVC_Pipeline", device = 0)
+            results = model.train(
+                data=config_file_path,
+                epochs=1,
+                imgsz=640,
+                cfg = cfg_file_path_hyps,
+                name="Sample_Train__DVC_Pipeline",
+                device = 0
+                )
 
-        print("Entrenamiento completado y experimentos registrados en MLflow.")
+        print("Training completed and experiments recorded in MLflow.")

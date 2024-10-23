@@ -1,14 +1,29 @@
 """ Tests for the data pipeline """
 import os
 from pathlib import Path
-import subprocess
+import shutil
 from dotenv import load_dotenv
 import pytest
 
 
 
-from person_image_segmentation.config import RAW_DATA_DIR, SPLIT_DATA_DIR, TRANSFORM_DATA_DIR, LABELS_DATA_DIR, TRAIN_SIZE, VAL_SIZE, TEST_SIZE, DATASET_LINK, KAGGLE_KEY, KAGGLE_USERNAME
-from person_image_segmentation.utils.dataset_utils import download_dataset, split_dataset, transform_masks, generate_labels, complete_data_folder
+
+from person_image_segmentation.config import (
+    RAW_DATA_DIR,
+    SPLIT_DATA_DIR,
+    TRANSFORM_DATA_DIR,
+    LABELS_DATA_DIR,
+    TRAIN_SIZE,
+    VAL_SIZE,
+    DATASET_LINK
+)
+from person_image_segmentation.utils.dataset_utils import (
+    download_dataset,
+    split_dataset,
+    transform_masks,
+    generate_labels,
+    complete_data_folder
+)
 
 load_dotenv()
 
@@ -27,8 +42,7 @@ def run_data_pipeline():
     """ Runs de data pipelin to be tested """
     # Run the pipeline script
     print("Running the data pipeline script...")
-    pipelines_path = REPO_PATH / 'person_image_segmentation/pipelines/'
-    
+
     # Download raw data
     download_dataset(
         dataset_link = DATASET_LINK,
@@ -71,7 +85,7 @@ def run_data_pipeline():
 
     yield
 
-def test_data_pipeline_and_structure(run_data_pipeline):
+def test_data_pipeline_and_structure():
     """Tests the data pipeline and its structure"""
     # Check if the data folder exists
     assert TEST_DATA_DIR.exists()

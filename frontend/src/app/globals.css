@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #080c13;
+  --foreground: #ededed;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #080c13;
     --foreground: #ededed;
   }
 }
@@ -24,4 +24,18 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Add this to your global CSS or component-specific CSS */
+input[type="checkbox"]:checked::before {
+  content: "✔";
+  display: block;
+  color: white;
+  font-size: 10px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.8rem;
+  font-weight: 500;
 }

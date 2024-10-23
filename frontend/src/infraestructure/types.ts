@@ -11,3 +11,10 @@ export function toImage(file: File): Image {
     url: URL.createObjectURL(file),
   }
 }
+
+export interface PredictionStats {
+  mIoU: number
+  precision: number
+  recall: number
+  f1: number
+}

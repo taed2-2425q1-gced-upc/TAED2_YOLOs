@@ -4,29 +4,39 @@ import PageHeader from "@/components/layout/PageHeader"
 import PageSubtitle from "@/components/text/PageSubtitle"
 import PageTitle from "@/components/text/PageTitle"
 import {Image} from "@/infraestructure/types"
-import {predictService} from "@/infraestructure/predictionsService"
+import {
+  PredictionData,
+  predictService,
+} from "@/infraestructure/predictionsService"
 import {ImageUpload} from "@/components/image/ImageUpload"
 import toast from "react-hot-toast"
 import {PredictionCard} from "@/components/predictions/PredictionCard"
+import {PredictionStatsContainer} from "@/components/predictions/PredictionStats"
 
 export default function Home() {
-  const [prediction, setPrediction] = useState<Image | null>(null)
+  const [prediction, setPrediction] = useState<PredictionData | null>(null)
   const [original, setOriginal] = useState<Image | null>(null)
 
-  const handlePrediction = async (img: Image) => {
+  const handlePrediction = async (img: Image, hasStats: boolean) => {
     setPrediction(null)
     setOriginal(img)
 
     try {
       toast.loading("Predicting...")
 
-      const prediction = await predictService.getPrediction(img)
+      console.log("predicting with stats?", hasStats)
+
+      const prediction = hasStats
+        ? await predictService.getPredictionWithStats(img)
+        : await predictService.getPrediction(img)
 
       if (!prediction.mask) {
         throw new Error("No mask found")
       }
 
-      setPrediction(prediction.mask)
+      console.log(prediction)
+
+      setPrediction(prediction)
       toast.dismiss() // Dismiss the loading toast
       toast.success(<b>Prediction complete!</b>)
     } catch (error: any) {
@@ -47,7 +57,8 @@ export default function Home() {
         <PageSubtitle>with YOLOv8-Seg</PageSubtitle>
       </PageHeader>
       <ImageUpload onSubmit={handlePrediction} />
-      <PredictionCard prediction={prediction!} original={original!} />
+      <PredictionCard prediction={prediction?.mask!} original={original!} />
+      <PredictionStatsContainer stats={prediction?.stats!} />
     </main>
   )
 }

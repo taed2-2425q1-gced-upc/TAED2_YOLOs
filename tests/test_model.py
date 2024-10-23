@@ -1,15 +1,15 @@
 """ Tests for the model """
-import pytest
 import os
 import time
+from unittest import mock
+from pathlib import Path
+import pytest
 import torch
 
-from pathlib import Path
 from dotenv import load_dotenv
 from ultralytics import YOLO
-from unittest import mock
 
-from person_image_segmentation.modeling.evaluation import compute_mIoU # pylint: disable=E0401
+from person_image_segmentation.modeling.evaluation import compute_miou # pylint: disable=E0401
 from person_image_segmentation.utils.modeling_utils import generate_predictions
 
 load_dotenv()
@@ -31,11 +31,13 @@ def run_prediction_pipeline():
     # Run the pipeline script
     print("Running the prediction pipeline script...")
     start_time = time.time()
-    
-    PREDS_PATH = REPO_PATH / "predictions"
+
     test_folder = BASE_DATA_PATH / "processed/images/test"
     file_names = os.listdir(test_folder)
-    file_names = [str(test_folder / file) for file in file_names if os.path.isfile(str(test_folder / file))]
+    file_names = [
+        str(test_folder / file) for file in file_names
+        if os.path.isfile(str(test_folder / file))
+        ]
     model = YOLO(BEST_WEIGHTS_FULL_PATH)
 
     generate_predictions(
@@ -62,7 +64,7 @@ def run_evaluation_pipeline():
         for file in file_names
         if os.path.isfile(str(folder_path / file))
     ]
-    miou = compute_mIoU(file_names, PREDS_PATH)
+    miou = compute_miou(file_names, PREDS_PATH)
 
     yield miou
 
@@ -76,19 +78,18 @@ def test_model_performance(run_evaluation_pipeline):
     """ Tests the performance of the model """
     miou = run_evaluation_pipeline
     print("mIoU is: ", miou)
-    assert miou > 0.85 
+    assert miou > 0.85
 
 def test_generate_predictions_raises_exception_on_image_processing_error():
-    # Mock the model to return a valid result object
+    """Test to check if an exception is raised for image processing errors."""
     mock_model = mock.Mock()
     mock_result = mock.Mock()
     mock_result.masks.data = torch.tensor([[0, 0], [0, 1]])  # Simulate masks data
     mock_model.return_value = [mock_result]
-    
+
     # Mock the cv2.imread to simulate an error when reading an image
     with mock.patch("cv2.imread", side_effect=Exception("Error reading image")):
         test_filenames = ["path/to/image1.jpg"]
-        predictions_folder = Path("predictions")
 
         # Check that the exception is raised with the correct message
         with pytest.raises(Exception, match="Error processing"):

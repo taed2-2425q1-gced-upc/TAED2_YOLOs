@@ -37,7 +37,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Cargar el modelo de YOLO
+# Load the YOLO template
 REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
 BEST_WEIGHTS = Path(os.getenv('PATH_TO_BEST_WEIGHTS', 'yolov8m-seg.pt'))
 BEST_WEIGHTS_FULL_PATH = str(REPO_PATH / BEST_WEIGHTS)
@@ -46,7 +46,6 @@ model = YOLO(BEST_WEIGHTS_FULL_PATH)
 
 VALID_TOKEN = str(Path(os.getenv('VALID_TOKEN')))
 
-# Configurar el esquema de seguridad para el token
 security = HTTPBearer()
 
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
@@ -75,7 +74,6 @@ app.mount("/static", StaticFiles(
     directory = str(REPO_PATH) + "/static", html=True), name = "static"
     )
 
-# Ruta para servir el favicon
 @app.get("/favicon.ico", include_in_schema=True)
 async def favicon():
     """
@@ -86,7 +84,6 @@ async def favicon():
     """
     return FileResponse(str(REPO_PATH) + "/static/favicon.ico")
 
-# Función para limpiar imágenes más antiguas de una hora
 def clean_old_images():
     """
     Cleans up old image files from the static directory.
@@ -94,19 +91,18 @@ def clean_old_images():
     Files older than 10 minutes are deleted to free up storage space.
     """
     now = time.time()
-    time_ago = now - 600  # Cada 10 mins
+    time_ago = now - 600  # Every 10 mins
 
     for file in Path(str(REPO_PATH) + "/static").iterdir():
         if file.name != "favicon.ico" and file.is_file():
-            # Verificar la última modificación del archivo
+            # Check the last modification of the file
             if file.stat().st_mtime < time_ago:
                 try:
-                    file.unlink()  # Eliminar el archivo
+                    file.unlink() 
                     print(f"File {file.name} deleted!")
                 except Exception as e:
                     print(f"Failed to delete {file.name}: {str(e)}")
 
-# Función para ejecutar la limpieza periódicamente
 def schedule_cleaning_task():
     """
     Schedules a periodic cleaning task to delete old files.
@@ -117,7 +113,6 @@ def schedule_cleaning_task():
         clean_old_images()
         time.sleep(60)  # Ejecutar cada 60 segundos
 
-# Configurar la ejecución de la tarea periódica en el evento de inicio
 @app.on_event("startup")
 async def startup_event():
     """
@@ -126,7 +121,6 @@ async def startup_event():
     cleaning_thread = Thread(target=schedule_cleaning_task, daemon=True)
     cleaning_thread.start()
 
-# Ruta base
 @app.get("/", response_model=RootResponse)
 def read_root():
     """
@@ -137,7 +131,6 @@ def read_root():
     """
     return RootResponse(message="API para hacer predicciones con YOLO")
 
-# Ruta para hacer predicciones
 @app.post("/predict/", response_model=PredictionResponse, responses={400: {"model": ErrorResponse}})
 async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify_token)):
     """
@@ -153,7 +146,7 @@ async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify
     Raises:
         HTTPException: If there is an error during processing.
     """
-    # Guardar el archivo temporalmente
+    # Save the file temporarily
     img_path = f"temp_{file.filename}"
     try:
         with open(img_path, "wb") as buffer:
@@ -167,21 +160,20 @@ async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify
             os.remove(img_path)
             img_path = jpg_path
 
-        # Llamar a la función predict_mask_function para realizar la predicción
+        # Call the predict_mask_function to perform the prediction
         response = predict_mask_function(img_path, Path(REPO_PATH / "static"), img, model)
 
-        # Eliminar archivo temporal
+        # Delete temporary file
         os.remove(img_path)
 
         return response
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        # Asegurarse de eliminar el archivo temporal
+        # Make sure to delete the temporary file
         if os.path.exists(img_path):
             os.remove(img_path)
 
-# Nuevo endpoint para predicción y seguimiento de emisiones
 @app.post("/predict_with_emissions/",
           response_model=PredictionAndEnergyResponse,
           responses={400: {"model": ErrorResponse}}
@@ -202,7 +194,7 @@ async def predict_mask_with_emissions(
     Raises:
         HTTPException: If there is an error during processing.
     """
-    # Guardar el archivo temporalmente
+    # Save the file temporarily
     img_path = f"temp_{file.filename}"
     try:
         with open(img_path, "wb") as buffer:
@@ -216,14 +208,14 @@ async def predict_mask_with_emissions(
             os.remove(img_path)
             img_path = jpg_path
 
-        # Realizar predicción y seguimiento de emisiones
+        # Predict and monitor emissions
         emissions_stats = {}
         with EmissionsTracker(
             output_dir=str(REPO_PATH / "static"), output_file="emissions_inference_api.csv"
             ) as tracker:
             response = predict_mask_function(img_path, Path(REPO_PATH / "static"), img, model)
 
-        # Leer el archivo de emisiones y devolver los resultados
+        # Read the emissions file and return the results
         emissions_file = REPO_PATH / "static" / "emissions_inference_api.csv"
         if emissions_file.exists():
             emissions_data = pd.read_csv(emissions_file).to_dict(orient='records')
@@ -244,6 +236,6 @@ async def predict_mask_with_emissions(
             message="Prediction complete with energy tracking!"
             )
     finally:
-        # Asegurarse de eliminar el archivo temporal
+        # Make sure to delete the temporary file
         if os.path.exists(img_path):
             os.remove(img_path)

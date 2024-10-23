@@ -13,8 +13,10 @@ export function toImage(file: File): Image {
 }
 
 export interface PredictionStats {
-  mIoU: number
-  precision: number
-  recall: number
-  f1: number
+  emissions: number
+  duration: number
+  cpu_power: number
+  gpu_power: number
+  ram_power: number
+  energy_consumed: number
 }

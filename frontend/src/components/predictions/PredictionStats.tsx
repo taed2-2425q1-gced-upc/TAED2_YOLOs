@@ -36,7 +36,7 @@ export const PredictionStat: React.FC<Stat> = ({statName, statValue}) => {
   return (
     <div className="flex items-center gap-2 bg-gray-900 rounded-lg py-2 px-4">
       <h3>{statName}:</h3>
-      <p>{statValue}</p>
+      <p className="font-extralight">{statValue}</p>
     </div>
   )
 }

@@ -5,16 +5,16 @@ stages:
     deps:
     - path: person_image_segmentation/config.py
       hash: md5
-      md5: 6c73610546ae015ce69b499453c3bd0f
-      size: 1401
+      md5: c65d52cabd49bcdc26e49c701550b13a
+      size: 1245
     - path: person_image_segmentation/pipelines/download_raw_data.py
       hash: md5
-      md5: 5b6149b8ca2cff50b85265ed0c68bb8c
-      size: 899
+      md5: 71d6cf6f0d67f0e168ddbce4c3981ca5
+      size: 1556
     - path: person_image_segmentation/utils/dataset_utils.py
       hash: md5
-      md5: 086eb4da3561d8f6b79fc9e5aeefc184
-      size: 4918
+      md5: d746d21ddad9e96ffbd2baaddda0d064
+      size: 6992
     outs:
     - path: data/raw/dataset_person-yolos/data/images
       hash: md5
@@ -46,228 +46,228 @@ stages:
       nfiles: 5000
     - path: person_image_segmentation/config.py
       hash: md5
-      md5: 6c73610546ae015ce69b499453c3bd0f
-      size: 1401
+      md5: c65d52cabd49bcdc26e49c701550b13a
+      size: 1245
     - path: person_image_segmentation/pipelines/split_data.py
       hash: md5
-      md5: 7f26ab3cad9477fd33e6b38822d67265
-      size: 867
+      md5: e4ec1e5a9050848b840086d0f0acc1d8
+      size: 1623
     - path: person_image_segmentation/utils/dataset_utils.py
       hash: md5
-      md5: 086eb4da3561d8f6b79fc9e5aeefc184
-      size: 4918
+      md5: d746d21ddad9e96ffbd2baaddda0d064
+      size: 6992
     outs:
     - path: data/interim/splitted/images/test
       hash: md5
-      md5: fc0d520b3bc8576ee7a6cedaf5b612e5.dir
-      size: 44850583
+      md5: 5059e61a127d58534aeea9f02346915f.dir
+      size: 43845881
       nfiles: 750
     - path: data/interim/splitted/images/train
       hash: md5
-      md5: 0066881e0257735f187692b3f3e2f568.dir
-      size: 208500112
+      md5: 54996c41c37d7b56eb4cdba5507d973e.dir
+      size: 208197995
       nfiles: 3500
     - path: data/interim/splitted/images/val
       hash: md5
-      md5: d686605d5a6b9207e4e091eacdccc398.dir
-      size: 42900191
+      md5: 5e339705d57e130a46a826eda4687247.dir
+      size: 44207010
       nfiles: 750
     - path: data/interim/splitted/masks/test
       hash: md5
-      md5: 75c11eef4dc8a21d084d5e9bada29f3b.dir
-      size: 2248450
+      md5: 7bfbd2a5af4530f9ca765fe2af073e7c.dir
+      size: 2249425
       nfiles: 750
     - path: data/interim/splitted/masks/train
       hash: md5
-      md5: 192bf0db04f8db85bf5f5d9db8a1eae9.dir
-      size: 10543581
+      md5: d7c2f2e85f8f1879506d57fc016770d4.dir
+      size: 10504887
       nfiles: 3500
     - path: data/interim/splitted/masks/val
       hash: md5
-      md5: fe111e5ceb8791e8234ed724d136964b.dir
-      size: 2226078
+      md5: d2d3412cbf43b7ade5c5514952aaefbe.dir
+      size: 2263797
       nfiles: 750
   transform_masks:
     cmd: python3 -m person_image_segmentation.pipelines.transform_masks
     deps:
     - path: data/interim/splitted/images/test
       hash: md5
-      md5: fc0d520b3bc8576ee7a6cedaf5b612e5.dir
-      size: 44850583
+      md5: 5059e61a127d58534aeea9f02346915f.dir
+      size: 43845881
       nfiles: 750
     - path: data/interim/splitted/images/train
       hash: md5
-      md5: 0066881e0257735f187692b3f3e2f568.dir
-      size: 208500112
+      md5: 54996c41c37d7b56eb4cdba5507d973e.dir
+      size: 208197995
       nfiles: 3500
     - path: data/interim/splitted/images/val
       hash: md5
-      md5: d686605d5a6b9207e4e091eacdccc398.dir
-      size: 42900191
+      md5: 5e339705d57e130a46a826eda4687247.dir
+      size: 44207010
       nfiles: 750
     - path: data/interim/splitted/masks/test
       hash: md5
-      md5: 75c11eef4dc8a21d084d5e9bada29f3b.dir
-      size: 2248450
+      md5: 7bfbd2a5af4530f9ca765fe2af073e7c.dir
+      size: 2249425
       nfiles: 750
     - path: data/interim/splitted/masks/train
       hash: md5
-      md5: 192bf0db04f8db85bf5f5d9db8a1eae9.dir
-      size: 10543581
+      md5: d7c2f2e85f8f1879506d57fc016770d4.dir
+      size: 10504887
       nfiles: 3500
     - path: data/interim/splitted/masks/val
       hash: md5
-      md5: fe111e5ceb8791e8234ed724d136964b.dir
-      size: 2226078
+      md5: d2d3412cbf43b7ade5c5514952aaefbe.dir
+      size: 2263797
       nfiles: 750
     - path: person_image_segmentation/config.py
       hash: md5
-      md5: 6c73610546ae015ce69b499453c3bd0f
-      size: 1401
+      md5: c65d52cabd49bcdc26e49c701550b13a
+      size: 1245
     - path: person_image_segmentation/pipelines/transform_masks.py
       hash: md5
-      md5: e95b1b5a180e5bd7c00969ad732b836a
-      size: 791
+      md5: 7d360e7b50629a1dbcf2386b05e95148
+      size: 1571
     - path: person_image_segmentation/utils/dataset_utils.py
       hash: md5
-      md5: 086eb4da3561d8f6b79fc9e5aeefc184
-      size: 4918
+      md5: d746d21ddad9e96ffbd2baaddda0d064
+      size: 6992
     outs:
     - path: data/interim/transformed/images/test
       hash: md5
-      md5: fc0d520b3bc8576ee7a6cedaf5b612e5.dir
-      size: 44850583
+      md5: 5059e61a127d58534aeea9f02346915f.dir
+      size: 43845881
       nfiles: 750
     - path: data/interim/transformed/images/train
       hash: md5
-      md5: 0066881e0257735f187692b3f3e2f568.dir
-      size: 208500112
+      md5: 54996c41c37d7b56eb4cdba5507d973e.dir
+      size: 208197995
       nfiles: 3500
     - path: data/interim/transformed/images/val
       hash: md5
-      md5: d686605d5a6b9207e4e091eacdccc398.dir
-      size: 42900191
+      md5: 5e339705d57e130a46a826eda4687247.dir
+      size: 44207010
       nfiles: 750
     - path: data/interim/transformed/masks/test
       hash: md5
-      md5: 242ae3d59eecb6a1c88f004ea6af4e5f.dir
-      size: 1135792
+      md5: 64f0376d75986bf8d82994ab99070cfd.dir
+      size: 1137094
       nfiles: 750
     - path: data/interim/transformed/masks/train
       hash: md5
-      md5: 6a5636466044e76992ae025c07d95bde.dir
-      size: 5336358
+      md5: 4143211f629bfbef8605b1a1152d8bf5.dir
+      size: 5315315
       nfiles: 3500
     - path: data/interim/transformed/masks/val
       hash: md5
-      md5: 5675fb2f36cb11a49575389fcf1fa4a3.dir
-      size: 1122275
+      md5: 7235ed6f061dd83635d4ba624289467a.dir
+      size: 1142016
       nfiles: 750
   create_labels:
     cmd: python3 -m person_image_segmentation.pipelines.create_labels
     deps:
     - path: data/interim/splitted/images/test
       hash: md5
-      md5: fc0d520b3bc8576ee7a6cedaf5b612e5.dir
-      size: 44850583
+      md5: 5059e61a127d58534aeea9f02346915f.dir
+      size: 43845881
       nfiles: 750
     - path: data/interim/splitted/images/train
       hash: md5
-      md5: 0066881e0257735f187692b3f3e2f568.dir
-      size: 208500112
+      md5: 54996c41c37d7b56eb4cdba5507d973e.dir
+      size: 208197995
       nfiles: 3500
     - path: data/interim/splitted/images/val
       hash: md5
-      md5: d686605d5a6b9207e4e091eacdccc398.dir
-      size: 42900191
+      md5: 5e339705d57e130a46a826eda4687247.dir
+      size: 44207010
       nfiles: 750
     - path: data/interim/splitted/masks/test
       hash: md5
-      md5: 75c11eef4dc8a21d084d5e9bada29f3b.dir
-      size: 2248450
+      md5: 7bfbd2a5af4530f9ca765fe2af073e7c.dir
+      size: 2249425
       nfiles: 750
     - path: data/interim/splitted/masks/train
       hash: md5
-      md5: 192bf0db04f8db85bf5f5d9db8a1eae9.dir
-      size: 10543581
+      md5: d7c2f2e85f8f1879506d57fc016770d4.dir
+      size: 10504887
       nfiles: 3500
     - path: data/interim/splitted/masks/val
       hash: md5
-      md5: fe111e5ceb8791e8234ed724d136964b.dir
-      size: 2226078
+      md5: d2d3412cbf43b7ade5c5514952aaefbe.dir
+      size: 2263797
       nfiles: 750
     - path: data/interim/transformed/images/test
       hash: md5
-      md5: fc0d520b3bc8576ee7a6cedaf5b612e5.dir
-      size: 44850583
+      md5: 5059e61a127d58534aeea9f02346915f.dir
+      size: 43845881
       nfiles: 750
     - path: data/interim/transformed/images/train
       hash: md5
-      md5: 0066881e0257735f187692b3f3e2f568.dir
-      size: 208500112
+      md5: 54996c41c37d7b56eb4cdba5507d973e.dir
+      size: 208197995
       nfiles: 3500
     - path: data/interim/transformed/images/val
       hash: md5
-      md5: d686605d5a6b9207e4e091eacdccc398.dir
-      size: 42900191
+      md5: 5e339705d57e130a46a826eda4687247.dir
+      size: 44207010
       nfiles: 750
     - path: data/interim/transformed/masks/test
       hash: md5
-      md5: 242ae3d59eecb6a1c88f004ea6af4e5f.dir
-      size: 1135792
+      md5: 64f0376d75986bf8d82994ab99070cfd.dir
+      size: 1137094
       nfiles: 750
     - path: data/interim/transformed/masks/train
       hash: md5
-      md5: 6a5636466044e76992ae025c07d95bde.dir
-      size: 5336358
+      md5: 4143211f629bfbef8605b1a1152d8bf5.dir
+      size: 5315315
       nfiles: 3500
     - path: data/interim/transformed/masks/val
       hash: md5
-      md5: 5675fb2f36cb11a49575389fcf1fa4a3.dir
-      size: 1122275
+      md5: 7235ed6f061dd83635d4ba624289467a.dir
+      size: 1142016
       nfiles: 750
     - path: person_image_segmentation/config.py
       hash: md5
-      md5: 6c73610546ae015ce69b499453c3bd0f
-      size: 1401
+      md5: c65d52cabd49bcdc26e49c701550b13a
+      size: 1245
     - path: person_image_segmentation/pipelines/create_labels.py
       hash: md5
-      md5: 91b460f148a94ea8b81a19e0058c8d45
-      size: 929
+      md5: 5bf240078847e337731a224e128bbba9
+      size: 1627
     - path: person_image_segmentation/utils/dataset_utils.py
       hash: md5
-      md5: 086eb4da3561d8f6b79fc9e5aeefc184
-      size: 4918
+      md5: d746d21ddad9e96ffbd2baaddda0d064
+      size: 6992
     outs:
     - path: data/processed/images/test
       hash: md5
-      md5: fc0d520b3bc8576ee7a6cedaf5b612e5.dir
-      size: 44850583
+      md5: 5059e61a127d58534aeea9f02346915f.dir
+      size: 43845881
       nfiles: 750
     - path: data/processed/images/train
       hash: md5
-      md5: 0066881e0257735f187692b3f3e2f568.dir
-      size: 208500112
+      md5: 54996c41c37d7b56eb4cdba5507d973e.dir
+      size: 208197995
       nfiles: 3500
     - path: data/processed/images/val
       hash: md5
-      md5: d686605d5a6b9207e4e091eacdccc398.dir
-      size: 42900191
+      md5: 5e339705d57e130a46a826eda4687247.dir
+      size: 44207010
       nfiles: 750
     - path: data/processed/labels/test
       hash: md5
-      md5: c8dcf1cb366282350071c3b02ba8ffce.dir
-      size: 13077426
+      md5: 93f342baf7c63d47d507d060b066b505.dir
+      size: 13056791
       nfiles: 750
     - path: data/processed/labels/train
       hash: md5
-      md5: f8016348b5fd2552011f6d8a99f6587c.dir
-      size: 61216079
+      md5: 8c3aa084c76d8be588dee3f24bfb0153.dir
+      size: 60981824
       nfiles: 3500
     - path: data/processed/labels/val
       hash: md5
-      md5: ebb7af4080aea4b2d71963bb7b71796e.dir
-      size: 12767414
+      md5: ba51cf328283de7b103d4adad6fc5d17.dir
+      size: 13022304
       nfiles: 750
   complete_data_folder:
     cmd: python3 -m person_image_segmentation.pipelines.complete_data_folder
@@ -282,8 +282,8 @@ stages:
       size: 317
     - path: person_image_segmentation/pipelines/complete_data_folder.py
       hash: md5
-      md5: 674cba8398fe62191aeafd41c3753fb9
-      size: 729
+      md5: 784a9ae7f9a4329f1451edd245ffbe3f
+      size: 1051
     outs:
     - path: data/config_hyps.yaml
       hash: md5
@@ -298,8 +298,8 @@ stages:
     deps:
     - path: data/processed/images/train
       hash: md5
-      md5: 0066881e0257735f187692b3f3e2f568.dir
-      size: 208500112
+      md5: 54996c41c37d7b56eb4cdba5507d973e.dir
+      size: 208197995
       nfiles: 3500
     - path: models/configs/config_hyps.yaml
       hash: md5
@@ -311,13 +311,13 @@ stages:
       size: 292
     - path: person_image_segmentation/modeling/simple_train.py
       hash: md5
-      md5: ce43bf42819977c1ec472f0cedda0b3b
-      size: 1748
+      md5: b207a2612b648e68e4fe8432fc7f0bd4
+      size: 2232
     outs:
     - path: runs/segment/Sample_Train__DVC_Pipeline
       hash: md5
-      md5: 28fefd4d18ded98adf3fa9c2903fd7c8.dir
-      size: 104711949
+      md5: 1c194b95b7c0c276b8812577ab1cbfb5.dir
+      size: 104625481
       nfiles: 26
     - path: yolov8m-seg.pt
       hash: md5
@@ -328,8 +328,8 @@ stages:
     deps:
     - path: data/processed/images/test
       hash: md5
-      md5: fc0d520b3bc8576ee7a6cedaf5b612e5.dir
-      size: 44850583
+      md5: 5059e61a127d58534aeea9f02346915f.dir
+      size: 43845881
       nfiles: 750
     - path: models/weights_v0/best.pt
       hash: md5
@@ -337,29 +337,29 @@ stages:
       size: 49567649
     - path: person_image_segmentation/modeling/prediction.py
       hash: md5
-      md5: ceaba28e387ca9e57de0c3cbd9084729
-      size: 3647
+      md5: 86565182700d095cc6a3cb14aca9d40f
+      size: 1891
     outs:
     - path: predictions
       hash: md5
-      md5: 17d7ae2fe7c5dda835e033b38abb3905.dir
-      size: 116231
+      md5: 836e12a54ff7fae6a0f3209b149187b3.dir
+      size: 106354
       nfiles: 10
   evaluate_model_sample:
     cmd: python3 -m person_image_segmentation.modeling.evaluation
     deps:
     - path: data/interim/transformed/masks/test
       hash: md5
-      md5: 242ae3d59eecb6a1c88f004ea6af4e5f.dir
-      size: 1135792
+      md5: 64f0376d75986bf8d82994ab99070cfd.dir
+      size: 1137094
       nfiles: 750
     - path: data/processed/images/test
       hash: md5
-      md5: fc0d520b3bc8576ee7a6cedaf5b612e5.dir
-      size: 44850583
+      md5: 5059e61a127d58534aeea9f02346915f.dir
+      size: 43845881
       nfiles: 750
     - path: predictions
       hash: md5
-      md5: 17d7ae2fe7c5dda835e033b38abb3905.dir
-      size: 116231
+      md5: 836e12a54ff7fae6a0f3209b149187b3.dir
+      size: 106354
       nfiles: 10

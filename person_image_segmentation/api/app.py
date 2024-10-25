@@ -98,9 +98,9 @@ def clean_old_images():
             # Check the last modification of the file
             if file.stat().st_mtime < time_ago:
                 try:
-                    file.unlink() 
+                    file.unlink()
                     print(f"File {file.name} deleted!")
-                except Exception as e:
+                except OSError as e:
                     print(f"Failed to delete {file.name}: {str(e)}")
 
 def schedule_cleaning_task():
@@ -132,7 +132,7 @@ def read_root():
     return RootResponse(message="API para hacer predicciones con YOLO")
 
 @app.post("/predict/", response_model=PredictionResponse, responses={400: {"model": ErrorResponse}})
-async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify_token)):
+async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify_token)): #pylint: disable = W0613
     """
     Endpoint to make predictions for image segmentation.
 
@@ -168,7 +168,7 @@ async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify
 
         return response
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
     finally:
         # Make sure to delete the temporary file
         if os.path.exists(img_path):
@@ -179,7 +179,7 @@ async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify
           responses={400: {"model": ErrorResponse}}
           )
 async def predict_mask_with_emissions(
-    file: UploadFile = File(...), token: str = Depends(verify_token)):
+    file: UploadFile = File(...), token: str = Depends(verify_token)): #pylint: disable = W0613
     """
     Endpoint to make predictions with energy consumption tracking.
 
@@ -212,7 +212,7 @@ async def predict_mask_with_emissions(
         emissions_stats = {}
         with EmissionsTracker(
             output_dir=str(REPO_PATH / "static"), output_file="emissions_inference_api.csv"
-            ) as tracker:
+            ) as _:
             response = predict_mask_function(img_path, Path(REPO_PATH / "static"), img, model)
 
         # Read the emissions file and return the results

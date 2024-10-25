@@ -10,7 +10,8 @@ Usage:
     python complete_data_folder.py [--test]
 
 Args:
-    --test: Run the pipeline in test mode, which uses a different data directory for testing purposes.
+    --test: Run the pipeline in test mode, which uses a different data directory for 
+    testing purposes.
 
 Environment Variables:
     KAGGLE_USERNAME: The Kaggle username used for authentication.

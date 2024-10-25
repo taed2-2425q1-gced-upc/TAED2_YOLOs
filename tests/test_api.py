@@ -5,13 +5,17 @@ This module includes tests for different endpoints and scenarios to ensure the c
 functionality of the API, including token validation, file format handling, and edge cases 
 such as no masks found in the prediction.
 """
+# pylint: disable=redefined-outer-name
+
+from pathlib import Path
 
 import os
-from pathlib import Path
 import pytest
+
 from fastapi.testclient import TestClient
-from person_image_segmentation.api.app import app
 from dotenv import load_dotenv
+
+from person_image_segmentation.api.app import app
 
 
 load_dotenv()

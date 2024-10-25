@@ -1,4 +1,6 @@
 """ Tests for the model """
+# pylint: disable=redefined-outer-name
+
 import os
 import time
 from unittest import mock

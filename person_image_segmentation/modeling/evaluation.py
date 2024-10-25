@@ -9,6 +9,7 @@ from codecarbon import EmissionsTracker # pylint: disable=E0401
 import mlflow
 import numpy as np
 
+from person_image_segmentation.utils.evaluation_utils import compute_miou
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -16,48 +17,6 @@ load_dotenv()
 # Declare the base data path
 BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
 REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
-
-""" Function to compute mean Intersection over Union (mIoU) from the predictions """
-def compute_miou(image_file_list: list[str], predictions_folder: Path) -> float:
-    """
-    Compute mean Intersection over Union (mIoU) for the provided list of image files
-    and their corresponding predictions.
-
-    ### Args:
-        image_file_list (list[str]): List of image file paths.
-        predictions_folder (Path): Path to the folder containing predicted masks.
-
-    ### Returns:
-        float: The computed mean IoU (mIoU).
-    """
-    # Initialize mean IoU
-    total_iou = 0
-    for image_file in image_file_list:
-        try:
-            file_name = image_file.split('/')[-1]
-            true_mask = np.asarray(
-                Image.open(
-                    image_file.replace("processed", "interim/transformed")
-                              .replace("images", "masks")
-                              .replace("jpg", "png")
-                )
-            )
-            pred_mask = np.asarray(Image.open(predictions_folder / file_name))
-
-            gtb = true_mask > 0
-            predb = pred_mask > 0
-
-            overlap = gtb * predb
-            union = gtb + predb
-            iou = overlap.sum() / union.sum()
-
-            total_iou += iou
-        except Exception as e:
-            raise RuntimeError(
-                f"Could not compute mIoU for image in {file_name} because of {e}"
-            ) from e
-    total_iou /= len(image_file_list)
-    return total_iou
 
 
 if __name__ == "__main__":

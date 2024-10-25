@@ -3,6 +3,9 @@
 /test_data/
 /out/
 
+# YOLOs results
+runs/
+
 # Mac OS-specific storage files
 .DS_Store
 

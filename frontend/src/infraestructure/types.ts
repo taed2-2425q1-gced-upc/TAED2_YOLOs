@@ -11,3 +11,12 @@ export function toImage(file: File): Image {
     url: URL.createObjectURL(file),
   }
 }
+
+export interface PredictionStats {
+  emissions: number
+  duration: number
+  cpu_power: number
+  gpu_power: number
+  ram_power: number
+  energy_consumed: number
+}

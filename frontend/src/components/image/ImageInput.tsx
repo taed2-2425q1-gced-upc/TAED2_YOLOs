@@ -30,7 +30,7 @@ const ImageInput: React.FC<ImageInputProps> = ({
 
   return (
     <div
-      className={`relative ${containerClassName} my-4`}
+      className={`relative ${containerClassName} my-2`}
       onClick={handleClick}
     >
       <input

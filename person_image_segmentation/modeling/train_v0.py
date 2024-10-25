@@ -6,6 +6,7 @@ MLflow for experiment tracking, DagsHub for version control, and CodeCarbon
 for tracking carbon emissions. It supports both CPU and GPU training.
 """
 
+# pylint: disable = R0801
 import subprocess
 import sys
 import os

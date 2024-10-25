@@ -51,10 +51,8 @@ def run_data_pipeline():
 
     # Split data
     split_dataset(
-        train_size = TRAIN_SIZE,
-        val_size = VAL_SIZE,
-        data_dir = RAW_DATA_DIR,
-        split_dir = SPLIT_DATA_DIR
+        train_size = TRAIN_SIZE, val_size = VAL_SIZE,
+        data_dir = RAW_DATA_DIR, split_dir = SPLIT_DATA_DIR
     )
 
     # Transform masks
@@ -65,8 +63,7 @@ def run_data_pipeline():
 
     # Create labels
     generate_labels(
-        transform_dir = TRANSFORM_DATA_DIR,
-        labels_dir = LABELS_DATA_DIR,
+        transform_dir = TRANSFORM_DATA_DIR, labels_dir = LABELS_DATA_DIR,
         split_dir = SPLIT_DATA_DIR
     )
 

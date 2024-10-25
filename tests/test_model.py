@@ -21,9 +21,7 @@ PREDS_PATH = REPO_PATH / "predictions"
 BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
 BEST_WEIGHTS = os.getenv('PATH_TO_BEST_WEIGHTS')
 BEST_WEIGHTS_FULL_PATH = (
-    str(REPO_PATH / BEST_WEIGHTS)
-    if BEST_WEIGHTS != "None"
-    else "yolov8m-seg.pt"
+    str(REPO_PATH / BEST_WEIGHTS) if BEST_WEIGHTS != "None" else "yolov8m-seg.pt"
 )
 MAX_PREDICTIONS = 10
 
@@ -35,15 +33,15 @@ def run_prediction_pipeline():
     start_time = time.time()
 
     test_folder = BASE_DATA_PATH / "processed/images/test"
-    file_names = os.listdir(test_folder)
-    file_names = [
-        str(test_folder / file) for file in file_names
+    test_file_names = os.listdir(test_folder)
+    test_file_names = [
+        str(test_folder / file) for file in test_file_names
         if os.path.isfile(str(test_folder / file))
         ]
     model = YOLO(BEST_WEIGHTS_FULL_PATH)
 
     generate_predictions(
-        test_filenames = file_names,
+        test_filenames = test_file_names,
         predictions_folder = PREDS_PATH,
         model = model,
         max_predictions = MAX_PREDICTIONS
@@ -60,13 +58,13 @@ def run_evaluation_pipeline():
     """ Runs the evaluation pipeline to be tested """
     # Compute the mIoU on the predicted samples
     folder_path = BASE_DATA_PATH / "processed/images/test"
-    file_names = os.listdir(PREDS_PATH)
-    file_names = [
+    test_file_names = os.listdir(PREDS_PATH)
+    test_file_names = [
         str(folder_path / file)
-        for file in file_names
+        for file in test_file_names
         if os.path.isfile(str(folder_path / file))
     ]
-    miou = compute_miou(file_names, PREDS_PATH)
+    miou = compute_miou(test_file_names, PREDS_PATH)
 
     yield miou
 

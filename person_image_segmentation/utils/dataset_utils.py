@@ -53,42 +53,48 @@ def split_dataset(train_size: float, val_size: float,
         None
     """
     # Define directories
-    images_dir = data_dir / 'dataset_person-yolos/data/images'
-    masks_dir = data_dir / 'dataset_person-yolos/data/masks'
-    images_dir_train = split_dir / 'images/train'
-    masks_dir_train = split_dir / 'masks/train'
-    images_dir_val = split_dir / 'images/val'
-    masks_dir_val = split_dir / 'masks/val'
-    images_dir_test = split_dir / 'images/test'
-    masks_dir_test = split_dir / 'masks/test'
+    data_paths = {
+        "images": data_dir / 'dataset_person-yolos/data/images',
+        "masks": data_dir / 'dataset_person-yolos/data/masks'
+    }
+    split_paths = {
+        "train": {
+            "images": split_dir / 'images/train',
+            "masks": split_dir / 'masks/train'
+        },
+        "val": {
+            "images": split_dir / 'images/val',
+            "masks": split_dir / 'masks/val'
+        },
+        "test": {
+            "images": split_dir / 'images/test',
+            "masks": split_dir / 'masks/test'
+        }
+    }
 
     # Get the list of samples and shuffle them
-    samples = os.listdir(images_dir)
+    samples = os.listdir(data_paths["images"])
     random.shuffle(samples)
 
-    # Calculate split indices
-    num_samples = len(samples)
-    train_end = int(train_size * num_samples)
-    val_end = train_end + int(val_size * num_samples)
-
-    # Split samples
-    train_samples = samples[:train_end]
-    val_samples = samples[train_end:val_end]
-    test_samples = samples[val_end:]
+    # Calculate split indices and split samples
+    train_end = int(train_size * len(samples))
+    val_end = train_end + int(val_size * len(samples))
+    sample_splits = {
+        "train": samples[:train_end],
+        "val": samples[train_end:val_end],
+        "test": samples[val_end:]
+    }
 
     # Create necessary directories
-    split_dir.mkdir(parents = True, exist_ok = True)
-    images_dir_train.mkdir(parents = True, exist_ok = True)
-    masks_dir_train.mkdir(parents = True, exist_ok = True)
-    images_dir_val.mkdir(parents = True, exist_ok = True)
-    masks_dir_val.mkdir(parents = True, exist_ok = True)
-    images_dir_test.mkdir(parents = True, exist_ok = True)
-    masks_dir_test.mkdir(parents = True, exist_ok = True)
+    split_dir.mkdir(parents=True, exist_ok=True)
+    for split in split_paths.values():
+        for path in split.values():
+            path.mkdir(parents=True, exist_ok=True)
 
     # Copy files to respective directories
-    copy_files(train_samples, images_dir, masks_dir, images_dir_train, masks_dir_train)
-    copy_files(val_samples, images_dir, masks_dir, images_dir_val, masks_dir_val)
-    copy_files(test_samples, images_dir, masks_dir, images_dir_test, masks_dir_test)
+    for split, split_samples in sample_splits.items():
+        copy_files(split_samples, data_paths["images"], data_paths["masks"],
+                   split_paths[split]["images"], split_paths[split]["masks"])
 
 
 def transform_masks(split_dir: Path, transform_dir: Path) -> None:

@@ -13,7 +13,7 @@ from person_image_segmentation.utils.dataset_utils import complete_data_folder
 
 if __name__ == "__main__":
     # Set up argument parser
-    parser = argparse.ArgumentParser(description="Person Image Segmentation Pipeline")
+    parser = argparse.ArgumentParser(description="Parser for Person Image Segmentation Pipeline")
     parser.add_argument('--test', action='store_true', help="Run the pipeline in test mode")
     args = parser.parse_args()
 

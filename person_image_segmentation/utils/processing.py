@@ -46,39 +46,34 @@ def from_raw_masks_to_image_masks(input_dirs: list[str], output_dirs: list[str])
             mask.save(save_path, 'PNG')
 
 
+def process_mask(image_path: str, output_file: str) -> None:
+    """Process the mask image and save contours as polygons to the output file."""
+    mask = imread(image_path, IMREAD_GRAYSCALE)
+    _, mask = threshold(mask, 1, 255, THRESH_BINARY)
+    h, w = mask.shape
+    contours, _ = findContours(mask, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
+
+    # Convert the contours to polygons
+    polygons = []
+    for cnt in contours:
+        if contourArea(cnt) > 200:
+            polygon = []
+            for point in cnt:
+                x, y = point[0]
+                polygon.append(x / w)
+                polygon.append(y / h)
+            polygons.append(polygon)
+
+    # Save polygons to the output file
+    with open(output_file, 'w', encoding='utf-8') as f:
+        for polygon in polygons:
+            f.write(' '.join(f'{p}' for p in polygon) + '\n')
+
+
 def from_image_masks_to_labels(input_dirs: list[str], output_dirs: list[str]) -> None:
-    """ Converts the masks from the image format to the labels format supported by YOLOv8-Seg """
+    """Converts the masks from the image format to the labels format supported by YOLOv8-Seg."""
     for input_dir, output_dir in zip(input_dirs, output_dirs):
-        for j in os.listdir(input_dir):
-            image_path = os.path.join(input_dir, j)
-            # load the binary mask and get its contours
-            mask = imread(image_path, IMREAD_GRAYSCALE)
-            _, mask = threshold(mask, 1, 255, THRESH_BINARY)
-
-            h, w = mask.shape
-            contours, _ = findContours(mask, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
-
-            # convert the contours to polygons
-            polygons = []
-            for cnt in contours:
-                if contourArea(cnt) > 200:
-                    polygon = []
-                    for point in cnt:
-                        x, y = point[0]
-                        polygon.append(x / w)
-                        polygon.append(y / h)
-                    polygons.append(polygon)
-
-            # print the polygons
-            with open(
-                f'{os.path.join(output_dir, j)[:-4]}.txt', 'w', encoding='utf-8'
-            ) as f:
-                for polygon in polygons:
-                    for p_, p in enumerate(polygon):
-                        if p_ == len(polygon) - 1:
-                            f.write(f'{p}\n')
-                        elif p_ == 0:
-                            f.write(f'0 {p} ')
-                        else:
-                            f.write(f'{p} ')
-            f.close()
+        for filename in os.listdir(input_dir):
+            image_path = os.path.join(input_dir, filename)
+            output_file = os.path.join(output_dir, filename[:-4] + '.txt')
+            process_mask(image_path, output_file)

@@ -28,14 +28,14 @@ from person_image_segmentation.utils.dataset_utils import generate_labels
 
 if __name__ == "__main__":
     # Set up argument parser
-    parser = argparse.ArgumentParser(description="Person Image Segmentation Pipeline")
+    parser = argparse.ArgumentParser(description="Person Image Segmentation Pipeline Parser")
     parser.add_argument('--test', action='store_true', help="Run the pipeline in test mode")
     args = parser.parse_args()
 
     if args.test:
+        LABELS_DATA_DIR = Path(str(LABELS_DATA_DIR).replace('data', 'test_data'))
         SPLIT_DATA_DIR = Path(str(SPLIT_DATA_DIR).replace('data', 'test_data'))
         TRANSFORM_DATA_DIR = Path(str(TRANSFORM_DATA_DIR).replace('data', 'test_data'))
-        LABELS_DATA_DIR = Path(str(LABELS_DATA_DIR).replace('data', 'test_data'))
 
     # Generate labels
     generate_labels(

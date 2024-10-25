@@ -1,9 +1,9 @@
 
 """ Configuration file for the project """
-import os
-import yaml
-
 from pathlib import Path
+
+import os
+
 from tqdm import tqdm
 from dotenv import load_dotenv
 from loguru import logger # pylint: disable=E0401

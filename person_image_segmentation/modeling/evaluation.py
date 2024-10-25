@@ -1,15 +1,16 @@
 """ Evaluation script for the model """
-import os
+
 from pathlib import Path
+
+import os
 import json
 import pandas as pd
-from PIL import Image
 from dotenv import load_dotenv
-from codecarbon import EmissionsTracker # pylint: disable=E0401
 import mlflow
-import numpy as np
 
-from person_image_segmentation.utils.evaluation_utils import compute_miou
+from codecarbon import EmissionsTracker # pylint: disable=E0401
+
+from person_image_segmentation.utils.modeling_utils import compute_miou
 
 # Load environment variables from a .env file
 load_dotenv()

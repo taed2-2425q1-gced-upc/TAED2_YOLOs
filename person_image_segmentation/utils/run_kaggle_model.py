@@ -10,8 +10,8 @@ def load_kaggle_credentials():
     """Load Kaggle credentials from the environment variables."""
     load_dotenv()
 
-    kaggle_username = os.getenv('KAGGLE_USERNAME')
     kaggle_key = os.getenv('KAGGLE_KEY')
+    kaggle_username = os.getenv('KAGGLE_USERNAME')
 
     if not kaggle_username or not kaggle_key:
         raise ValueError("Kaggle credentials are not set properly in the .env file.")

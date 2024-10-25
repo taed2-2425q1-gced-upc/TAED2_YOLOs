@@ -17,10 +17,10 @@ subprocess.check_call([
     "dagshub", "codecarbon"
 ])
 
-import mlflow
-import dagshub
-from codecarbon import EmissionsTracker # pylint: disable=E0401
-from ultralytics import YOLO # pylint: disable=E0401
+import mlflow # pylint: disable=C0413
+import dagshub # pylint: disable=C0413
+from codecarbon import EmissionsTracker # pylint: disable=E0401 disable=C0413
+from ultralytics import YOLO # pylint: disable=E0401 disable=C0413
 
 # Disable W&B logging
 os.environ["WANDB_MODE"] = "offline"

@@ -3,12 +3,10 @@ import os
 import time
 import shutil
 from pathlib import Path
-from threading import Thread
 import pandas as pd
 
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 from PIL import Image
@@ -16,6 +14,7 @@ from ultralytics import YOLO
 from dotenv import load_dotenv
 from codecarbon import EmissionsTracker # pylint: disable=E0401
 from contextlib import asynccontextmanager
+import asyncio
 
 from person_image_segmentation.api.schema import (
     PredictionResponse,
@@ -41,13 +40,10 @@ def clean_old_images():
         if file.name != "favicon.ico" and file.is_file():
             # Check the last modification of the file
             if file.stat().st_mtime < time_ago:
-                try:
-                    file.unlink()
-                    print(f"File {file.name} deleted!")
-                except OSError as e:
-                    print(f"Failed to delete {file.name}: {str(e)}")
+                file.unlink()
+                print(f"File {file.name} deleted!")
 
-def schedule_cleaning_task():
+async def schedule_cleaning_task():
     """
     Schedules a periodic cleaning task to delete old files.
 
@@ -55,15 +51,18 @@ def schedule_cleaning_task():
     """
     while True:
         clean_old_images()
-        time.sleep(60)  # Ejecutar cada 60 segundos
+        await asyncio.sleep(60)  # Run every 60 seconds
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
     Starts a background thread for the periodic cleaning task.
     """
-    cleaning_thread = Thread(target=schedule_cleaning_task, daemon=True)
-    cleaning_thread.start()
+    cleaning_task = asyncio.create_task(schedule_cleaning_task())
+    yield
+
+    cleaning_task.cancel()
+    await cleaning_task
 
 app = FastAPI(title="YOLOs image segmentation inference", lifespan=lifespan)
 
@@ -111,16 +110,6 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
 app.mount("/static", StaticFiles(
     directory = str(REPO_PATH) + "/static", html=True), name = "static"
     )
-
-# @app.get("/favicon.ico", include_in_schema=True)
-# async def favicon():
-#     """
-#     Serves the favicon.ico file.
-
-#     Returns:
-#         FileResponse: The favicon file.
-#     """
-#     return FileResponse(str(REPO_PATH) + "/static/favicon.ico")
 
 @app.get("/", response_model=RootResponse)
 def read_root():

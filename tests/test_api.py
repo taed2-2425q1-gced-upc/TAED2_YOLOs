@@ -235,6 +235,7 @@ import os
 import pytest
 import time
 import asyncio
+import pandas as pd
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -332,6 +333,38 @@ def test_predict_mask_with_non_jpeg_file(client, non_jpeg_payload):
             headers=non_jpeg_payload["headers"],
         )
 
+    assert response.status_code == 200
+    response_json = response.json()
+    assert "filename" in response_json
+    assert response_json["message"] == "Prediction complete!"
+
+# Prueba para asegurarse que el archivo csv se genera
+def test_predict_mask_with_non_jpeg_file_with_csv(client, non_jpeg_payload):
+    emissions_path = Path(REPO_PATH) / "static" / "emissions_inference_api.csv"
+
+    # Ensure the directory exists
+    emissions_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Create the emissions file with predefined content
+    expected_data = pd.DataFrame([{
+        'emissions': 0.1,
+        'duration': 2,
+        'cpu_power': 15,
+        'gpu_power': 25,
+        'ram_power': 10,
+        'energy_consumed': 1.5,
+    }])
+    expected_data.to_csv(emissions_path, index=False)
+
+    # Send request to predict endpoint
+    with open(non_jpeg_payload["file"][1].name, "rb") as image_file:
+        response = client.post(
+            "/predict/",
+            files={"file": ("test_image.png", image_file, "image/png")},
+            headers=non_jpeg_payload["headers"],
+        )
+
+    # Validate response
     assert response.status_code == 200
     response_json = response.json()
     assert "filename" in response_json
@@ -436,5 +469,3 @@ def test_lifespan():
         asyncio.run(run_test())
     except asyncio.CancelledError:
         print("Test finalizado: tarea de limpieza cancelada correctamente.")
-
-

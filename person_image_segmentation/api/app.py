@@ -15,6 +15,7 @@ from PIL import Image
 from ultralytics import YOLO
 from dotenv import load_dotenv
 from codecarbon import EmissionsTracker # pylint: disable=E0401
+from contextlib import asynccontextmanager
 
 from person_image_segmentation.api.schema import (
     PredictionResponse,
@@ -27,7 +28,44 @@ from person_image_segmentation.utils.api_utils import predict_mask_function
 # Load Kaggle credentials
 load_dotenv()
 
-app = FastAPI(title="YOLOs image segmentation inference")
+def clean_old_images():
+    """
+    Cleans up old image files from the static directory.
+
+    Files older than 10 minutes are deleted to free up storage space.
+    """
+    now = time.time()
+    time_ago = now - 600  # Every 10 mins
+
+    for file in Path(str(REPO_PATH) + "/static").iterdir():
+        if file.name != "favicon.ico" and file.is_file():
+            # Check the last modification of the file
+            if file.stat().st_mtime < time_ago:
+                try:
+                    file.unlink()
+                    print(f"File {file.name} deleted!")
+                except OSError as e:
+                    print(f"Failed to delete {file.name}: {str(e)}")
+
+def schedule_cleaning_task():
+    """
+    Schedules a periodic cleaning task to delete old files.
+
+    The task runs every 60 seconds.
+    """
+    while True:
+        clean_old_images()
+        time.sleep(60)  # Ejecutar cada 60 segundos
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Starts a background thread for the periodic cleaning task.
+    """
+    cleaning_thread = Thread(target=schedule_cleaning_task, daemon=True)
+    cleaning_thread.start()
+
+app = FastAPI(title="YOLOs image segmentation inference", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -74,52 +112,15 @@ app.mount("/static", StaticFiles(
     directory = str(REPO_PATH) + "/static", html=True), name = "static"
     )
 
-@app.get("/favicon.ico", include_in_schema=True)
-async def favicon():
-    """
-    Serves the favicon.ico file.
+# @app.get("/favicon.ico", include_in_schema=True)
+# async def favicon():
+#     """
+#     Serves the favicon.ico file.
 
-    Returns:
-        FileResponse: The favicon file.
-    """
-    return FileResponse(str(REPO_PATH) + "/static/favicon.ico")
-
-def clean_old_images():
-    """
-    Cleans up old image files from the static directory.
-
-    Files older than 10 minutes are deleted to free up storage space.
-    """
-    now = time.time()
-    time_ago = now - 600  # Every 10 mins
-
-    for file in Path(str(REPO_PATH) + "/static").iterdir():
-        if file.name != "favicon.ico" and file.is_file():
-            # Check the last modification of the file
-            if file.stat().st_mtime < time_ago:
-                try:
-                    file.unlink()
-                    print(f"File {file.name} deleted!")
-                except OSError as e:
-                    print(f"Failed to delete {file.name}: {str(e)}")
-
-def schedule_cleaning_task():
-    """
-    Schedules a periodic cleaning task to delete old files.
-
-    The task runs every 60 seconds.
-    """
-    while True:
-        clean_old_images()
-        time.sleep(60)  # Ejecutar cada 60 segundos
-
-@app.on_event("startup")
-async def startup_event():
-    """
-    Starts a background thread for the periodic cleaning task.
-    """
-    cleaning_thread = Thread(target=schedule_cleaning_task, daemon=True)
-    cleaning_thread.start()
+#     Returns:
+#         FileResponse: The favicon file.
+#     """
+#     return FileResponse(str(REPO_PATH) + "/static/favicon.ico")
 
 @app.get("/", response_model=RootResponse)
 def read_root():

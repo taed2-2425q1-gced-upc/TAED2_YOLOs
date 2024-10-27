@@ -37,7 +37,7 @@ class Prediction implements IPrediction {
       }
 
       formData.append("file", img.file)
-      const response = await axios.post(BASE_URL + "/predict", formData, {
+      const response = await axios.post(BASE_URL + "/predict/image", formData, {
         headers,
       })
 
@@ -61,7 +61,7 @@ class Prediction implements IPrediction {
 
       formData.append("file", img.file)
       const response = await axios.post(
-        BASE_URL + "/predict_with_emissions",
+        BASE_URL + "/predict/image/emissions",
         formData,
         {
           headers,

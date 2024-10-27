@@ -80,3 +80,4 @@ omit = ["person_image_segmentation/pipelines/*", "person_image_segmentation/mode
 pythonpath = "."
 testpaths = "tests"
 addopts = "--junitxml=out/tests-report.xml --cov=person_image_segmentation --cov-report=html:reports/coverage"
+asyncio_mode = "auto"

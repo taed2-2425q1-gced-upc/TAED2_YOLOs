@@ -3,6 +3,8 @@ import os
 import time
 import shutil
 from pathlib import Path
+from contextlib import asynccontextmanager
+import asyncio
 import pandas as pd
 
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
@@ -13,8 +15,6 @@ from PIL import Image
 from ultralytics import YOLO
 from dotenv import load_dotenv
 from codecarbon import EmissionsTracker # pylint: disable=E0401
-from contextlib import asynccontextmanager
-import asyncio
 
 from person_image_segmentation.api.schema import (
     PredictionResponse,

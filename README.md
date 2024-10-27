@@ -39,8 +39,8 @@ The `data` folder that appears in this section is not in the GitHub repository, 
 │
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
 │   └── cards
-│   │   ├── ModelCard.md
-│   │   └── DatasetCard.md
+│       ├── ModelCard.md
+│       └── DatasetCard.md
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
 │
 ├── tests
@@ -56,17 +56,17 @@ The `data` folder that appears in this section is not in the GitHub repository, 
 │   ├── modeling
 │   │   ├── __init__.py
 │   │   ├── predict.py          <- Code to run model inference with trained models
-│   │   └── train_v0.py         <- Code to train model v0
-│   │   └── simple_train.py     <- Code to perform a simple training
+│   │   ├── train_v0.py         <- Code to train model v0
+│   │   ├── simple_train.py     <- Code to perform a simple training
 │   │   └── evaluation.py       <- Code to evaluate models
 │   │
 │   ├── pipelines
-│   │   └── download_raw_data.py        <- Code to download raw data
-│   │   └── split_data.py               <- Code to split data
-│   │   └── transform_masks.py          <- Code to transform masks to YOLO format
-│   │   └── create_labels.py            <- Code to create labels
+│   │   ├── download_raw_data.py        <- Code to download raw data
+│   │   ├── split_data.py               <- Code to split data
+│   │   ├── transform_masks.py          <- Code to transform masks to YOLO format
+│   │   ├── create_labels.py            <- Code to create labels
 │   │   └── complete_data_folder.py     <- Code to copy files
-│   ├── utils
+│   └── utils
 │
 ├ .env.test                     <- Sample .env file with the main structure
 │

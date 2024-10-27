@@ -30,8 +30,7 @@ This is an instance segmentation dataset. Therefore, no languages appear in it.
 
 ## Data Structure
 
-### Data instances (TODA LA CARTA CON EL FINAL MENOS DATASET CREATION)
-
+### Data instances
 This dataset contains a total of 5639 images and, therefore, a total of 5639 labels. 
 
 Each instance can be divided in two parts: the sample and the label. The sample will correspond to the image we want to segment. The label will correpsond to a `txt` file with `N` lines. Each line will relate to a segmented person.

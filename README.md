@@ -145,6 +145,7 @@ Before running the project, make sure that your `.env` has the same structure as
   - Right click on the folder name and select "Copy path"
 - `PATH_TO_REPO` -> The path to the root of the project
   - It should look something like this: `.../.../TAED2_YOLOs`
+- `VALID_TOKEN` -> Token provided to the user (if the user is intended to use the endpoints from the documentation url)
 
 Note that there are some variables with a default value. You should not modify them, as they apply to all users running the project.
 

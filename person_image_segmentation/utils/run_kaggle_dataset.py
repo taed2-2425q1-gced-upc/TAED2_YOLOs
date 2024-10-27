@@ -7,18 +7,6 @@ from dotenv import load_dotenv
 # Load Kaggle credentials
 load_dotenv()
 
-def validate_kaggle_credentials():
-    """Validate Kaggle credentials from environment variables."""
-    kaggle_username = os.getenv('KAGGLE_USERNAME')
-    kaggle_key = os.getenv('KAGGLE_KEY')
-
-    if not kaggle_username or not kaggle_key:
-        raise ValueError("Kaggle credentials are not set properly in the .env file.")
-
-    # Set environment variables for Kaggle API
-    os.environ['KAGGLE_USERNAME'] = kaggle_username
-    os.environ['KAGGLE_KEY'] = kaggle_key
-
 def set_paths():
     """Set paths for local files."""
     data_directory_path = os.getenv('PATH_TO_DATA_FOLDER')
@@ -71,8 +59,6 @@ def create_and_upload_dataset(kaggle_username, data_directory_path, dataset_meta
 # Main function to execute the process
 def main():
     """Main function to run the dataset creation and upload process."""
-    validate_kaggle_credentials()
-
     # Retrieve the paths
     data_directory_path, dataset_metadata_path = set_paths()
 

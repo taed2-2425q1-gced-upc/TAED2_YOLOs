@@ -1,12 +1,11 @@
 """ Tests for the data pipeline """
+
+# pylint: disable=W0621, W0613
 import os
 from pathlib import Path
 import shutil
 from dotenv import load_dotenv
 import pytest
-
-
-
 
 from person_image_segmentation.config import (
     RAW_DATA_DIR,
@@ -82,7 +81,7 @@ def run_data_pipeline():
 
     yield
 
-def test_data_pipeline_and_structure():
+def test_data_pipeline_and_structure(run_data_pipeline):
     """Tests the data pipeline and its structure"""
     # Check if the data folder exists
     assert TEST_DATA_DIR.exists()

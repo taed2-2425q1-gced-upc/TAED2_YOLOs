@@ -1,14 +1,16 @@
 """This module defines a FastAPI application for image segmentation using the YOLO model."""
+
+# pylint: disable=W0621, W0613
 import os
 import time
 import shutil
 from pathlib import Path
-from threading import Thread
+from contextlib import asynccontextmanager
+import asyncio
 import pandas as pd
 
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 from PIL import Image
@@ -27,7 +29,44 @@ from person_image_segmentation.utils.api_utils import predict_mask_function
 # Load Kaggle credentials
 load_dotenv()
 
-app = FastAPI(title="YOLOs image segmentation inference")
+def clean_old_images():
+    """
+    Cleans up old image files from the static directory.
+
+    Files older than 10 minutes are deleted to free up storage space.
+    """
+    now = time.time()
+    time_ago = now - 600  # Every 10 mins
+
+    for file in Path(str(REPO_PATH) + "/static").iterdir():
+        if file.name != "favicon.ico" and file.is_file():
+            # Check the last modification of the file
+            if file.stat().st_mtime < time_ago:
+                file.unlink()
+                print(f"File {file.name} deleted!")
+
+async def schedule_cleaning_task():
+    """
+    Schedules a periodic cleaning task to delete old files.
+
+    The task runs every 60 seconds.
+    """
+    while True:
+        clean_old_images()
+        await asyncio.sleep(60)  # Run every 60 seconds
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Starts a background thread for the periodic cleaning task.
+    """
+    cleaning_task = asyncio.create_task(schedule_cleaning_task())
+    yield
+
+    cleaning_task.cancel()
+    await cleaning_task
+
+app = FastAPI(title="YOLOs image segmentation inference", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -73,53 +112,6 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
 app.mount("/static", StaticFiles(
     directory = str(REPO_PATH) + "/static", html=True), name = "static"
     )
-
-@app.get("/favicon.ico", include_in_schema=True)
-async def favicon():
-    """
-    Serves the favicon.ico file.
-
-    Returns:
-        FileResponse: The favicon file.
-    """
-    return FileResponse(str(REPO_PATH) + "/static/favicon.ico")
-
-def clean_old_images():
-    """
-    Cleans up old image files from the static directory.
-
-    Files older than 10 minutes are deleted to free up storage space.
-    """
-    now = time.time()
-    time_ago = now - 600  # Every 10 mins
-
-    for file in Path(str(REPO_PATH) + "/static").iterdir():
-        if file.name != "favicon.ico" and file.is_file():
-            # Check the last modification of the file
-            if file.stat().st_mtime < time_ago:
-                try:
-                    file.unlink()
-                    print(f"File {file.name} deleted!")
-                except OSError as e:
-                    print(f"Failed to delete {file.name}: {str(e)}")
-
-def schedule_cleaning_task():
-    """
-    Schedules a periodic cleaning task to delete old files.
-
-    The task runs every 60 seconds.
-    """
-    while True:
-        clean_old_images()
-        time.sleep(60)  # Ejecutar cada 60 segundos
-
-@app.on_event("startup")
-async def startup_event():
-    """
-    Starts a background thread for the periodic cleaning task.
-    """
-    cleaning_thread = Thread(target=schedule_cleaning_task, daemon=True)
-    cleaning_thread.start()
 
 @app.get("/", response_model=RootResponse)
 def read_root():

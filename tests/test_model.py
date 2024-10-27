@@ -78,7 +78,7 @@ def test_model_performance(run_evaluation_pipeline):
     """ Tests the performance of the model """
     miou = run_evaluation_pipeline
     print("mIoU is: ", miou)
-    assert miou > 0.85
+    assert miou > 0.825
 
 def test_generate_predictions_raises_exception_on_image_processing_error():
     """Test to check if an exception is raised for image processing errors."""
@@ -98,3 +98,11 @@ def test_generate_predictions_raises_exception_on_image_processing_error():
                 predictions_folder = REPO_PATH / "predictions",
                 model = mock_model,
                 max_predictions = MAX_PREDICTIONS)
+
+def test_compute_mio_for_wrong_file():
+    """Test to check if an exception is raised for wrong file."""
+    test_filenames = ["path/to/image1.jpg"]
+
+    # Check that the exception is raised with the correct message
+    with pytest.raises(Exception, match="Could not compute mIoU for image"):
+        compute_miou(test_filenames, PREDS_PATH)

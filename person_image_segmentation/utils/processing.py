@@ -1,9 +1,7 @@
 """ Module with processing utils """
 import shutil
 import os
-from cv2 import imread, threshold, findContours, contourArea # pylint: disable=E0611
-from cv2 import  RETR_EXTERNAL, CHAIN_APPROX_SIMPLE # pylint: disable=E0611
-from cv2 import IMREAD_GRAYSCALE, THRESH_BINARY # pylint: disable=E0611
+import cv2
 from PIL import Image
 
 def copy_files(sample_list, src_images_dir, src_masks_dir, dest_images_dir, dest_masks_dir):
@@ -48,26 +46,31 @@ def from_raw_masks_to_image_masks(input_dirs: list[str], output_dirs: list[str])
 
 def process_mask(image_path: str, output_file: str) -> None:
     """Process the mask image and save contours as polygons to the output file."""
-    mask = imread(image_path, IMREAD_GRAYSCALE)
-    _, mask = threshold(mask, 1, 255, THRESH_BINARY)
+    mask = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) # pylint: disable = E1101
+    _, mask = cv2.threshold(mask, 1, 255, cv2.THRESH_BINARY) # pylint: disable = E1101
     h, w = mask.shape
-    contours, _ = findContours(mask, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
+    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # pylint: disable = E1101
 
     # Convert the contours to polygons
     polygons = []
     for cnt in contours:
-        if contourArea(cnt) > 200:
+        if cv2.contourArea(cnt) > 200: # pylint: disable = E1101
             polygon = []
             for point in cnt:
-                x, y = point[0]
-                polygon.append(x / w)
-                polygon.append(y / h)
+                polygon.append(point[0][0] / w)
+                polygon.append(point[0][1] / h)
             polygons.append(polygon)
 
     # Save polygons to the output file
     with open(output_file, 'w', encoding='utf-8') as f:
         for polygon in polygons:
-            f.write(' '.join(f'{p}' for p in polygon) + '\n')
+            for p_, p in enumerate(polygon):
+                if p_ == len(polygon) - 1:
+                    f.write(f"{p}\n")
+                elif p_ == 0:
+                    f.write(f"0 {p} ")
+                else:
+                    f.write(f"{p} ")
 
 
 def from_image_masks_to_labels(input_dirs: list[str], output_dirs: list[str]) -> None:

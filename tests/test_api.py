@@ -17,6 +17,7 @@ import time
 import asyncio
 import pytest
 import pandas as pd
+from http import HTTPStatus
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -78,13 +79,32 @@ def non_jpeg_payload():
         "headers": {"Authorization": f"Bearer {VALID_TOKEN}"},
     }
 
+@pytest.fixture
+def non_mask_payload():
+    """
+    Fixture that returns a payload with a png test image that has no persons in it
+    (should not return any masks) and a valid authorization token for mask 
+    prediction tests.
+
+    Returns:
+        dict: Dictionary with the PNG image and authorization headers.
+    """
+    path = Path(REPO_PATH) / "tests/test_images/test_image_no_mask.png"
+    if not path.exists():
+        pytest.fail(f"Test non-mask image not found at {path}")
+
+    return {
+        "file": ("test_image_no_mask.png", open(path, "rb"), "image/png"),
+        "headers": {"Authorization": f"Bearer {VALID_TOKEN}"},
+    }
+
 def test_read_root(client):
     """
     Tests the root endpoint to verify that the API responds correctly and returns 
     a welcome message.
     """
     response = client.get("/")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json() == {"message": "API para hacer predicciones con YOLO"}
 
 
@@ -96,12 +116,12 @@ def test_predict_mask_with_valid_token(client, payload):
     """
     with open(payload["file"][1].name, "rb") as image_file:
         response = client.post(
-            "/predict/",
+            "/predict/image/",
             files={"file": ("test_image.jpg", image_file, "image/jpeg")},
             headers=payload["headers"],
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     response_json = response.json()
     assert "filename" in response_json
     assert response_json["message"] == "Prediction complete!"
@@ -113,12 +133,12 @@ def test_predict_mask_with_invalid_token(client, payload):
     """
     with open(payload["file"][1].name, "rb") as image_file:
         response = client.post(
-            "/predict/",
+            "/predict/image/",
             files={"file": ("test_image.jpg", image_file, "image/jpeg")},
             headers={"Authorization": "Bearer INVALID_TOKEN"},
         )
 
-    assert response.status_code == 401
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert response.json()["detail"] == "Token inválido o no autorizado"
 
 def test_predict_mask_with_no_file(client, payload):
@@ -127,10 +147,11 @@ def test_predict_mask_with_no_file(client, payload):
     the API responds with a validation error (422) due to the missing file.
     """
     response = client.post(
-        "/predict/",
+        "/predict/image/",
         headers=payload["headers"],
     )
 
+    # As there is no HTTPStatus attribute for this code, we use the code directly
     assert response.status_code == 422
 
 def test_predict_mask_with_non_jpeg_file(client, non_jpeg_payload):
@@ -141,15 +162,32 @@ def test_predict_mask_with_non_jpeg_file(client, non_jpeg_payload):
     """
     with open(non_jpeg_payload["file"][1].name, "rb") as image_file:
         response = client.post(
-            "/predict/",
+            "/predict/image/",
             files={"file": ("test_image.png", image_file, "image/png")},
             headers=non_jpeg_payload["headers"],
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     response_json = response.json()
     assert "filename" in response_json
     assert response_json["message"] == "Prediction complete!"
+
+def test_predict_mask_with_no_masks(client, non_mask_payload):
+    """
+    Tests mask prediction on an image without detectable masks. Verifies that the 
+    API responds with a 500 error and a message indicating no masks were found 
+    in the prediction.
+    """
+    with open(non_mask_payload["file"][1].name, "rb") as image_file:
+        response = client.post(
+            "/predict/image/",
+            files={"file": ("test_image_no_mask.png", image_file, "image/png")},
+            headers=non_mask_payload["headers"],
+        )
+
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    response_json = response.json()
+    assert "No masks found in the prediction." in response_json["detail"]
 
 def test_predict_mask_with_non_jpeg_file_with_csv(client, non_jpeg_payload):
     """
@@ -170,36 +208,15 @@ def test_predict_mask_with_non_jpeg_file_with_csv(client, non_jpeg_payload):
 
     with open(non_jpeg_payload["file"][1].name, "rb") as image_file:
         response = client.post(
-            "/predict/",
+            "/predict/image/emissions/",
             files={"file": ("test_image.png", image_file, "image/png")},
             headers=non_jpeg_payload["headers"],
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     response_json = response.json()
-    assert "filename" in response_json
-    assert response_json["message"] == "Prediction complete!"
-
-def test_predict_mask_with_no_masks(client):
-    """
-    Tests mask prediction on an image without detectable masks. Verifies that the 
-    API responds with a 500 error and a message indicating no masks were found 
-    in the prediction.
-    """
-    no_mask_image_path = Path(REPO_PATH) / "tests/test_images/test_image_no_mask.png"
-    if not no_mask_image_path.exists():
-        pytest.fail(f"Test image with no masks not found at {no_mask_image_path}")
-
-    with open(no_mask_image_path, "rb") as image_file:
-        response = client.post(
-            "/predict/",
-            files={"file": ("test_image_no_mask.png", image_file, "image/png")},
-            headers={"Authorization": f"Bearer {VALID_TOKEN}"},
-        )
-
-    assert response.status_code == 500
-    response_json = response.json()
-    assert "No masks found in the prediction." in response_json["detail"]
+    assert "filename" in response_json['prediction']
+    assert response_json["message"] == "Prediction complete with energy tracking!"
 
 def test_predict_with_emissions_with_valid_token(client, payload):
     """
@@ -209,16 +226,45 @@ def test_predict_with_emissions_with_valid_token(client, payload):
     """
     with open(payload["file"][1].name, "rb") as image_file:
         response = client.post(
-            "/predict_with_emissions/",
+            "/predict/image/emissions/",
             files={"file": ("test_image.jpg", image_file, "image/jpeg")},
             headers=payload["headers"],
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     response_json = response.json()
     assert "prediction" in response_json
     assert "energy_stats" in response_json
     assert response_json["message"] == "Prediction complete with energy tracking!"
+
+def test_predict_with_emissions_with_invalid_token(client, payload):
+    """
+    Tests mask prediction (and emissions) with an invalid authorization token. Verifies that the 
+    API responds with a 401 authorization error.
+    """
+    with open(payload["file"][1].name, "rb") as image_file:
+        response = client.post(
+            "/predict/image/emissions/",
+            files={"file": ("test_image.jpg", image_file, "image/jpeg")},
+            headers={"Authorization": "Bearer INVALID_TOKEN"},
+        )
+
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
+    assert response.json()["detail"] == "Token inválido o no autorizado"
+
+def test_predict_mask_with_emissions_with_no_existing_file(client, payload):
+    """
+    Tests the prediction endpoint without sending an image file. Verifies that 
+    the API responds with a validation error (422) due to the missing file.
+    """
+    response = client.post(
+        "/predict/image/emissions/",
+        files={"file": ("invalid_file.txt", b"not an image")},
+        headers=payload["headers"],
+    )
+
+    # As there is no HTTPStatus attribute for this code, we use the code directly
+    assert response.status_code == HTTPStatus.BAD_REQUEST
 
 def test_predict_with_emissions_non_jpeg_image(client, non_jpeg_payload):
     """
@@ -227,12 +273,12 @@ def test_predict_with_emissions_non_jpeg_image(client, non_jpeg_payload):
     """
     with open(non_jpeg_payload["file"][1].name, "rb") as image_file:
         response = client.post(
-            "/predict_with_emissions/",
+            "/predict/image/emissions/",
             files={"file": ("test_image.png", image_file, "image/png")},
             headers=non_jpeg_payload["headers"],
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     response_json = response.json()
     assert "prediction" in response_json
     assert "energy_stats" in response_json
@@ -284,8 +330,8 @@ def test_lifespan():
             old_file_path.touch()
             os.utime(old_file_path, (time.time() - 601, time.time() - 601))
 
-            # Get enough sleep for the scheduled cleaning task to remove you
-            await asyncio.sleep(65)
+            # Get enough sleep for the scheduled cleaning task to remove
+            await asyncio.sleep(5)
 
             assert not old_file_path.exists(), "No eliminó el archivo en el ciclo de vida."
 

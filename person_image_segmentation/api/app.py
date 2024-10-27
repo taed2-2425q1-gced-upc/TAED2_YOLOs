@@ -5,6 +5,7 @@ import os
 import time
 import shutil
 from pathlib import Path
+from http import HTTPStatus
 from contextlib import asynccontextmanager
 import asyncio
 import pandas as pd
@@ -28,6 +29,17 @@ from person_image_segmentation.utils.api_utils import predict_mask_function
 
 # Load Kaggle credentials
 load_dotenv()
+
+# Load the YOLO template
+REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
+BEST_WEIGHTS = Path(os.getenv('PATH_TO_BEST_WEIGHTS', 'yolov8m-seg.pt'))
+BEST_WEIGHTS_FULL_PATH = str(REPO_PATH / BEST_WEIGHTS)
+
+model = YOLO(BEST_WEIGHTS_FULL_PATH)
+
+VALID_TOKEN = str(Path(os.getenv('VALID_TOKEN')))
+
+security = HTTPBearer()
 
 def clean_old_images():
     """
@@ -66,7 +78,15 @@ async def lifespan(app: FastAPI):
     cleaning_task.cancel()
     await cleaning_task
 
-app = FastAPI(title="YOLOs image segmentation inference", lifespan=lifespan)
+app = FastAPI(
+    title="YOLOs Image Segmentation Inference",
+    description=(
+        "This API provides endpoints for person image segmentation using the YOLO model." \
+        "It includes functionality for making predictions and tracking energy consumption during inference."
+    ),
+    version="0.1",
+    lifespan=lifespan
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -75,17 +95,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Load the YOLO template
-REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
-BEST_WEIGHTS = Path(os.getenv('PATH_TO_BEST_WEIGHTS', 'yolov8m-seg.pt'))
-BEST_WEIGHTS_FULL_PATH = str(REPO_PATH / BEST_WEIGHTS)
-
-model = YOLO(BEST_WEIGHTS_FULL_PATH)
-
-VALID_TOKEN = str(Path(os.getenv('VALID_TOKEN')))
-
-security = HTTPBearer()
 
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """
@@ -104,17 +113,17 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
     if token != VALID_TOKEN:
         raise HTTPException(
-            status_code=401,
+            status_code=HTTPStatus.UNAUTHORIZED,
             detail="Token inválido o no autorizado",
         )
     return token
 
 app.mount("/static", StaticFiles(
     directory = str(REPO_PATH) + "/static", html=True), name = "static"
-    )
+)
 
-@app.get("/", response_model=RootResponse)
-def read_root():
+@app.get("/", tags=["General"], response_model=RootResponse)
+def _read_root():
     """
     Root endpoint providing a welcome message.
 
@@ -123,8 +132,11 @@ def read_root():
     """
     return RootResponse(message="API para hacer predicciones con YOLO")
 
-@app.post("/predict/", response_model=PredictionResponse, responses={400: {"model": ErrorResponse}})
-async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify_token)): #pylint: disable = W0613
+@app.post("/predict/image/", tags=["Prediction"],
+    response_model=PredictionResponse,
+    responses={HTTPStatus.BAD_REQUEST: {"model": ErrorResponse}, HTTPStatus.INTERNAL_SERVER_ERROR: {"model":ErrorResponse}}
+    )
+async def _predict_mask(file: UploadFile = File(...), token: str = Depends(verify_token)): #pylint: disable = W0613
     """
     Endpoint to make predictions for image segmentation.
 
@@ -160,17 +172,17 @@ async def predict_mask(file: UploadFile = File(...), token: str = Depends(verify
 
         return response
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(e)) from e
     finally:
         # Make sure to delete the temporary file
         if os.path.exists(img_path):
             os.remove(img_path)
 
-@app.post("/predict_with_emissions/",
+@app.post("/predict/image/emissions/", tags=["Prediction", "Emissions"],
           response_model=PredictionAndEnergyResponse,
-          responses={400: {"model": ErrorResponse}}
+          responses={HTTPStatus.BAD_REQUEST: {"model": ErrorResponse}, HTTPStatus.INTERNAL_SERVER_ERROR: {"model":ErrorResponse}}
           )
-async def predict_mask_with_emissions(
+async def _predict_mask_with_emissions(
     file: UploadFile = File(...), token: str = Depends(verify_token)): #pylint: disable = W0613
     """
     Endpoint to make predictions with energy consumption tracking.
@@ -227,6 +239,8 @@ async def predict_mask_with_emissions(
             energy_stats=emissions_stats,
             message="Prediction complete with energy tracking!"
             )
+    except Exception as e:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(e)) from e
     finally:
         # Make sure to delete the temporary file
         if os.path.exists(img_path):

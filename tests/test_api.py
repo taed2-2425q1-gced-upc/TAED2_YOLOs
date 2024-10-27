@@ -17,6 +17,7 @@ import time
 import asyncio
 import pytest
 import pandas as pd
+from http import HTTPStatus
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -84,7 +85,7 @@ def test_read_root(client):
     a welcome message.
     """
     response = client.get("/")
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json() == {"message": "API para hacer predicciones con YOLO"}
 
 
@@ -101,7 +102,7 @@ def test_predict_mask_with_valid_token(client, payload):
             headers=payload["headers"],
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     response_json = response.json()
     assert "filename" in response_json
     assert response_json["message"] == "Prediction complete!"
@@ -118,7 +119,7 @@ def test_predict_mask_with_invalid_token(client, payload):
             headers={"Authorization": "Bearer INVALID_TOKEN"},
         )
 
-    assert response.status_code == 401
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert response.json()["detail"] == "Token inválido o no autorizado"
 
 def test_predict_mask_with_no_file(client, payload):
@@ -131,6 +132,7 @@ def test_predict_mask_with_no_file(client, payload):
         headers=payload["headers"],
     )
 
+    # As there is no HTTPStatus attribute for this code, we use the code directly
     assert response.status_code == 422
 
 def test_predict_mask_with_non_jpeg_file(client, non_jpeg_payload):
@@ -146,7 +148,7 @@ def test_predict_mask_with_non_jpeg_file(client, non_jpeg_payload):
             headers=non_jpeg_payload["headers"],
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     response_json = response.json()
     assert "filename" in response_json
     assert response_json["message"] == "Prediction complete!"
@@ -175,7 +177,7 @@ def test_predict_mask_with_non_jpeg_file_with_csv(client, non_jpeg_payload):
             headers=non_jpeg_payload["headers"],
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     response_json = response.json()
     assert "filename" in response_json
     assert response_json["message"] == "Prediction complete!"
@@ -197,7 +199,7 @@ def test_predict_mask_with_no_masks(client):
             headers={"Authorization": f"Bearer {VALID_TOKEN}"},
         )
 
-    assert response.status_code == 500
+    assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
     response_json = response.json()
     assert "No masks found in the prediction." in response_json["detail"]
 
@@ -214,7 +216,7 @@ def test_predict_with_emissions_with_valid_token(client, payload):
             headers=payload["headers"],
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     response_json = response.json()
     assert "prediction" in response_json
     assert "energy_stats" in response_json
@@ -232,7 +234,7 @@ def test_predict_with_emissions_non_jpeg_image(client, non_jpeg_payload):
             headers=non_jpeg_payload["headers"],
         )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     response_json = response.json()
     assert "prediction" in response_json
     assert "energy_stats" in response_json

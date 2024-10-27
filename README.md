@@ -41,17 +41,26 @@ The `data` folder that appears in this section is not in the GitHub repository, 
 │   └── cards
 │       ├── ModelCard.md
 │       └── DatasetCard.md
+│
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
 │
 ├── tests
 │
 ├── metrics
 │
+├── frontend           <- Code for the UI used to test our ML component
+│
+├── static             <- Folder to store generated documents (cleaned periodically except for the favicon.ico)
+│
 ├── person_image_segmentation   <- Source code for use in this project.
 │   │
 │   ├── __init__.py             <- Makes person_image_segmentation a Python module
 │   │
 │   ├── config.py               <- Store useful variables and configuration
+│   │
+│   ├── api
+│   │   ├── app.py              <- Code to define the FastAPI application and its endpoints
+│   │   └── schema.py           <- Code to define data models used for responses
 │   │
 │   ├── modeling
 │   │   ├── __init__.py
@@ -66,6 +75,7 @@ The `data` folder that appears in this section is not in the GitHub repository, 
 │   │   ├── transform_masks.py          <- Code to transform masks to YOLO format
 │   │   ├── create_labels.py            <- Code to create labels
 │   │   └── complete_data_folder.py     <- Code to copy files
+│   │
 │   └── utils
 │
 ├ .env.test                     <- Sample .env file with the main structure

@@ -10,7 +10,7 @@ Tests include:
 - Scheduled deletion of old files on the server.
 """
 
-
+# pylint: disable=W0621
 from pathlib import Path
 import os
 import time

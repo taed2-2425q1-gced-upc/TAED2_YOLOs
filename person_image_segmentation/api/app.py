@@ -1,4 +1,6 @@
 """This module defines a FastAPI application for image segmentation using the YOLO model."""
+
+# pylint: disable=W0621, W0613
 import os
 import time
 import shutil

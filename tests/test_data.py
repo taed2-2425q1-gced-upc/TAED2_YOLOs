@@ -1,4 +1,6 @@
 """ Tests for the data pipeline """
+
+# pylint: disable=W0621, W0613
 import os
 from pathlib import Path
 import shutil

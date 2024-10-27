@@ -225,4 +225,42 @@ python3 run_kaggle_model.py
 
 This last notebook will end up as soon as the training is remotely started at kaggle. However, the training will continue. In real time tracking can be done from the DagsHub experiments section.
 
+## Code Inspection
 
+If the user wants, he can also test both the code itself by using `PyTest` and the code's format by using `Pylint`.
+
+### PyTest code analysis
+
+In order to test all the source code of our project, we have implemented some `PyTest` tests, which can be found in the [test](./tests/) folder. There, the user can find three different test files.
+
+1. One for the [model](./tests/test_model.py)
+2. One for the [data](./tests/test_data.py)
+3. One for the [API](./tests/test_api.py)
+
+These tests should cover 100% of the code, and a report is generated after executing these tests. These tests can be ran by executing the following command at the root of the project.
+
+```bash
+pytest .
+```
+
+This, once finished, if all tests are passed (which are passed), will generate a [PyTest report](./reports/coverage/index.html). Open this _HTML_ file in your browser to see the detailed `PyTest` report.
+
+### Pylint static code analysis (and Pynblint)
+
+In order to test our code's format we have unsed `Pylint`, which allows us to use standards in code formatting. In order to check that our code follows all code format standards we have to execute the following command at the root of the project.
+
+```bash
+pylint .
+```
+
+This, once finished, will provide all the format errors (which are expected to be zero) and a grade out of 10 (which is expected to be 10.00/10). The obtained results are reported in the following [report image](./reports/pylint.png).
+
+However, `Pylint` does not test notebooks. In order to ensure good code format standards in our notebooks as well we have used `Pynblint` which has been installed from the following [git repository](https://github.com/collab-uniba/pynblint.git) and has been added to the Poetry environment as well.
+
+In order to check that our notebooks follow all code format standards we have to execute the following command at the root of the project.
+
+```bash
+pynblint .
+```
+
+This, once finished, will provide all the format errors (which are expected to be zero) and repository issues, but not a grade. However, no errors clearly related to a grade of 10.00/10. The obtained results are reported in the following [report image](./reports/pynblint.png).

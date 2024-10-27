@@ -12,6 +12,12 @@ The primary aim is to develop a robust system that not only detects but also acc
 
 Hence, the end goal will be for the model to successfully detect and segment people within an input set of images containing various elements.
 
+We provide as well in this brief description the links to our model and dataset cards, so they are easily accesible to all users.
+
+- [Model Card](references/cards/ModelCard.md)
+- [Dataset Card](references/cards/DatasetCard.md)
+
+
 ## Project Organization
 
 The `data` folder that appears in this section is not in the GitHub repository, but will be generated once the `dvc repro` command ends.
@@ -104,11 +110,14 @@ Once you have cloned the project into you local machine, you need to install the
 
 #### Installing poetry
 
-This project uses [Poetry](https://python-poetry.org/) to manage dependencies and libraries. Make sure you have it installed on you machine by running:
+This project uses [Poetry](https://python-poetry.org/) to manage dependencies and libraries. 
 
-```bash
-poetry --version
-```
+> [!TIP]
+> Make sure you have it installed on you machine by running with the following command.
+>
+> ```bash
+> poetry --version
+> ```
 
 If you don't have Poetry installed, you can install it by running:
 
@@ -161,7 +170,8 @@ This will run all the stages of the pipeline and create the necessary files in t
 
 Keep in mind that this pipeline is configured to run the training with a single epoch, so the weights generated will not be final and should not be considered the best results of the model.
 
-> **Note**: The training stage can be executed using a GPU. However, some specific GPUs (Apple, for example) are not detected. In that case, the training stage can take more or less 30'.
+> [!IMPORTANT]
+> The training stage can be executed using a GPU. However, some specific GPUs (Apple, for example) are not detected. In that case, the training stage can take more or less 30'.
 
 Additionally, in the evaluation stage, only 10 images will be used to speed up the process. This means that each time the pipeline is run, the evaluation results may vary, since the images selected could be different in each run.
 
@@ -169,7 +179,8 @@ This configuration is intended to allow the pipeline to run completely without r
 
 The results and metrics for the model will be available in our hosted [MLFlow instance](https://dagshub.com/nachoogriis/TAED2_YOLOs.mlflow).
 
-> **Note**: During this process, human authorization will be needed for Dagshub. This is necessary to complete the model run. Make sure you keep an eye on notifications to grant the necessary permissions.
+> [!WARNING]
+> During this process, human authorization will be needed for Dagshub. This is necessary to complete the model run. Make sure you keep an eye on notifications to grant the necessary permissions.
 
 Additionally, to make the pipeline run faster, we have configured it to train using the test dataset instead of the full training dataset. The test dataset contains significantly fewer images, allowing us to verify that the pipeline works correctly on local machines without long wait times. Keep in mind that this setup is intended for quick testing and does not reflect the final model's performance.
 
@@ -195,6 +206,7 @@ To upload the model to Kaggle and run the training, use the following command:
 python3 run_kaggle_model.py
 ```
 
-> **Note**: During this process, Kaggle will ask for human authorization on the platform for DagsHub. This is necessary to complete the model run. Make sure you keep an eye on Kaggle notifications to grant the necessary permissions.
+> [!WARNING]
+> During this process, Kaggle will ask for human authorization on the platform for DagsHub. This is necessary to complete the model run. Make sure you keep an eye on Kaggle notifications to grant the necessary permissions.
 
 This last notebook will end up as soon as the training is remotely started at kaggle. However, the training will continue. In real time tracking can be done from the DagsHub experiments section.

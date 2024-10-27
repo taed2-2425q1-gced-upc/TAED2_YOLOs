@@ -104,6 +104,17 @@ git clone https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs.git
 cd TAED2_YOLOs
 ```
 
+If it is wanted to run the project in the university's Virthech machine, the following command lines can be executed in order to enter it. Then, the repositori can be cloned there.
+
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/my-key -C "YOLOs"
+ssh-copy-id -i ~/.ssh/my-key.pub -p 22041 alumne@nattech.fib.upc.edu
+ssh  -p 22041 alumne@nattech.fib.upc.edu
+```
+
+> [!NOTE]
+> To access the Virtech machine, a password will be required. This password will only be provided to the users who are intended to access our Virtech machine. In this case, the password to access the Virtech machine will be provided at the report. To be specific, in the section **2.4.0. Accessing the deployment environment**.
+
 ### Installing dependencies and libraries
 
 Once you have cloned the project into you local machine, you need to install the necessary dependencies and libraries.
@@ -158,6 +169,9 @@ Before running the project, make sure that your `.env` has the same structure as
 
 Note that there are some variables with a default value. You should not modify them, as they apply to all users running the project.
 
+> [!NOTE]
+> The `VALID_TOKEN` will be provided in the report. To be specific, in the section **2.4.2. API Design**
+
 ### Running the pipeline
 
 All the stages of the project are integrated into a single dvc pipeline. Thus, you can run the entire pipeline by running:
@@ -210,3 +224,5 @@ python3 run_kaggle_model.py
 > During this process, Kaggle will ask for human authorization on the platform for DagsHub. This is necessary to complete the model run. Make sure you keep an eye on Kaggle notifications to grant the necessary permissions.
 
 This last notebook will end up as soon as the training is remotely started at kaggle. However, the training will continue. In real time tracking can be done from the DagsHub experiments section.
+
+

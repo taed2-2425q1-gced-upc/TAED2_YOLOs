@@ -30,8 +30,6 @@ from person_image_segmentation.utils.dataset_utils import download_dataset
 
 # Load environment variables from a .env file
 load_dotenv()
-os.environ['KAGGLE_USERNAME'] = KAGGLE_KEY
-os.environ['KAGGLE_KEY'] = KAGGLE_USERNAME
 
 
 if __name__ == "__main__":

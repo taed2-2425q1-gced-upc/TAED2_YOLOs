@@ -132,7 +132,10 @@ def _read_root():
     """
     return RootResponse(message="API para hacer predicciones con YOLO")
 
-@app.post("/predict/image/", tags=["Prediction"], response_model=PredictionResponse, responses={HTTPStatus.INTERNAL_SERVER_ERROR: {"model": ErrorResponse}})
+@app.post("/predict/image/", tags=["Prediction"],
+    response_model=PredictionResponse,
+    responses={HTTPStatus.BAD_REQUEST: {"model": ErrorResponse}, HTTPStatus.INTERNAL_SERVER_ERROR: {"model":ErrorResponse}}
+    )
 async def _predict_mask(file: UploadFile = File(...), token: str = Depends(verify_token)): #pylint: disable = W0613
     """
     Endpoint to make predictions for image segmentation.
@@ -169,7 +172,7 @@ async def _predict_mask(file: UploadFile = File(...), token: str = Depends(verif
 
         return response
     except Exception as e:
-        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e)) from e
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(e)) from e
     finally:
         # Make sure to delete the temporary file
         if os.path.exists(img_path):
@@ -177,7 +180,7 @@ async def _predict_mask(file: UploadFile = File(...), token: str = Depends(verif
 
 @app.post("/predict/image/emissions/", tags=["Prediction", "Emissions"],
           response_model=PredictionAndEnergyResponse,
-          responses={HTTPStatus.INTERNAL_SERVER_ERROR: {"model": ErrorResponse}}
+          responses={HTTPStatus.BAD_REQUEST: {"model": ErrorResponse}, HTTPStatus.INTERNAL_SERVER_ERROR: {"model":ErrorResponse}}
           )
 async def _predict_mask_with_emissions(
     file: UploadFile = File(...), token: str = Depends(verify_token)): #pylint: disable = W0613
@@ -237,7 +240,7 @@ async def _predict_mask_with_emissions(
             message="Prediction complete with energy tracking!"
             )
     except Exception as e:
-        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e)) from e
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(e)) from e
     finally:
         # Make sure to delete the temporary file
         if os.path.exists(img_path):

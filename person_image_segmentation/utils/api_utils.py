@@ -47,7 +47,7 @@ def predict_mask_function(
 
         # Check if masks exist in the prediction
         if not hasattr(result, 'masks') or result.masks is None:
-            raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail="No masks found in the prediction.")
+            raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="No masks found in the prediction.")
 
         # Process the predicted mask
         img_array = np.array(img)

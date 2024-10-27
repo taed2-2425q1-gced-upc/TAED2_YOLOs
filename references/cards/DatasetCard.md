@@ -115,11 +115,11 @@ This dataset contained some initial annotations that some models such as YOLOv8-
 
 #### Annotation process
 
-**Finish when the annotation process has been finished, so all steps are clear.**
-
-In order to re-anotate the dataset samples to achieve some annotations that YOLO models can read we have to transform the label images to label text files in a specific format. To do so, we have used some python scrips (_**Link to the folder with the different python scripts for data transformations**_) that read the actual annotated images, extract the information and generate a text file for each of the data instances in our dataset.
+In order to re-anotate the dataset samples to achieve some annotations that YOLO models can read we have to transform the label images to label text files in a specific format. To do so, we have used some python scrips ([available in this folder](../../person_image_segmentation/pipelines)) that read the actual annotated images, extract the information and generate a text file for each of the data instances in our dataset.
 
 This process has been required for each of the data instances of the dataset. The validation annotation process has been implemented by checking the resulting mask as an image and comparing it to the original image.
+
+A more detailed and precise explanation of this process can be found [here](../../person_image_segmentation/pipelines/readme.md).
 
 #### Who are the annotators?
 

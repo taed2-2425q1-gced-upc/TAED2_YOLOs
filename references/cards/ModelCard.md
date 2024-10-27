@@ -151,7 +151,7 @@ The evaluation factors included variations in poses, environments, and lighting 
     - **Precision**: Measures the accuracy of the model's predictions.
     - **Recall**: Evaluates how many relevant instances the model correctly identified.
 - **Test**
-    - **mIoU**: 
+    - **mIoU**: Evaluate the accuracy of the model by comparing the area of ​​overlap between predictions and actual labels divided by the combined total area, calculating the average across all classes.
 
 ### Results
 - **Validation**
@@ -168,34 +168,37 @@ The evaluation results indicate high model performance in person segmentation ta
 ## Environmental Impact
 <!-- Total emissions (in grams of CO2eq) and additional considerations, such as electricity usage, go here. Edit the suggested text below accordingly -->
 
-#### Co2 eqemissions:
+#### Co2 eq Emissions:
 
-- **source**: CodeCarbon tool
+- **Source**: CodeCarbon tool
 
 - **Training:**
-    - **emissions**: 0.03898 tons of CO2 in total for the training process
-    - **power_consumption**: 
+    - **Emissions**: 0.03898 tons of CO2 in total for the training process
+    - **Power Consumption**: 
         - CPU: 42.5 kWh, 
         - GPU: 0 kWh (not properly estimated), 
         - RAM: 11.76 kWh
-    - **training_type**: Fine-tuning
-    - **geographical_location**: Oregon, USA (for Intel Xeon and Tesla P100 setup); 
-    - **hardware_used**: 
+    - **Training Type**: Fine-tuning
+    - **Geographical Location**: Oregon, USA (for Intel Xeon and Tesla P100 setup); 
+    - **Hardware Used**: 
         - CPU: Intel Xeon CPU @ 2.00GHz, 
         - GPU: Tesla P100-PCIE-16GB GPU, 
-    - **training_time**: Total of 18644.86s 
-    - **energy_label**: Not available
-    - **energy_label_source**: Not available
-    - **energy_label_classification**: Not available
+    - **Training Time**: Total of 18644.86s 
+    - **Energy Label**: [Training label](https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs/blob/6ba3bfdbf3a94bfa0ac2622c702e3518bf0a1b9c/reports/label_training.pdf).
+    - **Energy Label Source**: [GAISSA](https://gaissalabel.essi.upc.edu/)
+    - **Energy Label Classification**: B
 
 - **Inference and Validation**:
-    - **emissions**: 0.0004 tons of CO2
-    - **power_consumption**: 
+    - **Emissions**: 0.0004 tons of CO2
+    - **Power Consumption**: 
         - CPU: 0.28 kWh, 
         - GPU: 0.02 kWh (not properly estimated), 
         - RAM: 6.75 kWh
-    - **geographical_location**: **inference and evaluation**: Catalonia, Spain (for Apple M3 Pro setup)
-    - **hardware_used**:  Apple M3 Pro CPU/GPU
+    - **Geographical Location**: Catalonia, Spain (for Apple M3 Pro setup)
+    - **Hardware Used**:  Apple M3 Pro CPU/GPU
+    - **Energy Label**: [Evaluation label](https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs/blob/6ba3bfdbf3a94bfa0ac2622c702e3518bf0a1b9c/reports/label_inference.pdf).
+    - **Energy Label Source**: [GAISSA](https://gaissalabel.essi.upc.edu/)
+    - **Energy Label Classification**: C
 
 ## Citation
 <!-- If there is a paper or blog post introducing the model, the APA and Bibtex information for that should go in this section. -->

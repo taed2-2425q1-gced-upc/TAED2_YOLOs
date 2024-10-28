@@ -32,8 +32,8 @@ REPO_PATH = os.getenv("PATH_TO_REPO")
 @pytest.fixture(scope="function")
 def client():
     """
-    Fixture que proporciona un cliente de prueba para la API respetando el ciclo de vida (lifespan),
-    permitiendo la carga de modelos y tareas de limpieza.
+    Fixture that provides a test client for the API respecting the lifecycle (lifespan),
+    allowing the loading of molds and cleaning tasks.
     """
     with TestClient(app) as client:
         yield client
@@ -314,17 +314,14 @@ async def test_schedule_cleaning_task():
 @pytest.mark.anyio
 async def test_lifespan():
     """
-    Prueba el ciclo de vida `lifespan` para asegurar que inicia y detiene correctamente 
-    la tarea de limpieza programada.
+    Test the `lifespan` lifecycle to ensure it starts and stops correctly 
+    the scheduled cleaning task.
     """
-    # Creamos un archivo antiguo que debería ser eliminado
     old_file_path = Path(REPO_PATH) / "static" / "lifespan_old_image.jpg"
     old_file_path.touch()
     os.utime(old_file_path, (time.time() - 601, time.time() - 601))
 
-    # Inicia el ciclo de vida de la aplicación
     async with lifespan(app):
-        await asyncio.sleep(5)  # Espera suficiente para que la tarea de limpieza se ejecute
+        await asyncio.sleep(5)  # Wait long enough for the cleanup task to run
 
-    # Verifica que el archivo fue eliminado por la tarea de limpieza
     assert not old_file_path.exists(), "No eliminó el archivo en el ciclo de vida."

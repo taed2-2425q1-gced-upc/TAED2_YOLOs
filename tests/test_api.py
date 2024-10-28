@@ -29,18 +29,14 @@ load_dotenv()
 VALID_TOKEN = os.getenv("VALID_TOKEN")
 REPO_PATH = os.getenv("PATH_TO_REPO")
 
-@pytest.fixture(scope="module")
+
+@pytest.fixture(scope="function")
 def client():
     """
-    Fixture that provides a test client for making requests to the API. Uses a 
-    copy of the application without lifecycle events to avoid background tasks, 
-    allowing faster tests.
+    Fixture que proporciona un cliente de prueba para la API respetando el ciclo de vida (lifespan),
+    permitiendo la carga de modelos y tareas de limpieza.
     """
-    # Create a copy of the application without the lifecycle to avoid background tasks
-    app_no_lifespan = FastAPI()
-    app_no_lifespan.router.routes = app.router.routes
-
-    with TestClient(app_no_lifespan) as client:
+    with TestClient(app) as client:
         yield client
 
 @pytest.fixture
@@ -299,7 +295,7 @@ def test_clean_old_images():
     # Verify that the file was deleted
     assert not old_file_path.exists(), "La función `clean_old_images` no eliminó el archivo."
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_schedule_cleaning_task():
     """
     Tests the scheduled cleanup task `schedule_cleaning_task`. Starts the cleanup 
@@ -315,27 +311,21 @@ async def test_schedule_cleaning_task():
     except asyncio.CancelledError:
         pass
 
-def test_lifespan():
+
+@pytest.mark.anyio
+async def test_lifespan():
     """
-    Tests the `lifespan` context manager to ensure it correctly starts and stops 
-    the cleanup task. Creates an old test file and verifies that the cleanup task 
-    removes it within the lifespan.
+    Prueba el ciclo de vida `lifespan` para asegurar que inicia y detiene correctamente 
+    la tarea de limpieza programada.
     """
-    async def run_test():
-        app = FastAPI(lifespan=lifespan)
-        # Simulate app startup
-        async with lifespan(app):
-            # Create an old file that should be deleted
-            old_file_path = Path(REPO_PATH) / "static" / "lifespan_old_image.jpg"
-            old_file_path.touch()
-            os.utime(old_file_path, (time.time() - 601, time.time() - 601))
+    # Creamos un archivo antiguo que debería ser eliminado
+    old_file_path = Path(REPO_PATH) / "static" / "lifespan_old_image.jpg"
+    old_file_path.touch()
+    os.utime(old_file_path, (time.time() - 601, time.time() - 601))
 
-            # Get enough sleep for the scheduled cleaning task to remove
-            await asyncio.sleep(5)
+    # Inicia el ciclo de vida de la aplicación
+    async with lifespan(app):
+        await asyncio.sleep(5)  # Espera suficiente para que la tarea de limpieza se ejecute
 
-            assert not old_file_path.exists(), "No eliminó el archivo en el ciclo de vida."
-
-    try:
-        asyncio.run(run_test())
-    except asyncio.CancelledError:
-        print("Test finalizado: tarea de limpieza cancelada correctamente.")
+    # Verifica que el archivo fue eliminado por la tarea de limpieza
+    assert not old_file_path.exists(), "No eliminó el archivo en el ciclo de vida."

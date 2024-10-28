@@ -31,6 +31,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({onSubmit}) => {
         onClick={() => {
           onSubmit(toImage(image!), getStats)
           setImage(null)
+          setIsImageUploaded(false)
         }}
         disabled={!isImageUploaded}
       >

@@ -139,7 +139,7 @@ def _read_root():
 @app.post("/predict/image/", tags=["Prediction"],
     response_model=PredictionResponse,
     responses={
-        HTTPStatus.BAD_REQUEST: {"model": ErrorResponse}, 
+        HTTPStatus.BAD_REQUEST: {"model": ErrorResponse},
         HTTPStatus.INTERNAL_SERVER_ERROR: {"model":ErrorResponse}
         }
     )
@@ -188,7 +188,7 @@ async def _predict_mask(file: UploadFile = File(...), token: str = Depends(verif
 @app.post("/predict/image/emissions/", tags=["Prediction", "Emissions"],
           response_model=PredictionAndEnergyResponse,
           responses={
-              HTTPStatus.BAD_REQUEST: {"model": ErrorResponse}, 
+              HTTPStatus.BAD_REQUEST: {"model": ErrorResponse},
               HTTPStatus.INTERNAL_SERVER_ERROR: {"model":ErrorResponse}
               }
           )

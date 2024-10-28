@@ -19,18 +19,12 @@ def load_kaggle_credentials():
     return kaggle_username, kaggle_key
 
 
-def set_kaggle_env_vars(kaggle_username, kaggle_key):
-    """Set Kaggle environment variables for API."""
-    os.environ['KAGGLE_USERNAME'] = kaggle_username
-    os.environ['KAGGLE_KEY'] = kaggle_key
-
-
 def create_kernel_metadata(kaggle_username, code_file_path):
     """Create kernel metadata for Kaggle."""
     dataset_slug = f'{kaggle_username.lower()}/yolo-training-data'
     kernel_metadata = {
         'id': f'{kaggle_username.lower()}/entrenamiento-yolo', 
-        'title': 'YoloV8-training-v0-Hyps',
+        'title': 'yolov8-training-v0-hyps',
         'code_file': str(code_file_path),
         'language': 'python',
         'kernel_type': 'script',
@@ -79,9 +73,6 @@ def main():
     """Main function to execute the entire process."""
     # Load credentials
     kaggle_username, kaggle_key = load_kaggle_credentials()
-
-    # Set environment variables
-    set_kaggle_env_vars(kaggle_username, kaggle_key)
 
     # Paths for local files
     code_file_path = (

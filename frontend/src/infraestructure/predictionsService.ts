@@ -1,11 +1,11 @@
 import axios from "axios"
 import {Image, PredictionStats} from "./types"
 
-const BASE_URL = "http://127.0.0.1:8080"
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 
 const headers = {
   "Content-Type": "multipart/form-data",
-  Authorization: "Bearer YOLOsImageSegmentation",
+  Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTH_TOKEN}`,
 }
 
 export interface PredictionData {
@@ -37,7 +37,7 @@ class Prediction implements IPrediction {
       }
 
       formData.append("file", img.file)
-      const response = await axios.post(BASE_URL + "/predict", formData, {
+      const response = await axios.post(BASE_URL + "/predict/image", formData, {
         headers,
       })
 
@@ -61,7 +61,7 @@ class Prediction implements IPrediction {
 
       formData.append("file", img.file)
       const response = await axios.post(
-        BASE_URL + "/predict_with_emissions",
+        BASE_URL + "/predict/image/emissions",
         formData,
         {
           headers,

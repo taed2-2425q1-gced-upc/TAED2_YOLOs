@@ -8,6 +8,7 @@ and save the resulting masks in the specified directory.
 import os
 from datetime import datetime
 from pathlib import Path
+from http import HTTPStatus
 
 import numpy as np
 import torch
@@ -46,7 +47,10 @@ def predict_mask_function(
 
         # Check if masks exist in the prediction
         if not hasattr(result, 'masks') or result.masks is None:
-            raise HTTPException(status_code=400, detail="No masks found in the prediction.")
+            raise HTTPException(
+                status_code=HTTPStatus.BAD_REQUEST,
+                detail="No masks found in the prediction."
+                )
 
         # Process the predicted mask
         img_array = np.array(img)
@@ -70,4 +74,4 @@ def predict_mask_function(
         return PredictionResponse(filename=output_filename, message="Prediction complete!")
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e)) from e

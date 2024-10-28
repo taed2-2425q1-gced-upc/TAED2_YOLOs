@@ -187,3 +187,52 @@ python3 run_kaggle_model.py
 > **Note**: During this process, Kaggle will ask for human authorization on the platform for DagsHub. This is necessary to complete the model run. Make sure you keep an eye on Kaggle notifications to grant the necessary permissions.
 
 This last notebook will end up as soon as the training is remotely started at kaggle. However, the training will continue. In real time tracking can be done from the DagsHub experiments section.
+
+### Running the frontend
+
+We have implemented a really simple UI interface to interact with the person segmentation model.
+
+#### Installing dependencies
+
+Within the root of the project, run the following commands:
+
+```bash
+cd frontend
+npm install
+```
+
+This will install all the necessary dependencies for the frontend.
+
+> **Note**: Node.js is required to run the frontend. If you don't have it installed, you can download it from [here](https://nodejs.org/en/download/).
+
+#### Setting up the environment
+
+Before running the frontend, make sure that your `.env` has the same structure as the `.env.test` file located in the `/frontend` folder.
+
+#### Running the frontend locally
+
+If you want to run the frontend from your machine, you can run the following command:
+
+```bash
+npm run dev
+```
+
+This will start the frontend in development mode and will make it available at `http://localhost:3000`.
+
+#### Running the frontend in the Virtual Machine
+
+The interface can be run in the virtual machine by either running the command:
+
+```bash
+npm run dev -- -p 8081
+```
+
+Or by starting a new process in `pm2` with:
+
+```bash
+pm2 start npm --name "next_app" -- run dev -- -p 8081
+```
+
+This last option will allow you to run the frontend in the background and access it through a web browser even if the ssh connection to the virtual machine is closed.
+
+> **Note**: Before starting a new process, you should run `pm2 list` as the frontend might already be running in the background.

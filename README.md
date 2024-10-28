@@ -12,6 +12,12 @@ The primary aim is to develop a robust system that not only detects but also acc
 
 Hence, the end goal will be for the model to successfully detect and segment people within an input set of images containing various elements.
 
+We provide as well in this brief description the links to our model and dataset cards, so they are easily accesible to all users.
+
+- [Model Card](references/cards/ModelCard.md)
+- [Dataset Card](references/cards/DatasetCard.md)
+
+
 ## Project Organization
 
 The `data` folder that appears in this section is not in the GitHub repository, but will be generated once the `dvc repro` command ends.
@@ -39,13 +45,18 @@ The `data` folder that appears in this section is not in the GitHub repository, 
 │
 ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
 │   └── cards
-│   │   ├── ModelCard.md
-│   │   └── DatasetCard.md
+│       ├── ModelCard.md
+│       └── DatasetCard.md
+│
 ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
 │
 ├── tests
 │
 ├── metrics
+│
+├── frontend           <- Code for the UI used to test our ML component
+│
+├── static             <- Folder to store generated documents (cleaned periodically except for the favicon.ico)
 │
 ├── person_image_segmentation   <- Source code for use in this project.
 │   │
@@ -53,20 +64,25 @@ The `data` folder that appears in this section is not in the GitHub repository, 
 │   │
 │   ├── config.py               <- Store useful variables and configuration
 │   │
+│   ├── api
+│   │   ├── app.py              <- Code to define the FastAPI application and its endpoints
+│   │   └── schema.py           <- Code to define data models used for responses
+│   │
 │   ├── modeling
 │   │   ├── __init__.py
 │   │   ├── predict.py          <- Code to run model inference with trained models
-│   │   └── train_v0.py         <- Code to train model v0
-│   │   └── simple_train.py     <- Code to perform a simple training
+│   │   ├── train_v0.py         <- Code to train model v0
+│   │   ├── simple_train.py     <- Code to perform a simple training
 │   │   └── evaluation.py       <- Code to evaluate models
 │   │
 │   ├── pipelines
-│   │   └── download_raw_data.py        <- Code to download raw data
-│   │   └── split_data.py               <- Code to split data
-│   │   └── transform_masks.py          <- Code to transform masks to YOLO format
-│   │   └── create_labels.py            <- Code to create labels
+│   │   ├── download_raw_data.py        <- Code to download raw data
+│   │   ├── split_data.py               <- Code to split data
+│   │   ├── transform_masks.py          <- Code to transform masks to YOLO format
+│   │   ├── create_labels.py            <- Code to create labels
 │   │   └── complete_data_folder.py     <- Code to copy files
-│   ├── utils
+│   │
+│   └── utils
 │
 ├ .env.test                     <- Sample .env file with the main structure
 │
@@ -88,17 +104,31 @@ git clone https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs.git
 cd TAED2_YOLOs
 ```
 
+If it is wanted to run the project in the university's Virthech machine, the following command lines can be executed in order to enter it. Then, the repositori can be cloned there.
+
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/my-key -C "YOLOs"
+ssh-copy-id -i ~/.ssh/my-key.pub -p 22041 alumne@nattech.fib.upc.edu
+ssh  -p 22041 alumne@nattech.fib.upc.edu
+```
+
+> [!NOTE]
+> To access the Virtech machine, a password will be required. This password will only be provided to the users who are intended to access our Virtech machine. In this case, the password to access the Virtech machine will be provided at the report. To be specific, in the section **2.4.0. Accessing the deployment environment**.
+
 ### Installing dependencies and libraries
 
 Once you have cloned the project into you local machine, you need to install the necessary dependencies and libraries.
 
 #### Installing poetry
 
-This project uses [Poetry](https://python-poetry.org/) to manage dependencies and libraries. Make sure you have it installed on you machine by running:
+This project uses [Poetry](https://python-poetry.org/) to manage dependencies and libraries. 
 
-```bash
-poetry --version
-```
+> [!TIP]
+> Make sure you have it installed on you machine by running with the following command.
+>
+> ```bash
+> poetry --version
+> ```
 
 If you don't have Poetry installed, you can install it by running:
 
@@ -135,8 +165,12 @@ Before running the project, make sure that your `.env` has the same structure as
   - Right click on the folder name and select "Copy path"
 - `PATH_TO_REPO` -> The path to the root of the project
   - It should look something like this: `.../.../TAED2_YOLOs`
+- `VALID_TOKEN` -> Token provided to the user (if the user is intended to use the endpoints from the documentation url)
 
 Note that there are some variables with a default value. You should not modify them, as they apply to all users running the project.
+
+> [!NOTE]
+> The `VALID_TOKEN` will be provided in the report. To be specific, in the section **2.4.2. API Design**
 
 ### Running the pipeline
 
@@ -150,7 +184,8 @@ This will run all the stages of the pipeline and create the necessary files in t
 
 Keep in mind that this pipeline is configured to run the training with a single epoch, so the weights generated will not be final and should not be considered the best results of the model.
 
-> **Note**: The training stage can be executed using a GPU. However, some specific GPUs (Apple, for example) are not detected. In that case, the training stage can take more or less 30'.
+> [!IMPORTANT]
+> The training stage can be executed using a GPU. However, some specific GPUs (Apple, for example) are not detected. In that case, the training stage can take more or less 30'.
 
 Additionally, in the evaluation stage, only 10 images will be used to speed up the process. This means that each time the pipeline is run, the evaluation results may vary, since the images selected could be different in each run.
 
@@ -158,7 +193,8 @@ This configuration is intended to allow the pipeline to run completely without r
 
 The results and metrics for the model will be available in our hosted [MLFlow instance](https://dagshub.com/nachoogriis/TAED2_YOLOs.mlflow).
 
-> **Note**: During this process, human authorization will be needed for Dagshub. This is necessary to complete the model run. Make sure you keep an eye on notifications to grant the necessary permissions.
+> [!WARNING]
+> During this process, human authorization will be needed for Dagshub. This is necessary to complete the model run. Make sure you keep an eye on notifications to grant the necessary permissions.
 
 Additionally, to make the pipeline run faster, we have configured it to train using the test dataset instead of the full training dataset. The test dataset contains significantly fewer images, allowing us to verify that the pipeline works correctly on local machines without long wait times. Keep in mind that this setup is intended for quick testing and does not reflect the final model's performance.
 
@@ -184,9 +220,50 @@ To upload the model to Kaggle and run the training, use the following command:
 python3 run_kaggle_model.py
 ```
 
-> **Note**: During this process, Kaggle will ask for human authorization on the platform for DagsHub. This is necessary to complete the model run. Make sure you keep an eye on Kaggle notifications to grant the necessary permissions.
+> [!WARNING]
+> During this process, Kaggle will ask for human authorization on the platform for DagsHub. This is necessary to complete the model run. Make sure you keep an eye on Kaggle notifications to grant the necessary permissions.
 
 This last notebook will end up as soon as the training is remotely started at kaggle. However, the training will continue. In real time tracking can be done from the DagsHub experiments section.
+
+## Code Inspection
+
+If the user wants, he can also test both the code itself by using `PyTest` and the code's format by using `Pylint`.
+
+### PyTest code analysis
+
+In order to test all the source code of our project, we have implemented some `PyTest` tests, which can be found in the [test](./tests/) folder. There, the user can find three different test files.
+
+1. One for the [model](./tests/test_model.py)
+2. One for the [data](./tests/test_data.py)
+3. One for the [API](./tests/test_api.py)
+
+These tests should cover 100% of the code, and a report is generated after executing these tests. These tests can be ran by executing the following command at the root of the project.
+
+```bash
+pytest .
+```
+
+This, once finished, if all tests are passed (which are passed), will generate a [PyTest report](./reports/coverage/index.html). Open this _HTML_ file in your browser to see the detailed `PyTest` report.
+
+### Pylint static code analysis (and Pynblint)
+
+In order to test our code's format we have unsed `Pylint`, which allows us to use standards in code formatting. In order to check that our code follows all code format standards we have to execute the following command at the root of the project.
+
+```bash
+pylint .
+```
+
+This, once finished, will provide all the format errors (which are expected to be zero) and a grade out of 10 (which is expected to be 10.00/10). The obtained results are reported in the following [report image](./reports/pylint.png).
+
+However, `Pylint` does not test notebooks. In order to ensure good code format standards in our notebooks as well we have used `Pynblint` which has been installed from the following [git repository](https://github.com/collab-uniba/pynblint.git) and has been added to the Poetry environment as well.
+
+In order to check that our notebooks follow all code format standards we have to execute the following command at the root of the project.
+
+```bash
+pynblint .
+```
+
+This, once finished, will provide all the format errors (which are expected to be zero) and repository issues, but not a grade. However, no errors clearly related to a grade of 10.00/10. The obtained results are reported in the following [report image](./reports/pynblint.png).
 
 ### Running the frontend
 

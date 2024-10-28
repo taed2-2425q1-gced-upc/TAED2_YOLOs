@@ -20,8 +20,6 @@ The script uses the dotenv package to load environment variables from a .env fil
 
 ```python
 load_dotenv()
-os.environ['KAGGLE_USERNAME'] = KAGGLE_KEY
-os.environ['KAGGLE_KEY'] = KAGGLE_USERNAME
 ```
 
 The variables `KAGGLE_USERNAME` and `KAGGLE_KEY` are fetched from the environment and stored into the respective environment variables to authenticate with the Kaggle API.

@@ -15,11 +15,10 @@ from pathlib import Path
 import os
 import time
 import asyncio
+from http import HTTPStatus
 import pytest
 import pandas as pd
-from http import HTTPStatus
 
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from dotenv import load_dotenv
 from person_image_segmentation.api.app import app, clean_old_images, schedule_cleaning_task,lifespan

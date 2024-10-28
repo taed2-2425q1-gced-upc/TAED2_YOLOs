@@ -15,11 +15,10 @@ from pathlib import Path
 import os
 import time
 import asyncio
+from http import HTTPStatus
 import pytest
 import pandas as pd
-from http import HTTPStatus
 
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from dotenv import load_dotenv
 from person_image_segmentation.api.app import app, clean_old_images, schedule_cleaning_task,lifespan
@@ -29,18 +28,14 @@ load_dotenv()
 VALID_TOKEN = os.getenv("VALID_TOKEN")
 REPO_PATH = os.getenv("PATH_TO_REPO")
 
-@pytest.fixture(scope="module")
+
+@pytest.fixture(scope="function")
 def client():
     """
-    Fixture that provides a test client for making requests to the API. Uses a 
-    copy of the application without lifecycle events to avoid background tasks, 
-    allowing faster tests.
+    Fixture that provides a test client for the API respecting the lifecycle (lifespan),
+    allowing the loading of molds and cleaning tasks.
     """
-    # Create a copy of the application without the lifecycle to avoid background tasks
-    app_no_lifespan = FastAPI()
-    app_no_lifespan.router.routes = app.router.routes
-
-    with TestClient(app_no_lifespan) as client:
+    with TestClient(app) as client:
         yield client
 
 @pytest.fixture
@@ -299,7 +294,7 @@ def test_clean_old_images():
     # Verify that the file was deleted
     assert not old_file_path.exists(), "La función `clean_old_images` no eliminó el archivo."
 
-@pytest.mark.asyncio
+@pytest.mark.anyio
 async def test_schedule_cleaning_task():
     """
     Tests the scheduled cleanup task `schedule_cleaning_task`. Starts the cleanup 
@@ -315,27 +310,18 @@ async def test_schedule_cleaning_task():
     except asyncio.CancelledError:
         pass
 
-def test_lifespan():
+
+@pytest.mark.anyio
+async def test_lifespan():
     """
-    Tests the `lifespan` context manager to ensure it correctly starts and stops 
-    the cleanup task. Creates an old test file and verifies that the cleanup task 
-    removes it within the lifespan.
+    Test the `lifespan` lifecycle to ensure it starts and stops correctly 
+    the scheduled cleaning task.
     """
-    async def run_test():
-        app = FastAPI(lifespan=lifespan)
-        # Simulate app startup
-        async with lifespan(app):
-            # Create an old file that should be deleted
-            old_file_path = Path(REPO_PATH) / "static" / "lifespan_old_image.jpg"
-            old_file_path.touch()
-            os.utime(old_file_path, (time.time() - 601, time.time() - 601))
+    old_file_path = Path(REPO_PATH) / "static" / "lifespan_old_image.jpg"
+    old_file_path.touch()
+    os.utime(old_file_path, (time.time() - 601, time.time() - 601))
 
-            # Get enough sleep for the scheduled cleaning task to remove
-            await asyncio.sleep(5)
+    async with lifespan(app):
+        await asyncio.sleep(5)  # Wait long enough for the cleanup task to run
 
-            assert not old_file_path.exists(), "No eliminó el archivo en el ciclo de vida."
-
-    try:
-        asyncio.run(run_test())
-    except asyncio.CancelledError:
-        print("Test finalizado: tarea de limpieza cancelada correctamente.")
+    assert not old_file_path.exists(), "No eliminó el archivo en el ciclo de vida."

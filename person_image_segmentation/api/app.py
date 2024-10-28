@@ -63,9 +63,12 @@ async def schedule_cleaning_task():
 
     The task runs every 60 seconds.
     """
-    while True:
-        clean_old_images()
-        await asyncio.sleep(60)  # Run every 60 seconds
+    try:
+        while True:
+            clean_old_images()
+            await asyncio.sleep(60)
+    except asyncio.CancelledError:
+        pass
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -82,7 +85,8 @@ app = FastAPI(
     title="YOLOs Image Segmentation Inference",
     description=(
         "This API provides endpoints for person image segmentation using the YOLO model." \
-        "It includes functionality for making predictions and tracking energy consumption during inference."
+        "It includes functionality for making predictions and tracking energy consumption" \
+        "during inference."
     ),
     version="0.1",
     lifespan=lifespan
@@ -134,7 +138,10 @@ def _read_root():
 
 @app.post("/predict/image/", tags=["Prediction"],
     response_model=PredictionResponse,
-    responses={HTTPStatus.BAD_REQUEST: {"model": ErrorResponse}, HTTPStatus.INTERNAL_SERVER_ERROR: {"model":ErrorResponse}}
+    responses={
+        HTTPStatus.BAD_REQUEST: {"model": ErrorResponse},
+        HTTPStatus.INTERNAL_SERVER_ERROR: {"model":ErrorResponse}
+        }
     )
 async def _predict_mask(file: UploadFile = File(...), token: str = Depends(verify_token)): #pylint: disable = W0613
     """
@@ -180,7 +187,10 @@ async def _predict_mask(file: UploadFile = File(...), token: str = Depends(verif
 
 @app.post("/predict/image/emissions/", tags=["Prediction", "Emissions"],
           response_model=PredictionAndEnergyResponse,
-          responses={HTTPStatus.BAD_REQUEST: {"model": ErrorResponse}, HTTPStatus.INTERNAL_SERVER_ERROR: {"model":ErrorResponse}}
+          responses={
+              HTTPStatus.BAD_REQUEST: {"model": ErrorResponse},
+              HTTPStatus.INTERNAL_SERVER_ERROR: {"model":ErrorResponse}
+              }
           )
 async def _predict_mask_with_emissions(
     file: UploadFile = File(...), token: str = Depends(verify_token)): #pylint: disable = W0613

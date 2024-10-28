@@ -106,7 +106,7 @@ The model was finetuned by our team on the data_person dataset, which contains o
 - Augmentation techniques included flipping left-right(33% probability), scaling (±27.45%), translation (±7.69%), and HSV adjustments to hue, saturation, and value to enhance robustness. Mosaic augmentation (93.32% probability) and segment copy-paste (50% probability) were also employed to diversify image variations. 
 - Data was randomly split into training (78%), validation (14%), and test (8%) sets to mitigate potential biases.
 
-More details can be found in the dataset card (FALTA LINK).
+More details can be found in the [Dataset Card](https://github.com/taed2-2425q1-gced-upc/TAED2_YOLOs.git)..
 
 #### Training Hyperparameters
 - **Initial learning rate** (`lr0`): 0.00729

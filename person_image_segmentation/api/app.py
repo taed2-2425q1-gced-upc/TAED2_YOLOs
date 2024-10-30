@@ -182,9 +182,9 @@ async def _predict_mask(file: UploadFile = File(...), token: str = Depends(verif
         os.remove(img_path)
 
         return response
-    except Exception as e:
+    except Exception as e: #pylint: disable = W0718
         if hasattr(e, 'status_code'):
-            raise HTTPException(status_code=e.status_code, detail=e.detail) from e
+            raise HTTPException(status_code=e.status_code, detail=e.detail) from e #pylint: disable = W0718
     finally:
         # Make sure to delete the temporary file
         if os.path.exists(img_path):

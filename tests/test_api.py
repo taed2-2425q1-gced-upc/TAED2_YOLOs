@@ -24,7 +24,6 @@ import pandas as pd
 from fastapi.testclient import TestClient
 from person_image_segmentation.api.app import app, clean_old_images, schedule_cleaning_task,lifespan
 from person_image_segmentation.config import REPO_PATH, VALID_TOKEN
-from person_image_segmentation.utils.api_utils import predict_mask_function
 
 
 @pytest.fixture(scope="function")
@@ -120,7 +119,7 @@ def test_predict_mask_function_without_module(client, payload):
             files={"file": ("test_image.jpg", image_file, "image/jpeg")},
             headers=payload["headers"],
         )
-    
+
     assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 def test_predict_mask_with_valid_token(client, payload):
@@ -267,7 +266,7 @@ def test_predict_with_emissions_with_invalid_token(client, payload):
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert response.json()["detail"] == "Token inválido o no autorizado"
 
-def test_predict_mask_with_no_masks(client, non_mask_payload):
+def test_predict_emissions_mask_with_no_masks(client, non_mask_payload):
     """
     Tests mask prediction on an image without detectable masks. Verifies that the 
     API responds with a 500 error and a message indicating no masks were found 
@@ -287,7 +286,7 @@ def test_predict_mask_with_no_masks(client, non_mask_payload):
 def test_predict_mask_with_emissions_with_no_existing_file(client, payload):
     """
     Tests the prediction endpoint without sending an image file. Verifies that 
-    the API responds with a validation error (422) due to the missing file.
+    the API responds with a validation error (500) due to the missing file.
     """
     response = client.post(
         "/predict/image/emissions/",

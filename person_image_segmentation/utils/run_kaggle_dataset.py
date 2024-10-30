@@ -2,14 +2,12 @@
 import os
 import subprocess
 import json
-from dotenv import load_dotenv
 
-# Load Kaggle credentials
-load_dotenv()
+from person_image_segmentation.config import DATA_DIR, KAGGLE_USERNAME
 
 def set_paths():
     """Set paths for local files."""
-    data_directory_path = os.getenv('PATH_TO_DATA_FOLDER')
+    data_directory_path = DATA_DIR
     dataset_metadata_path = os.path.join(data_directory_path, 'dataset-metadata.json')
     return data_directory_path, dataset_metadata_path
 
@@ -62,11 +60,8 @@ def main():
     # Retrieve the paths
     data_directory_path, dataset_metadata_path = set_paths()
 
-    # Get Kaggle username for dataset creation
-    kaggle_username = os.getenv('KAGGLE_USERNAME')
-
     # Create and upload dataset
-    create_and_upload_dataset(kaggle_username, data_directory_path, dataset_metadata_path)
+    create_and_upload_dataset(KAGGLE_USERNAME, data_directory_path, dataset_metadata_path)
 
 # Call the main function
 if __name__ == "__main__":

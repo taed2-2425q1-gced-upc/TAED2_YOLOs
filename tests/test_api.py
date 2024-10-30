@@ -15,6 +15,8 @@ from pathlib import Path
 import os
 import time
 import asyncio
+import sys
+from unittest.mock import patch
 from http import HTTPStatus
 import pytest
 import pandas as pd
@@ -22,6 +24,7 @@ import pandas as pd
 from fastapi.testclient import TestClient
 from person_image_segmentation.api.app import app, clean_old_images, schedule_cleaning_task,lifespan
 from person_image_segmentation.config import REPO_PATH, VALID_TOKEN
+from person_image_segmentation.utils.api_utils import predict_mask_function
 
 
 @pytest.fixture(scope="function")
@@ -105,6 +108,20 @@ def test_read_root(client):
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {"message": "API para hacer predicciones con YOLO"}
 
+@patch.dict(sys.modules, {'torch': None})
+def test_predict_mask_function_without_module(client, payload):
+    """
+    Tests the predict_mask_function when the torch module is not installed.
+    Verifies that the function raises an INTERNAL_SERVER_ERROR.
+    """
+    with open(payload["file"][1].name, "rb") as image_file:
+        response = client.post(
+            "/predict/image/",
+            files={"file": ("test_image.jpg", image_file, "image/jpeg")},
+            headers=payload["headers"],
+        )
+    
+    assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 def test_predict_mask_with_valid_token(client, payload):
     """
@@ -249,6 +266,23 @@ def test_predict_with_emissions_with_invalid_token(client, payload):
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert response.json()["detail"] == "Token inválido o no autorizado"
+
+def test_predict_mask_with_no_masks(client, non_mask_payload):
+    """
+    Tests mask prediction on an image without detectable masks. Verifies that the 
+    API responds with a 500 error and a message indicating no masks were found 
+    in the prediction.
+    """
+    with open(non_mask_payload["file"][1].name, "rb") as image_file:
+        response = client.post(
+            "/predict/image/emissions",
+            files={"file": ("test_image_no_mask.png", image_file, "image/png")},
+            headers=non_mask_payload["headers"],
+        )
+
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    response_json = response.json()
+    assert "No masks found in the prediction." in response_json["detail"]
 
 def test_predict_mask_with_emissions_with_no_existing_file(client, payload):
     """

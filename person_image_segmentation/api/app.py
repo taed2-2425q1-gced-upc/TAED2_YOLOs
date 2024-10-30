@@ -29,8 +29,7 @@ from person_image_segmentation.utils.api_utils import predict_mask_function
 from person_image_segmentation.config import REPO_PATH, PATH_TO_BEST_WEIGHTS, VALID_TOKEN
 
 # Load the YOLO model
-if PATH_TO_BEST_WEIGHTS == "None":
-    PATH_TO_BEST_WEIGHTS = "yolov8m-seg.pt"
+PATH_TO_BEST_WEIGHTS = PATH_TO_BEST_WEIGHTS if PATH_TO_BEST_WEIGHTS != "None" else "yolov8m-seg.pt"
 BEST_WEIGHTS = Path(PATH_TO_BEST_WEIGHTS)
 BEST_WEIGHTS_FULL_PATH = str(REPO_PATH / BEST_WEIGHTS)
 model = YOLO(BEST_WEIGHTS_FULL_PATH)
@@ -186,7 +185,6 @@ async def _predict_mask(file: UploadFile = File(...), token: str = Depends(verif
     except Exception as e:
         if hasattr(e, 'status_code'):
             raise HTTPException(status_code=e.status_code, detail=e.detail) from e
-        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e)) from e
     finally:
         # Make sure to delete the temporary file
         if os.path.exists(img_path):

@@ -262,7 +262,7 @@ def test_predict_mask_with_emissions_with_no_existing_file(client, payload):
     )
 
     # As there is no HTTPStatus attribute for this code, we use the code directly
-    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR
 
 def test_predict_with_emissions_non_jpeg_image(client, non_jpeg_payload):
     """

@@ -88,7 +88,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-@app.get("/favicon.ico", include_in_schema=True)
+@app.get("/favicon.ico", tags=["General"], include_in_schema=True)
 async def favicon():
     """
     Serves the favicon.ico file.
@@ -184,7 +184,9 @@ async def _predict_mask(file: UploadFile = File(...), token: str = Depends(verif
 
         return response
     except Exception as e:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(e)) from e
+        if hasattr(e, 'status_code'):
+            raise HTTPException(status_code=e.status_code, detail=e.detail) from e
+        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e)) from e
     finally:
         # Make sure to delete the temporary file
         if os.path.exists(img_path):
@@ -255,7 +257,9 @@ async def _predict_mask_with_emissions(
             message="Prediction complete with energy tracking!"
             )
     except Exception as e:
-        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail=str(e)) from e
+        if hasattr(e, 'status_code'):
+            raise HTTPException(status_code=e.status_code, detail=e.detail) from e
+        raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e)) from e
     finally:
         # Make sure to delete the temporary file
         if os.path.exists(img_path):

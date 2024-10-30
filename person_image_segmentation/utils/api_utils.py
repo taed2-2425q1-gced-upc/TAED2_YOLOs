@@ -74,4 +74,6 @@ def predict_mask_function(
         return PredictionResponse(filename=output_filename, message="Prediction complete!")
 
     except Exception as e:
+        if hasattr(e, 'status_code'):
+            raise HTTPException(status_code=e.status_code, detail=e.detail) from e
         raise HTTPException(status_code=HTTPStatus.INTERNAL_SERVER_ERROR, detail=str(e)) from e

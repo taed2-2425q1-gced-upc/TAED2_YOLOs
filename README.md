@@ -280,7 +280,8 @@ npm install
 
 This will install all the necessary dependencies for the frontend.
 
-> **Note**: Node.js is required to run the frontend. If you don't have it installed, you can download it from [here](https://nodejs.org/en/download/).
+> [!NOTE]
+> Node.js is required to run the frontend. If you don't have it installed, you can download it from [here](https://nodejs.org/en/download/).
 
 #### Setting up the environment
 
@@ -312,4 +313,14 @@ pm2 start npm --name "next_app" -- run dev -- -p 8081
 
 This last option will allow you to run the frontend in the background and access it through a web browser even if the ssh connection to the virtual machine is closed.
 
-> **Note**: Before starting a new process, you should run `pm2 list` as the frontend might already be running in the background.
+> [!NOTE]
+> Before starting a new process, you should run `pm2 list` as the frontend might already be running in the background.
+
+## Try out or application!
+
+> [!TIP]
+> Both our backend and frontend are currently deployed at the UPC VirTech machine. They are constantly up and running. In order to test them, use the following links.
+
+1. [API URL](http://nattech.fib.upc.edu:40410)
+2. [API SWAGGER DOCUMENTATION](http://nattech.fib.upc.edu:40410/docs) - Allows to try the endpoints using a valid authorization token (it can be found in the report).
+3. [USER INTERFACE](http://nattech.fib.upc.edu:40411)

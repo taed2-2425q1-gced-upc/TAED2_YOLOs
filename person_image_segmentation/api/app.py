@@ -13,6 +13,7 @@ import pandas as pd
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 from PIL import Image
 from ultralytics import YOLO
@@ -91,6 +92,15 @@ app = FastAPI(
     version="0.1",
     lifespan=lifespan
 )
+
+@app.get("/favicon.ico", include_in_schema=True)
+async def favicon():
+    """
+    Serves the favicon.ico file.
+    Returns:
+        FileResponse: The favicon file.
+    """
+    return FileResponse(str(REPO_PATH) + "/static/favicon.ico")
 
 app.add_middleware(
     CORSMiddleware,

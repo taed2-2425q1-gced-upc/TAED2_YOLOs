@@ -22,9 +22,6 @@ Usage:
     ```
 """
 
-
-from pathlib import Path
-import os
 import numpy as np
 from PIL import Image
 from deepchecks.vision import VisionData, BatchOutputFormat

@@ -1,7 +1,6 @@
 """ Tests for the data pipeline """
 
 # pylint: disable=W0621, W0613
-import os
 from pathlib import Path
 import shutil
 import pytest
@@ -27,7 +26,6 @@ from person_image_segmentation.utils.dataset_utils import (
 
 
 # Main folders
-REPO_PATH = REPO_PATH
 TEST_DATA_DIR = Path(str(DATA_DIR).replace('data', 'test_data'))
 
 # Folders for functions

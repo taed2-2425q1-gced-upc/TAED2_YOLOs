@@ -1,7 +1,5 @@
 """ Evaluation script for the model """
 
-from pathlib import Path
-
 import os
 import json
 import pandas as pd

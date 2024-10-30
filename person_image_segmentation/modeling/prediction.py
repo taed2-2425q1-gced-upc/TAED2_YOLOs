@@ -2,7 +2,6 @@
 # General imports
 import os
 import argparse
-from pathlib import Path
 
 from ultralytics import YOLO # pylint: disable=E0401
 from codecarbon import EmissionsTracker # pylint: disable=E0401

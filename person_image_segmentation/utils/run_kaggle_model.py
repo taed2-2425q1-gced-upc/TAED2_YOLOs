@@ -1,13 +1,12 @@
 """ Module to run a model in Kaggle"""
-import os
 import subprocess
 import json
-from pathlib import Path
 import requests
 
 from person_image_segmentation.config import REPO_PATH, KAGGLE_USERNAME, KAGGLE_KEY
 
 def load_kaggle_credentials():
+    """Load Kaggle credentials and check that they are set correctly."""
     if not KAGGLE_USERNAME or not KAGGLE_KEY:
         raise ValueError("Kaggle credentials are not set properly in the .env file.")
 

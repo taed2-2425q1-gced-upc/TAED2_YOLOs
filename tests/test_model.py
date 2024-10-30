@@ -4,24 +4,20 @@
 import os
 import time
 from unittest import mock
-from pathlib import Path
 import pytest
 import torch
 
-from dotenv import load_dotenv
 from ultralytics import YOLO
 
 from person_image_segmentation.modeling.evaluation import compute_miou # pylint: disable=E0401
 from person_image_segmentation.utils.modeling_utils import generate_predictions
+from person_image_segmentation.config import REPO_PATH, DATA_DIR, PATH_TO_BEST_WEIGHTS
 
-load_dotenv()
 
-REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
 PREDS_PATH = REPO_PATH / "predictions"
-BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
-BEST_WEIGHTS = os.getenv('PATH_TO_BEST_WEIGHTS')
+BASE_DATA_PATH = DATA_DIR
 BEST_WEIGHTS_FULL_PATH = (
-    str(REPO_PATH / BEST_WEIGHTS) if BEST_WEIGHTS != "None" else "yolov8m-seg.pt"
+    str(REPO_PATH / PATH_TO_BEST_WEIGHTS) if PATH_TO_BEST_WEIGHTS != "None" else "yolov8m-seg.pt"
 )
 MAX_PREDICTIONS = 10
 

@@ -22,14 +22,12 @@ Usage:
     ```
 """
 
-
-from pathlib import Path
-import os
 import numpy as np
 from PIL import Image
 from deepchecks.vision import VisionData, BatchOutputFormat
 from deepchecks.vision.suites import data_integrity, train_test_validation
-from dotenv import load_dotenv
+
+from person_image_segmentation.config import DATA_DIR, REPO_PATH
 
 def load_environment_vars():
     """
@@ -41,10 +39,8 @@ def load_environment_vars():
             - repo_dir (Path): Path to the repository reports directory.
     """
 
-    # Load Kaggle credentials
-    load_dotenv()
-    data_dir = Path(os.getenv('PATH_TO_DATA_FOLDER')) / "interim" / "transformed"
-    repo_dir = Path(os.getenv('PATH_TO_REPO')) / "reports"
+    data_dir = DATA_DIR / "interim" / "transformed"
+    repo_dir = REPO_PATH / "reports"
     return data_dir, repo_dir
 
 def get_paths(data_dir):

@@ -16,11 +16,7 @@ This script downloads the raw data for the **Person Image Segmentation Pipeline*
 
 ### 2. Environment Setup
 
-The script uses the dotenv package to load environment variables from a .env file, which is necessary for accessing Kaggle credentials securely.
-
-```python
-load_dotenv()
-```
+The script uses the dotenv package to load environment variables from a .env file, which is necessary for accessing Kaggle credentials securely. However, this is not directly done in the `download_raw_data.py` sript, but in the `config.py` file of our module.
 
 The variables `KAGGLE_USERNAME` and `KAGGLE_KEY` are fetched from the environment and stored into the respective environment variables to authenticate with the Kaggle API.
 

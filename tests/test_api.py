@@ -20,13 +20,8 @@ import pytest
 import pandas as pd
 
 from fastapi.testclient import TestClient
-from dotenv import load_dotenv
 from person_image_segmentation.api.app import app, clean_old_images, schedule_cleaning_task,lifespan
-
-# Load environment variables
-load_dotenv()
-VALID_TOKEN = os.getenv("VALID_TOKEN")
-REPO_PATH = os.getenv("PATH_TO_REPO")
+from person_image_segmentation.config import REPO_PATH, VALID_TOKEN
 
 
 @pytest.fixture(scope="function")

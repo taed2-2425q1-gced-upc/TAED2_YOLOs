@@ -2,24 +2,18 @@
 # General imports
 import os
 import argparse
-from pathlib import Path
 
-from dotenv import load_dotenv
 from ultralytics import YOLO # pylint: disable=E0401
 from codecarbon import EmissionsTracker # pylint: disable=E0401
 
 from person_image_segmentation.utils.modeling_utils import generate_predictions
-
-# Load environment variables from a .env file
-load_dotenv()
+from person_image_segmentation.config import REPO_PATH, DATA_DIR, PATH_TO_BEST_WEIGHTS
 
 # Declare the base data path
-BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
-REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
-BEST_WEIGHTS = os.getenv('PATH_TO_BEST_WEIGHTS')
+BASE_DATA_PATH = DATA_DIR
 BEST_WEIGHTS_FULL_PATH = (
-    str(REPO_PATH / BEST_WEIGHTS)
-    if BEST_WEIGHTS != "None"
+    str(REPO_PATH / PATH_TO_BEST_WEIGHTS)
+    if PATH_TO_BEST_WEIGHTS != "None"
     else "yolov8m-seg.pt"
 )
 

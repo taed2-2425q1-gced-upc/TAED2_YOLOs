@@ -22,13 +22,9 @@ Environment Variables:
 import argparse
 
 from pathlib import Path
-from dotenv import load_dotenv
 
 from person_image_segmentation.config import RAW_DATA_DIR, DATASET_LINK
 from person_image_segmentation.utils.dataset_utils import download_dataset
-
-# Load environment variables from a .env file
-load_dotenv()
 
 
 if __name__ == "__main__":

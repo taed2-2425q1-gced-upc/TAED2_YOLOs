@@ -1,22 +1,16 @@
 """ Module to run a model in Kaggle"""
-import os
 import subprocess
 import json
-from pathlib import Path
-from dotenv import load_dotenv
 import requests
 
+from person_image_segmentation.config import REPO_PATH, KAGGLE_USERNAME, KAGGLE_KEY
+
 def load_kaggle_credentials():
-    """Load Kaggle credentials from the environment variables."""
-    load_dotenv()
-
-    kaggle_key = os.getenv('KAGGLE_KEY')
-    kaggle_username = os.getenv('KAGGLE_USERNAME')
-
-    if not kaggle_username or not kaggle_key:
+    """Load Kaggle credentials and check that they are set correctly."""
+    if not KAGGLE_USERNAME or not KAGGLE_KEY:
         raise ValueError("Kaggle credentials are not set properly in the .env file.")
 
-    return kaggle_username, kaggle_key
+    return KAGGLE_USERNAME, KAGGLE_KEY
 
 
 def create_kernel_metadata(kaggle_username, code_file_path):
@@ -76,7 +70,7 @@ def main():
 
     # Paths for local files
     code_file_path = (
-        Path(os.getenv('PATH_TO_REPO')) / 'person_image_segmentation/modeling/train_v0.py'
+        REPO_PATH / 'person_image_segmentation/modeling/train_v0.py'
     )
 
     # Create and save kernel metadata

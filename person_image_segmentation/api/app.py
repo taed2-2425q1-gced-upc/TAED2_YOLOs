@@ -17,7 +17,6 @@ from fastapi.responses import FileResponse
 from starlette.staticfiles import StaticFiles
 from PIL import Image
 from ultralytics import YOLO
-from dotenv import load_dotenv
 from codecarbon import EmissionsTracker # pylint: disable=E0401
 
 from person_image_segmentation.api.schema import (
@@ -27,18 +26,14 @@ from person_image_segmentation.api.schema import (
     PredictionAndEnergyResponse
 )
 from person_image_segmentation.utils.api_utils import predict_mask_function
+from person_image_segmentation.config import REPO_PATH, PATH_TO_BEST_WEIGHTS, VALID_TOKEN
 
-# Load Kaggle credentials
-load_dotenv()
-
-# Load the YOLO template
-REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
-BEST_WEIGHTS = Path(os.getenv('PATH_TO_BEST_WEIGHTS', 'yolov8m-seg.pt'))
+# Load the YOLO model
+if PATH_TO_BEST_WEIGHTS == "None":
+    PATH_TO_BEST_WEIGHTS = "yolov8m-seg.pt"
+BEST_WEIGHTS = Path(PATH_TO_BEST_WEIGHTS)
 BEST_WEIGHTS_FULL_PATH = str(REPO_PATH / BEST_WEIGHTS)
-
 model = YOLO(BEST_WEIGHTS_FULL_PATH)
-
-VALID_TOKEN = str(Path(os.getenv('VALID_TOKEN')))
 
 security = HTTPBearer()
 

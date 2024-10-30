@@ -1,13 +1,13 @@
 """ Tests for the data pipeline """
 
 # pylint: disable=W0621, W0613
-import os
 from pathlib import Path
 import shutil
-from dotenv import load_dotenv
 import pytest
 
 from person_image_segmentation.config import (
+    REPO_PATH,
+    DATA_DIR,
     RAW_DATA_DIR,
     SPLIT_DATA_DIR,
     TRANSFORM_DATA_DIR,
@@ -24,11 +24,9 @@ from person_image_segmentation.utils.dataset_utils import (
     complete_data_folder
 )
 
-load_dotenv()
 
 # Main folders
-REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
-TEST_DATA_DIR = Path(os.getenv('PATH_TO_DATA_FOLDER').replace('data', 'test_data'))
+TEST_DATA_DIR = Path(str(DATA_DIR).replace('data', 'test_data'))
 
 # Folders for functions
 RAW_DATA_DIR = Path(str(RAW_DATA_DIR).replace('data', 'test_data'))

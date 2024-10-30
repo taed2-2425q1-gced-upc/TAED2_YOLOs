@@ -1,23 +1,17 @@
 """ Evaluation script for the model """
 
-from pathlib import Path
-
 import os
 import json
 import pandas as pd
-from dotenv import load_dotenv
 import mlflow
 
 from codecarbon import EmissionsTracker # pylint: disable=E0401
 
 from person_image_segmentation.utils.modeling_utils import compute_miou
-
-# Load environment variables from a .env file
-load_dotenv()
+from person_image_segmentation.config import DATA_DIR, REPO_PATH
 
 # Declare the base data path
-BASE_DATA_PATH = Path(os.getenv('PATH_TO_DATA_FOLDER'))
-REPO_PATH = Path(os.getenv('PATH_TO_REPO'))
+BASE_DATA_PATH = DATA_DIR
 
 
 if __name__ == "__main__":

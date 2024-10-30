@@ -93,6 +93,14 @@ def non_mask_payload():
         "headers": {"Authorization": f"Bearer {VALID_TOKEN}"},
     }
 
+def test_favicon(client):
+    """
+    Test that the favicon route returns the file correctly.
+    """
+    response = client.get("/favicon.ico")
+    assert response.status_code == HTTPStatus.OK, "Favicon endpoint failed"
+    assert response.headers["content-type"] == "image/x-icon"
+
 def test_read_root(client):
     """
     Tests the root endpoint to verify that the API responds correctly and returns 

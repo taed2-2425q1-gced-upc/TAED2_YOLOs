@@ -29,7 +29,9 @@ from person_image_segmentation.utils.api_utils import predict_mask_function
 from person_image_segmentation.config import REPO_PATH, PATH_TO_BEST_WEIGHTS, VALID_TOKEN
 
 # Load the YOLO model
-BEST_WEIGHTS = PATH_TO_BEST_WEIGHTS / 'yolov8m-seg.pt'
+if PATH_TO_BEST_WEIGHTS == "None":
+    PATH_TO_BEST_WEIGHTS = "yolov8m-seg.pt"
+BEST_WEIGHTS = Path(PATH_TO_BEST_WEIGHTS)
 BEST_WEIGHTS_FULL_PATH = str(REPO_PATH / BEST_WEIGHTS)
 model = YOLO(BEST_WEIGHTS_FULL_PATH)
 
